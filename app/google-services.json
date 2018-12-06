@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "696055690698",
+    "firebase_url": "https://koobdevelopment.firebaseio.com",
+    "project_id": "koobdevelopment",
+    "storage_bucket": "koobdevelopment.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:696055690698:android:fef7d01ce1724687",
+        "android_client_info": {
+          "package_name": "com.mualab.org.user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "696055690698-q4mku05f7vc894mf9cnf1t11q12aqh97.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnKmbq4Ul00nYXC5EEhM4jfkge_caiY6s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context="com.mualab.org.user.activity.myprofile.activity.activity.EditProfileActivity">
+
+    <include
+        android:id="@+id/topLayout1"
+        layout="@layout/new_header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:layout_alignParentTop="true" />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:scrollbars="none"
+        android:layout_below="@+id/topLayout1"
+
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/ll_profileImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/profile_image"
+                            android:layout_width="110dp"
+                            android:layout_height="110dp"
+                            android:src="@drawable/default_placeholder"
+                            app:civ_border_color="@color/white"/>
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:id="@+id/cameraImg"
+                            android:src="@drawable/carema_icon"
+                            android:layout_marginLeft="8dp"
+                            android:layout_gravity="bottom|right"
+                            android:layout_marginStart="8dp" />
+
+                    </FrameLayout>
+
+
+                    <TextView
+                        android:id="@+id/tv_username"
+                        style="@style/TextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="5dp"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:visibility="visible"
+                        android:textSize="18sp"
+                        android:text="@string/create_profile"/>
+
+                </LinearLayout>
+
+
+
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginTop="10dp"
+                    app:cardElevation="10dp"
+                    app:cardBackgroundColor="@color/white"
+                    android:layout_marginRight="14dp"
+
+
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:padding="10dp">
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/My_Edittext_Otp"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/nunito_regular"
+                            android:text="First name"
+                            android:layout_height="wrap_content" />
+
+                        <EditText
+                            android:id="@+id/ed_firstName"
+                            style="@style/My_Edittext_Otp"
+                            android:background="@null"
+                            android:textCursorDrawable="@drawable/cursor"
+                            android:layout_width="match_parent"
+
+                            android:layout_height="wrap_content"
+                            android:focusableInTouchMode="true"
+
+                            android:textSize="15sp"
+                            android:hint="@string/first_name"
+                            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "
+                            android:inputType="textCapWords"
+                            android:singleLine="true"
+                            android:maxLines="1"
+                            android:maxLength="20"
+                            android:imeOptions="actionNext"/>
+
+                        <View
+                            android:layout_width="wrap_content"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="5dp"
+
+
+
+                            android:background="@color/gray2"
+                            />
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/My_Edittext_Otp"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/nunito_regular"
+                            android:text="Last name"
+                            android:layout_height="wrap_content" />
+
+                        <EditText
+                            android:id="@+id/ed_lastName"
+                            style="@style/My_Edittext_Otp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/last_name"
+                            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+                            android:inputType="textCapWords"
+                            android:background="@null"
+                            android:textCursorDrawable="@drawable/cursor"
+                            android:textSize="15sp"
+                            android:maxLines="1"
+                            android:focusableInTouchMode="true"
+                            android:maxLength="20"
+                            android:singleLine="true"
+                            android:imeOptions="actionNext"/>
+
+                        <View
+                            android:layout_width="wrap_content"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@color/gray2"
+
+
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/My_Edittext_Otp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="5dp"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/nunito_regular"
+                            android:text="Email id"
+                            android:layout_height="wrap_content" />
+
+                        <EditText
+                            android:id="@+id/edEmail"
+                            style="@style/My_Edittext_Otp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:focusableInTouchMode="true"
+                            android:textSize="16sp"
+                            android:hint="Email id"
+                            android:textCursorDrawable="@drawable/cursor"
+
+                            android:inputType="textEmailAddress"
+                            android:maxLines="1"
+                            android:fontFamily="@font/nunito_regular"
+                            android:singleLine="true"
+                            android:imeOptions="actionDone"/>
+
+                        <View
+                            android:layout_width="wrap_content"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="5dp"
+
+                            android:background="@color/gray2"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/My_Edittext_Otp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="5dp"
+                            android:textSize="14sp"
+
+                            android:fontFamily="@font/nunito_regular"
+                            android:text="Phone number"
+
+                            android:layout_height="wrap_content" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvCountryCode"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                style="@style/TextView.Header2"
+                                android:background="?selectableItemBackgroundBorderless"
+                                android:textSize="16sp"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:textColor="@color/black"
+                                android:text="+91" />
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:tint="@color/gray"
+                                android:visibility="gone"
+                                android:src="@drawable/down_arrow_spinner_ico"
+                                android:layout_height="wrap_content" />
+
+                            <View
+                                android:layout_width="0.5dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:background="@color/gray2"
+
+                                />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+
+                                <EditText
+                                    android:id="@+id/edPhoneNumber"
+                                    style="@style/My_Edittext_New"
+                                    android:layout_width="wrap_content"
+                                    android:textColor="@color/black"
+                                    android:layout_height="match_parent"
+                                    android:hint="@string/phone_number"
+                                    android:textColorHint="@color/black"
+                                    android:inputType="number"
+                                    android:textSize="16sp"
+                                    android:textCursorDrawable="@drawable/cursor"
+
+                                    android:focusableInTouchMode="true"
+
+                                    android:fontFamily="@font/nunito_regular"
+                                    android:maxLength="16"
+                                    android:maxLines="1"
+                                    android:background="@null"/>
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:src="@drawable/info_ico"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/imgVerifyStatus"
+                                    android:visibility="gone"
+                                    android:layout_centerVertical="true"
+                                    android:layout_alignParentEnd="true" />
+
+
+                            </RelativeLayout>
+
+
+
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="wrap_content"
+                            android:layout_height="1dp"
+                            android:background="@color/gray2"
+                            android:layout_marginTop="5dp"
+                            android:visibility="visible"
+                            />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="vertical"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                style="@style/My_Edittext_Otp"
+                                android:textStyle="bold"
+                                android:layout_marginTop="5dp"
+                                android:fontFamily="@font/nunito_regular"
+                                android:text="@string/gender"
+                                android:textSize="14sp"
+                                android:layout_height="wrap_content" />
+
+                            <RadioGroup
+                                android:id="@+id/radioGroup"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <RadioButton
+                                    android:id="@+id/rbMale"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:checked="true"
+                                    android:theme="@style/MyRadioButton"
+
+                                    android:fontFamily="@font/nunito_regular"
+                                    android:text="@string/male"
+                                    android:textColor="@color/black"
+                                    tools:targetApi="lollipop" />
+
+                                <RadioButton
+                                    android:id="@+id/rbFemale"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:theme="@style/MyRadioButton"
+
+                                    android:fontFamily="@font/nunito_regular"
+                                    android:text="@string/female"
+                                    android:textColor="@color/black"
+                                    tools:targetApi="lollipop" />
+
+                            </RadioGroup>
+
+                        </LinearLayout>
+
+
+
+                        <View
+                            android:layout_width="wrap_content"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="5dp"
+
+                            android:background="@color/gray2"
+                            />
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/tv_dob"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:gravity="center_vertical"
+                                android:textStyle="bold"
+                                android:layout_marginTop="3dp"
+
+                                style="@style/TextView"
+                                android:fontFamily="@font/nunito_regular"
+                                android:textColor="@color/black"
+                                android:text="Date of birth"
+                                android:background="@null"/>
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_below="@id/tv_dob"
+                                android:id="@+id/rl_dob"
+
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:id="@+id/tv_dobDate"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="16sp"
+                                    android:gravity="center_vertical"
+                                    android:layout_marginTop="3dp"
+                                    android:fontFamily="@font/nunito_regular"
+                                    android:textColor="@color/black"
+                                    android:text="@string/date_of_birth"
+                                    android:background="@null"/>
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:src="@drawable/date_ico_ico"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_alignParentEnd="true" />
+
+
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="wrap_content"
+                                android:layout_height="1dp"
+                                android:layout_below="@+id/rl_dob"
+                                android:layout_marginTop="5dp"
+                                android:background="@color/gray2"
+
+                                />
+
+
+
+
+
+
+                        </RelativeLayout>
+
+
+
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/My_Edittext_Otp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="5dp"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/nunito_regular"
+                            android:text="@string/address"
+                            android:layout_height="wrap_content"/>
+
+
+
+                        <TextView
+                            android:id="@+id/txt_address"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/TextView.Bold"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/nunito_regular"
+                            android:maxLines="1"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            android:textSize="16sp"
+                            android:hint="@string/address"
+                            />
+
+                        <View
+                            android:layout_width="wrap_content"
+                            android:layout_height="1dp"
+                            android:background="@color/gray2"
+                            android:layout_marginTop="5dp"
+
+                            />
+
+
+
+
+
+
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:id="@+id/relative_btn"
+                            android:layout_marginTop="50dp"
+
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:id="@+id/btnContinue1"
+                            style="@style/My_Button_Edit"
+                            android:layout_width="180dp"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/nunito_regular"
+                            android:layout_height="40dp"
+                            android:gravity="center"
+
+                            android:textColor="@color/white"
+                            android:text="Update"/>
+
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+
+                            android:layout_height="40dp">
+
+                        </RelativeLayout>
+
+
+
+                    </LinearLayout>
+
+
+                </android.support.v7.widget.CardView>
+
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progress_bar"
+        android:indeterminate="true"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:background="@android:color/transparent"
+        android:indeterminateDrawable="@drawable/loader_img_animation_blue"
+        android:focusable="true"/>
+
+
+
+
+
+
+
+
+
+
+
+</RelativeLayout>

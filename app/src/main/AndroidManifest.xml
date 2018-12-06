@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.mualab.org.user">
+
+    <uses-sdk tools:overrideLibrary="com.facebook, android.support.customtabs, net.ypresto.androidtranscoder" />
+    <!-- All nesassery permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+
+    <!-- All nesassery hardware -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera.front"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+
+    <protected-broadcast android:name="com.motorola.motocare.INTENT_TRIGGER" />
+
+    <application
+        android:name=".application.Mualab"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:noHistory="true"
+        android:roundIcon="@drawable/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme.FullScreen"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity
+            android:name=".activity.main.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
+        <activity
+            android:name=".activity.authentication.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.splash.SplashActivity"
+            android:theme="@style/AppTheme.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.authentication.RegistrationActivity" />
+        <activity
+            android:name=".activity.authentication.Registration2Activity"
+            android:screenOrientation="portrait">
+
+            <!--
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            -->
+        </activity>
+        <activity
+            android:name=".image.cropper.CropImageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Base.Theme.AppCompat" />
+
+        <provider
+            android:name=".application.GenericFileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBnFGTrGe8dJKMnrcinn1edleHCB_yZI5U" />
+
+        <activity
+            android:name=".activity.authentication.ChooseCountryActivity"
+            android:label="@string/country_activity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.authentication.AddAddressActivity"
+            android:label="@string/address_activity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.myprofile.activity.activity.UserProfileActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
+        <activity
+            android:name=".activity.searchBoard.activity.RefineArtistActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
+        <activity
+            android:name=".activity.myprofile.activity.activity.EditProfileActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
+        <activity
+            android:name=".activity.myprofile.activity.activity.OtpVerification"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
+        <activity
+            android:name=".activity.feeds.activity.LikeFeedActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
+        <activity
+            android:name=".activity.artist_profile.activity.FollowersActivity"
+            android:theme="@style/StatusBarBlack" />
+        <activity android:name=".activity.authentication.ForgotPasswordActivity"/>
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
+
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
+        <activity
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
+
+
+    </application>
+
+</manifest>
