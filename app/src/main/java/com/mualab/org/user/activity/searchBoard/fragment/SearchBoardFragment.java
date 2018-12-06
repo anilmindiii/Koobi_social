@@ -134,6 +134,7 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             item = (RefineSearchBoard) getArguments().getSerializable("param1");
+
         }
         if (artistsList == null)
             artistsList = new ArrayList<>();
@@ -188,11 +189,10 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
             sortType = item.sortType;
             isFavClick = item.isFavClick;
             time = item.time;
-            if (item.day.equals("100")) {
-                day = "";
-            } else
-                day = item.day;
+            day = item.day;
             date = item.date;
+
+            isFavClick = item.isFavClick;
 
             if (!lat.equals("") && !lng.equals("")) {
                 Mualab.currentLocationForBooking.lat = Double.parseDouble(lat);
@@ -446,23 +446,24 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
         params.put("longitude", lng);
 
 
-
-
         params.put("minPrice", "0");
         if(item == null){
             params.put("maxPrice", "0");
             params.put("rating", "");
+            params.put("distance", "");
         }else {
+            params.put("distance", item.LocationFilter);
             params.put("rating", item.rating);
             params.put("maxPrice", item.priceFilter);
         }
 
         // params.put("distance", "10");
+
         params.put("page", "" + page);
         params.put("limit", "10");
         params.put("service", mainServId);
         params.put("serviceType", serviceType);
-        params.put("day", date);
+        params.put("day", day);
         params.put("time", time);
         params.put("subservice", subServiceId);
         params.put("sortSearch", sortSearch);
@@ -597,7 +598,7 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
             @Override
             public void ErrorListener(VolleyError error) {
                 progress_bar.setVisibility(View.GONE);
-                tv_msg.setText(getString(R.string.msg_some_thing_went_wrong));
+                tv_msg.setText(getString(R.string.msg_some_thing_went_wrong)+"");
                 if (isPulltoRefrash) {
                     isPulltoRefrash = false;
                     mRefreshLayout.stopRefresh(false, 500);
@@ -631,6 +632,19 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
         params.put("latitude", lat);
         params.put("longitude", lng);
         // params.put("distance", "10");
+
+        params.put("minPrice", "0");
+        if(item == null){
+            params.put("maxPrice", "0");
+            params.put("rating", "");
+            params.put("distance", "");
+        }else {
+            params.put("rating", item.rating);
+            params.put("maxPrice", item.priceFilter);
+            params.put("distance", item.LocationFilter);
+        }
+
+
         params.put("page", "" + page);
         params.put("limit", "10");
         params.put("service", mainServId);
@@ -641,6 +655,7 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
         params.put("sortSearch", sortSearch);
         params.put("sortType", sortType);
         params.put("text", searchKeyword);
+
         params.put("userId", String.valueOf(Mualab.currentUser.id));
         // params.put("appType", "user");
 

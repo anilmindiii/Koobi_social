@@ -32,6 +32,19 @@ public class Constant {
     public final static int REQUEST_CHECK_SETTINGS_GPS = 96;
 
 
+    public static final String CLIENT_ID = " 235f0bad46fb41a5af0c1309b99481e6";
+    public static final String CLIENT_SECRET = " 4de6d8b1305f48e6bada5f87ab9e5f9b";
+    public static final String REDIRECT_URI = "http://sociallogin.insta";
+
+    public static final String AUTHURL = "https://instagram.com/oauth/authorize/?";
+    public static final String TOKENURL = "https://api.instagram.com/oauth/access_token";
+
+    public static final String SP = "SP_USER";
+    public static final String SP_TOKEN = "TOKEN";
+    public static final String SP_NAME = "NAME";
+    public static final String SP_DP = "DP";
+
+
 
 
     public static int CALENDAR_DAY = 0;

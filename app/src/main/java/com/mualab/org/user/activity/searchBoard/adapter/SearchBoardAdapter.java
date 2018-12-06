@@ -65,7 +65,7 @@ public class SearchBoardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemViewType(int position) {
-        if(position==artistsList.size()-1){
+        if(position == artistsList.size()){
             return showLoader?VIEWTYPE_LOADER:VIEWTYPE_ITEM;
         }
         return VIEWTYPE_ITEM;

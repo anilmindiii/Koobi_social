@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +31,8 @@ import android.widget.ViewSwitcher;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
@@ -59,6 +62,8 @@ import com.mualab.org.user.image.picker.ImagePicker;
 import com.mualab.org.user.utils.ConnectionDetector;
 import com.mualab.org.user.utils.StatusBarUtil;
 import com.mualab.org.user.utils.constants.Constant;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONObject;
 
@@ -113,6 +118,31 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
         Intent intent = getIntent();
         if (intent.getExtras() != null) {
             user = (User) intent.getSerializableExtra(Constant.USER);
+
+            if(!user.socialId.equals("") && user.socialId != null){
+                ed_firstName.setText(user.firstName);
+                ed_firstName.setSelection(user.firstName.length());
+                ed_lastName.setText(user.lastName);
+                Picasso.get().load(user.profileImage).placeholder(R.drawable.default_placeholder).into(profile_image);
+                Picasso.get()
+                        .load(user.profileImage)
+                        .into(new Target() {
+                            @Override
+                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                profileImageBitmap = bitmap;
+                            }
+
+                            @Override
+                            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                            }
+
+                            @Override
+                            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                            }
+                        });
+            }
         }
         session = new Session(this);
         simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
@@ -336,9 +366,18 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
         params.put("lastName", user.lastName);
         params.put("email", user.email);
         params.put("password", user.password);
-        params.put("countryCode", user.countryCode);
-        params.put("contactNo", user.contactNo);
-      //  params.put("businessName", user.businessName);
+
+        if(user.contactNo != null && !user.contactNo.equals("")){
+            params.put("countryCode", user.countryCode);
+            params.put("contactNo", user.contactNo);
+        }else {
+            params.put("countryCode", "");
+            params.put("contactNo", "");
+        }
+
+
+
+        //  params.put("businessName", user.businessName);
         params.put("gender", user.gender);
         params.put("dob", CalendarHelper.getStringYMDformatter(user.dob));
         params.put("address", address.stAddress1);
@@ -352,8 +391,16 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
         params.put("businessType", "N/A");
         params.put("deviceType", "2");
         params.put("deviceToken", deviceToken);
-        params.put("socialId", "");
-        params.put("socialType", "");
+        params.put("appType", "social");
+
+        if(user.socialId != null && !user.socialId.equals("")){
+            params.put("socialId", user.socialId);
+            params.put("socialType", user.userType);
+        }else {
+            params.put("socialId", "");
+            params.put("socialType", "");
+        }
+
         params.put("firebaseToken", deviceToken);
 
         //api.signUpTask(params, profileImageBitmap);
@@ -665,7 +712,14 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
             progressView4.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
             progressView3.setBackgroundColor(ContextCompat.getColor(this, R.color.darkpink));
 
-        } else {
+        }if(!user.socialId.equals("") && user.socialId != null){
+            Intent intent = new Intent(Registration2Activity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        }
+        else {
             Intent intent = new Intent(Registration2Activity.this, RegistrationActivity.class);
             startActivity(intent);
             finish();

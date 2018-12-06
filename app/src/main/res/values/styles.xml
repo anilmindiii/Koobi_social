@@ -72,6 +72,17 @@
 
 
 
+
+    <style name="FullyTranslucent" parent="android:Theme.Translucent.NoTitleBar">
+        <item name="android:progressBarStyle">@style/InvisibleProgress</item>
+    </style>
+
+    <style name="InvisibleProgress">
+        <item name="android:visibility">gone</item>
+    </style>
+
+
+
     <style name="AppTheme.DarkActionBar" parent="AppTheme">
         <item name="colorPrimary">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/white</item>
@@ -163,7 +174,7 @@
     </style>
 
     <!-- Theme for SwitchDateTime -->
-    <style name="Theme.SwitchDateTime" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="Theme.SwitchDateTime" parent="Base.Theme.AppCompat.Light.Dialog.FixedSize">
         <item name="colorPrimary">@color/colorPrimaryDark</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
 

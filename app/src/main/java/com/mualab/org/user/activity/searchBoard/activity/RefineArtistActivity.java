@@ -42,6 +42,7 @@ import com.mualab.org.user.activity.main.MainActivity;
 import com.mualab.org.user.activity.searchBoard.adapter.RefineServiceExpandListAdapter;
 import com.mualab.org.user.activity.searchBoard.adapter.ServiceAdapter;
 import com.mualab.org.user.activity.searchBoard.fragment.RefineSubServiceAdapter;
+import com.mualab.org.user.activity.searchBoard.fragment.SearchBoardFragment;
 import com.mualab.org.user.application.Mualab;
 import com.mualab.org.user.data.local.prefs.Session;
 import com.mualab.org.user.data.model.SearchBoard.RefineSearchBoard;
@@ -83,13 +84,13 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
     private TextView tv_refine_dnt, tv_refine_loc;
     private RefineServiceExpandListAdapter expandableListAdapter;
     private ArrayList<RefineServices> services, tempSerevice;
-    private String mainServId = "", sortType = "", sortSearch = "", serviceType = "", lat = "", lng = "", date_time = "", format, time = "", subServiceId = "", location = "";
+    private String mainServId = "", sortType = "", sortSearch = "", serviceType = "", lat = "", lng = "", day = "", date_time = "", format, time = "", subServiceId = "", location = "";
     private int mHour, mMinute, dayId = 100;
     private float rating;
     private RefineSearchBoard refineSearchBoard;
     private CheckBox chbOutcall;
     private Session session;
-    private TextView tvShowDistance,tv_price;
+    private TextView tvShowDistance, tv_price;
     private IndicatorSeekBar seekBarLocation;
     private RelativeLayout rlSelectLocation;
     private RelativeLayout rlSelectradiusSeekbar;
@@ -98,7 +99,7 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
     private IndicatorSeekBar seekBarPrice;
     private int SeekBarPriceValue;
     private RelativeLayout rlPriceSeekBar;
-    private TextView  tv_service_category;
+    private TextView tv_service_category;
     private View viewSelectRadius;
     private ArrayList<RefineSubServices> arrayList = new ArrayList<>();
     private ProgressBar progress_bar;
@@ -322,7 +323,7 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
 
 
     private void setRefineData() {
-        if(session.getSaveSearch() != null){
+        if (session.getSaveSearch() != null) {
             refineSearchBoard = session.getSaveSearch();
         }
 
@@ -338,6 +339,7 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
             time = refineSearchBoard.time;
             date_time = refineSearchBoard.date;
 
+
             if (refineSearchBoard.priceFilter != null)
                 SeekBarPriceValue = Integer.parseInt(refineSearchBoard.priceFilter);
             if (refineSearchBoard.LocationFilter != null)
@@ -347,7 +349,7 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
             isFavClick = refineSearchBoard.isFavClick;
 
             if (refineSearchBoard.day != null)
-                dayId = Integer.parseInt(refineSearchBoard.day);
+                day = refineSearchBoard.day;
 
             if (date_time != null)
                 if (!date_time.equals(""))
@@ -357,24 +359,23 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
             seekBarLocation.setProgress(seekBarrange);
             seekBarPrice.setProgress(SeekBarPriceValue);
 
-            if(refineSearchBoard.LocationFilter != null){
+            if (refineSearchBoard.LocationFilter != null) {
                 rlSelectradiusSeekbar.setVisibility(View.GONE);
                 tvShowDistance.setVisibility(View.VISIBLE);
-                tvShowDistance.setText("1-"+refineSearchBoard.LocationFilter +" Miles");
+                tvShowDistance.setText("1-" + refineSearchBoard.LocationFilter + " Miles");
             }
 
-            if(refineSearchBoard.priceFilter != null){
+            if (refineSearchBoard.priceFilter != null) {
                 rlPriceSeekBar.setVisibility(View.GONE);
                 tv_price.setVisibility(View.VISIBLE);
-                tv_price.setText("0-£"+refineSearchBoard.priceFilter);
+                tv_price.setText("0-£" + refineSearchBoard.priceFilter);
             }
 
 
-            if(refineSearchBoard.rating != null){
+            if (refineSearchBoard.rating != null) {
                 rating = Float.parseFloat(refineSearchBoard.rating);
                 userRating.setRating(Float.parseFloat(refineSearchBoard.rating));
             }
-
 
 
             if (sortSearch != null)
@@ -399,9 +400,9 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnBack:
-                if(session.getSaveSearch() == null){
+                if (session.getSaveSearch() == null) {
                     onBackPressed();
-                }else filterApply();
+                } else filterApply();
 
                 break;
 
@@ -454,9 +455,11 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
                     public void onPositiveButtonClick(Date date) {
                         String selectDate = Helper.formateDateFromstring("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy hh:mm aa", date.toString());
                         date_time = Helper.formateDateFromstring("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy", date.toString());
+
                         time = Helper.formateDateFromstring("EEE MMM dd HH:mm:ss zzz yyyy", "hh:mm aa", date.toString());
 
                         tv_refine_dnt.setText(selectDate);
+                        day =  day(Helper.formateDateFromstring("EEE MMM dd HH:mm:ss zzz yyyy", "EEE", date.toString()));
                     }
 
                     @Override
@@ -484,7 +487,6 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
                         }
                     }
                 });
-
 
 
                 break;
@@ -524,9 +526,9 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
                 session.setIsOutCallFilter(false);
                 session.saveFilter(null);
                 Intent intent = new Intent(RefineArtistActivity.this, MainActivity.class);
-                finish();
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                finish();
                 break;
 
             case R.id.btnApply:
@@ -538,6 +540,45 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
 
         }
     }
+
+
+    private String day(String weekDay) {
+        String day = "";
+        switch (weekDay) {
+            case "Sun":
+                day = "6";
+                break;
+
+            case "Mon":
+                day = "0";
+                break;
+
+            case "Tue":
+                day = "1";
+                break;
+
+            case "Wed":
+                day = "2";
+                break;
+
+            case "Thu":
+                day = "3";
+                break;
+
+            case "Fri":
+                day = "4";
+                break;
+
+            case "Sat":
+                day = "5";
+                break;
+
+        }
+
+        return day;
+
+    }
+
 
     private void onGroupClickListener(ExpandableListView expandableListView, View view, int groupPosition, long l) {
         RefineServices servicesItem = services.get(groupPosition);
@@ -586,7 +627,6 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
             }
 
 
-            refineSearchBoard.day = "" + dayId;
             refineSearchBoard.latitude = lat;
             refineSearchBoard.longitude = lng;
             refineSearchBoard.service = mainServId;
@@ -599,7 +639,8 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
             refineSearchBoard.priceFilter = String.valueOf(SeekBarPriceValue);
             refineSearchBoard.LocationFilter = String.valueOf(seekBarrange);
             refineSearchBoard.location = location;
-            refineSearchBoard.isFavClick = isFavClick;
+            refineSearchBoard.isFavClick = SearchBoardFragment.isFavClick;
+            refineSearchBoard.day = day;
             refineSearchBoard.rating = String.valueOf(rating);
 
             refineSearchBoard.refineServices.addAll(services);
@@ -817,12 +858,13 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onBackPressed() {
 
-        if(session.getSaveSearch() == null){
+        if (session.getSaveSearch() == null) {
             Intent intent = new Intent(RefineArtistActivity.this, MainActivity.class);
+            intent.putExtra("refineSearchBoard",refineSearchBoard);
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             finish();
-        }else filterApply();
+        } else filterApply();
 
 
     }
@@ -894,7 +936,7 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
                     if (services.get(i).ischeckLocal) {
 
                         services.get(i).ischeckFinal = true;
-                        serviceName = services.get(i).title + "," + serviceName;
+                        serviceName = services.get(i).title + ", " + serviceName;
 
                         for (int j = 0; j < arrayList.size(); j++) {
                             RefineSubServices temp = arrayList.get(j);
@@ -918,8 +960,8 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
                     tv_service_category.setText("");
                 }
 
-                if (serviceName.endsWith(",")) {
-                    serviceName = serviceName.substring(0, serviceName.length() - 1);
+                if (serviceName.endsWith(", ")) {
+                    serviceName = serviceName.substring(0, serviceName.length() - 2);
                 }
                 tv_business.setText(serviceName);
                 dialog.dismiss();
@@ -1010,14 +1052,14 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
                         services.id = tempSubList.get(i).id;
                         services.isSubItemChecked = true;
                         finalSubList.add(services);
-                        subserviceName = tempSubList.get(i).title + "," + subserviceName;
+                        subserviceName = tempSubList.get(i).title + ", " + subserviceName;
                     } else {
 
                     }
                 }
 
-                if (subserviceName.endsWith(",")) {
-                    subserviceName = subserviceName.substring(0, subserviceName.length() - 1);
+                if (subserviceName.endsWith(", ")) {
+                    subserviceName = subserviceName.substring(0, subserviceName.length() - 2);
                 }
                 tv_service_category.setText(subserviceName);
 

@@ -8,13 +8,14 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
+import com.facebook.FacebookAuthorizationException;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
@@ -36,7 +37,6 @@ import com.mualab.org.user.data.local.prefs.SharedPreferanceUtils;
 import com.mualab.org.user.data.model.User;
 import com.mualab.org.user.data.remote.HttpResponceListner;
 import com.mualab.org.user.data.remote.HttpTask;
-import com.mualab.org.user.dialogs.ForgotPassword;
 import com.mualab.org.user.dialogs.MyToast;
 import com.mualab.org.user.dialogs.NoConnectionDialog;
 import com.mualab.org.user.dialogs.Progress;
@@ -131,8 +131,6 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
-
-
                 /*new ForgotPassword(LoginActivity.this, new ForgotPassword.Listner() {
                     @Override
                     public void onSubmitClick(final Dialog dialog, final String emailId) {
@@ -161,7 +159,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }).show();
                 }
-
+                Progress.show(LoginActivity.this);
                 final LoginManager loginManager = LoginManager.getInstance();
                 loginManager.logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile", "email"));
 
@@ -171,7 +169,8 @@ public class LoginActivity extends AppCompatActivity {
         ivInstragram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast(getString(R.string.under_development));
+                Intent  intent = new Intent(LoginActivity.this,InstaLoginActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -203,38 +202,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void forgotPassword(final Dialog dialog, String emailId) {
-
-        Map<String, String> map = new HashMap<>();
-        map.put("email", emailId);
-        new HttpTask(new HttpTask.Builder(this, "forgotPassword", new HttpResponceListner.Listener() {
-            @Override
-            public void onResponse(String response, String apiName) {
-                try {
-                    dialog.findViewById(R.id.progress_bar).setVisibility(View.GONE);
-                    JSONObject jsonObject = new JSONObject(response);
-                    String status = jsonObject.getString("status");
-                    String message = jsonObject.getString("message");
-
-                    if (status.equalsIgnoreCase("success")) {
-                        MyToast.getInstance(LoginActivity.this).showDasuAlert(status, message);
-                        dialog.dismiss();
-                    } else {
-                        showToast(message);
-                    }
-                } catch (JSONException e) {
-                    showToast(getString(R.string.msg_some_thing_went_wrong));
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void ErrorListener(VolleyError error) {
-                dialog.findViewById(R.id.progress_bar).setVisibility(View.GONE);
-                showToast(getString(R.string.msg_some_thing_went_wrong));
-            }
-        }).setParam(map).setBodyContentType(HttpTask.ContentType.X_WWW_FORM_URLENCODED)).execute("forgotPassword");
-    }
 
     private void showToast(String msg) {
         if (!TextUtils.isEmpty(msg))
@@ -261,16 +228,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private void loginProcess() {
-        boolean isValidInput = true;
-        FirebaseApp.initializeApp(LoginActivity.this);
-        String username = ed_username.getText().toString().trim().toLowerCase();
-        String password = ed_password.getText().toString().trim();
-        String deviceToken = FirebaseInstanceId.getInstance().getToken();//"androidTest";
-
-        if (!validateName() || !validatePassword()) {
-            isValidInput = false;
-        }
+    private void checkSocialUser(final String socialId, final String socialType, final String email, final String firstname, final String lastname, final String profileImage) {
 
         if (!ConnectionDetector.isConnected()) {
             new NoConnectionDialog(LoginActivity.this, new NoConnectionDialog.Listner() {
@@ -278,68 +236,72 @@ public class LoginActivity extends AppCompatActivity {
                 public void onNetworkChange(Dialog dialog, boolean isConnected) {
                     if (isConnected) {
                         dialog.dismiss();
-                        loginProcess();
+                        checkSocialUser(socialId,socialType,email, firstname, lastname, profileImage);
                     }
 
                 }
             }).show();
 
-            isValidInput = false;
         }
 
-        if (isValidInput) {
-            Map<String, String> params = new HashMap<>();
-            params.put("userName", username);
-            params.put("password", password);
-            params.put("deviceToken", deviceToken);
-            params.put("firebaseToken", deviceToken);
-            params.put("deviceType", "2");
-            params.put("appType", "user");
-            params.put("userType", "user");
+        Map<String, String> params = new HashMap<>();
+        params.put("socialId", socialId);
+        params.put("socialType", socialType);
 
-            new HttpTask(new HttpTask.Builder(this, "userLogin", new HttpResponceListner.Listener() {
-                @Override
-                public void onResponse(String response, String apiName) {
-                    try {
-                        JSONObject js = new JSONObject(response);
-                        String status = js.getString("status");
-                        String message = js.getString("message");
-                        if (status.equalsIgnoreCase("success")) {
-                            Gson gson = new Gson();
-                            JSONObject userObj = js.getJSONObject("users");
-                            User user = gson.fromJson(String.valueOf(userObj), User.class);
-                            user.id = userObj.getInt("_id");
 
-                            if (user.status.equals("0")) {
-                                showToast("You are currenlty inactive by admin");
-                            } else {
-                                // showToast(message);
-                                session.createSession(user);
-                                session.setPassword(user.password);
-                                // checkUserRember(user);
-                                writeNewUser(user);
-                     /*           Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                intent.putExtra("user", user);
-                                startActivity(intent);
-                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                                finish();*/
-                            }
-                        } else
-                            showToast(message);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+        new HttpTask(new HttpTask.Builder(this, "checksocialLogin", new HttpResponceListner.Listener() {
+            @Override
+            public void onResponse(String response, String apiName) {
+                Progress.hide(LoginActivity.this);
+                try {
+                    JSONObject js = new JSONObject(response);
+                    String status = js.getString("status");
+                    String message = js.getString("message");
+                    if (status.equalsIgnoreCase("success")) {
+                        Gson gson = new Gson();
+                        JSONObject userObj = js.getJSONObject("data");
+                        User user = gson.fromJson(String.valueOf(userObj), User.class);
+                        user.id = userObj.getInt("_id");
+
+                        if (user.status.equals("0")) {
+                            showToast("You are currenlty inactive by admin");
+                        } else {
+                            session.createSession(user);
+                            session.setPassword(user.password);
+                            // checkUserRember(user);
+                            writeNewUser(user);
+                        }
+                    } else{
+                        // goto 3rd screen for register
+
+                        User user = new User();
+                        user.socialId = socialId;
+                        user.userType = socialType;
+                        user.email = email;
+                        user.firstName = firstname;
+                        user.lastName = lastname;
+                        user.profileImage = profileImage;
+                        startActivityForResult(new Intent(LoginActivity.this, Registration2Activity.class)
+                                .putExtra(Constant.USER, user),2);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        finish();
                     }
-                }
 
-                @Override
-                public void ErrorListener(VolleyError error) {
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Progress.hide(LoginActivity.this);
                 }
-            })
-                    .setBody(params, HttpTask.ContentType.APPLICATION_JSON)
-                    .setProgress(true))
-                    .execute(this.getClass().getName());
-        }
+            }
+
+            @Override
+            public void ErrorListener(VolleyError error) {
+                Progress.hide(LoginActivity.this);
+            }
+        })
+                .setBody(params, HttpTask.ContentType.APPLICATION_JSON)
+                .setProgress(true))
+                .execute(this.getClass().getName());
+
     }
 
 
@@ -399,7 +361,6 @@ public class LoginActivity extends AppCompatActivity {
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Progress.show(LoginActivity.this);
 
                 String accessToken = loginResult.getAccessToken().getToken();
                 final String sSocialId = loginResult.getAccessToken().getUserId();
@@ -412,15 +373,8 @@ public class LoginActivity extends AppCompatActivity {
                         if (response.getError() != null) {
                             MyToast.getInstance(LoginActivity.this).showDasuAlert(getResources().getString(R.string.msg_some_thing_went_wrong));
                         } else {
-                            Log.e("SIGN UP RESPONSE", response.toString());
-                            Log.e("SIGN UP OBJECT", object + "");
                             try {
-                                String email = "";
-
-                                if (object.has("email")) {
-                                    email = object.getString("email");
-                                }
-
+                                String  email = "";
                                 final String socialId = object.getString("id");
                                 final String firstname = object.getString("first_name");
                                 final String lastname = object.getString("last_name");
@@ -428,21 +382,17 @@ public class LoginActivity extends AppCompatActivity {
                                 final String profileImage = "https://graph.facebook.com/" + sSocialId + "/picture?width=543&height=543";
                                 final String deviceToken = FirebaseInstanceId.getInstance().getToken();
 
-                                if (object.has("email")) {
-                                    email = object.getString("email");
-
-                                } else {
-
+                                if(object.has("email")){
+                                       email =  object.getString("email");
                                 }
 
 
-                                //loadingView.setVisibility(View.GONE);
+                                checkSocialUser(socialId,"facebook",email,firstname,lastname,profileImage);
+
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
-
                                 Progress.hide(LoginActivity.this);
-
                             }
                         }
 
@@ -464,8 +414,94 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onError(FacebookException error) {
                 Progress.hide(LoginActivity.this);
+                if (error instanceof FacebookAuthorizationException) {
+                    if (AccessToken.getCurrentAccessToken() != null) {
+                        LoginManager.getInstance().logOut();
+                    }
+                }
             }
         });
+    }
+
+    private void loginProcess() {
+        boolean isValidInput = true;
+        FirebaseApp.initializeApp(LoginActivity.this);
+        String username = ed_username.getText().toString().trim().toLowerCase();
+        String password = ed_password.getText().toString().trim();
+        String deviceToken = FirebaseInstanceId.getInstance().getToken();//"androidTest";
+
+        if (!validateName() || !validatePassword()) {
+            isValidInput = false;
+        }
+
+        if (!ConnectionDetector.isConnected()) {
+            new NoConnectionDialog(LoginActivity.this, new NoConnectionDialog.Listner() {
+                @Override
+                public void onNetworkChange(Dialog dialog, boolean isConnected) {
+                    if (isConnected) {
+                        dialog.dismiss();
+                        loginProcess();
+                    }
+
+                }
+            }).show();
+
+            isValidInput = false;
+        }
+
+        if (isValidInput) {
+            Map<String, String> params = new HashMap<>();
+            params.put("userName", username);
+            params.put("password", password);
+            params.put("deviceToken", deviceToken);
+            params.put("firebaseToken", deviceToken);
+            params.put("deviceType", "2");
+            params.put("userType", "user");
+            params.put("appType", "social");
+
+            new HttpTask(new HttpTask.Builder(this, "userLogin", new HttpResponceListner.Listener() {
+                @Override
+                public void onResponse(String response, String apiName) {
+                    try {
+                        JSONObject js = new JSONObject(response);
+                        String status = js.getString("status");
+                        String message = js.getString("message");
+                        if (status.equalsIgnoreCase("success")) {
+                            Gson gson = new Gson();
+                            JSONObject userObj = js.getJSONObject("users");
+                            User user = gson.fromJson(String.valueOf(userObj), User.class);
+                            user.id = userObj.getInt("_id");
+
+                            if (user.status.equals("0")) {
+                                showToast("You are currenlty inactive by admin");
+                            } else {
+                                // showToast(message);
+                                session.createSession(user);
+                                session.setPassword(user.password);
+                                // checkUserRember(user);
+                                writeNewUser(user);
+                     /*           Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.putExtra("user", user);
+                                startActivity(intent);
+                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                                finish();*/
+                            }
+                        } else
+                            showToast(message);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void ErrorListener(VolleyError error) {
+                }
+            })
+                    .setBody(params, HttpTask.ContentType.APPLICATION_JSON)
+                    .setProgress(true))
+                    .execute(this.getClass().getName());
+        }
     }
 
 
