@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -55,6 +56,7 @@ import com.mualab.org.user.R;
 import com.mualab.org.user.Views.refreshviews.CircleHeaderView;
 import com.mualab.org.user.Views.refreshviews.OnRefreshListener;
 import com.mualab.org.user.Views.refreshviews.RjRefreshLayout;
+import com.mualab.org.user.activity.authentication.LoginActivity;
 import com.mualab.org.user.activity.base.BaseFragment;
 import com.mualab.org.user.activity.searchBoard.activity.RefineArtistActivity;
 import com.mualab.org.user.activity.searchBoard.adapter.SearchBoardAdapter;
@@ -110,14 +112,17 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
     protected LocationRequest locationRequest;
     private ImageView ivChat, ivFilter;
     protected FusedLocationProviderClient mFusedLocationClient;
-    private TextView tv_location, tv_change_location;
+    private TextView tv_location;
+    private RelativeLayout ly_change_location;
     private boolean isAlreadySelectedLocation = false;
     Session session;
+    RefineSearchBoard locationData = null;
 
-    public static SearchBoardFragment newInstance(RefineSearchBoard item) {
+    public static SearchBoardFragment newInstance(RefineSearchBoard item, RefineSearchBoard locationData) {
         SearchBoardFragment fragment = new SearchBoardFragment();
         Bundle args = new Bundle();
         args.putSerializable("param1", item);
+        args.putSerializable("locationData", locationData);
         fragment.setArguments(args);
         return fragment;
     }
@@ -134,7 +139,7 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             item = (RefineSearchBoard) getArguments().getSerializable("param1");
-
+            locationData = (RefineSearchBoard) getArguments().getSerializable("locationData");
         }
         if (artistsList == null)
             artistsList = new ArrayList<>();
@@ -142,7 +147,7 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_search_board, container, false);
+        View view = inflater.inflate(R.layout.fragment_search_board_demo, container, false);
         // Inflate the layout for this fragment
         rvSearchBoard = view.findViewById(R.id.rvSearchBoard);
         ivFav = view.findViewById(R.id.ivFav);
@@ -152,24 +157,30 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
         ll_loadingBox = view.findViewById(R.id.ll_loadingBox);
         searchview = view.findViewById(R.id.searchview);
         tv_location = view.findViewById(R.id.tv_location);
-        tv_change_location = view.findViewById(R.id.tv_change_location);
+        ly_change_location = view.findViewById(R.id.ly_change_location);
         initView();
 
         ivFav.setOnClickListener(this);
         ivFilter.setOnClickListener(this);
-        tv_change_location.setOnClickListener(this);
+        ly_change_location.setOnClickListener(this);
 
         session = new Session(mContext);
 
-        if(session.getSaveSearch() != null){
+        if (session.getSaveSearch() != null) {
             ivFilter.setImageResource(R.drawable.active_filter_ico);
         }
 
 
         if (session.getCurrentLatltude() != null && session.getCurrentLongitude() != null) {
             if (item == null) {
-                lat = session.getCurrentLatltude();
-                lng = session.getCurrentLongitude();
+                if (locationData != null) {
+                    lat = locationData.latitude;
+                    lng = locationData.longitude;
+                    tv_location.setText(locationData.location);
+                } else {
+                    lat = session.getCurrentLatltude();
+                    lng = session.getCurrentLongitude();
+                }
             }
 
 
@@ -201,6 +212,8 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
 
             }
         }
+
+
         if (isFavClick) {
             ivFav.setImageResource(R.drawable.active_star_ico);
         } else {
@@ -310,7 +323,15 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
     public void hitApi(int page, String latitude, String longitude) {
         lat = latitude;
         lng = longitude;
-        getTextAddress(Double.parseDouble(latitude), Double.parseDouble(longitude));
+        if (item == null) {
+            if (locationData != null) {
+                lat = locationData.latitude;
+                lng = locationData.longitude;
+                tv_location.setText(locationData.location);
+            } else
+                getTextAddress(Double.parseDouble(latitude), Double.parseDouble(longitude));
+        }
+
         if (isFavClick)
             apiForGetFavArtist(page, true);
         else
@@ -363,7 +384,7 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
 
                 break;
 
-            case R.id.tv_change_location:
+            case R.id.ly_change_location:
                 if (!ConnectionDetector.isConnected()) {
                     new NoConnectionDialog(mContext, new NoConnectionDialog.Listner() {
                         @Override
@@ -378,6 +399,7 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
                 } else {
                     getAddress();
                 }
+                KeyboardUtil.hideKeyboard(ly_change_location, mContext);
 
                 break;
 
@@ -447,11 +469,11 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
 
 
         params.put("minPrice", "0");
-        if(item == null){
+        if (item == null) {
             params.put("maxPrice", "0");
             params.put("rating", "");
             params.put("distance", "");
-        }else {
+        } else {
             params.put("distance", item.LocationFilter);
             params.put("rating", item.rating);
             params.put("maxPrice", item.priceFilter);
@@ -598,7 +620,8 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
             @Override
             public void ErrorListener(VolleyError error) {
                 progress_bar.setVisibility(View.GONE);
-                tv_msg.setText(getString(R.string.msg_some_thing_went_wrong)+"");
+                if (tv_msg != null)
+                    tv_msg.setText(getString(R.string.msg_some_thing_went_wrong) + "");
                 if (isPulltoRefrash) {
                     isPulltoRefrash = false;
                     mRefreshLayout.stopRefresh(false, 500);
@@ -634,11 +657,11 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
         // params.put("distance", "10");
 
         params.put("minPrice", "0");
-        if(item == null){
+        if (item == null) {
             params.put("maxPrice", "0");
             params.put("rating", "");
             params.put("distance", "");
-        }else {
+        } else {
             params.put("rating", item.rating);
             params.put("maxPrice", item.priceFilter);
             params.put("distance", item.LocationFilter);
@@ -860,8 +883,16 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
                                     lng = String.valueOf(longitude);
                                 }
 
-                                if (item == null)
-                                    getTextAddress(latitude, longitude);
+
+                                if (locationData != null) {
+                                    lat = locationData.latitude;
+                                    lng = locationData.longitude;
+                                    tv_location.setText(locationData.location);
+                                } else {
+                                    if (item == null) {
+                                        getTextAddress(latitude, longitude);
+                                    }
+                                }
 
 
                                 session.saveCurrentLocation(String.valueOf(latitude), String.valueOf(longitude));
@@ -940,6 +971,7 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
                 // The user canceled the operation.
             }
         }
+        KeyboardUtil.hideKeyboard(ly_change_location, mContext);
 
     }
 

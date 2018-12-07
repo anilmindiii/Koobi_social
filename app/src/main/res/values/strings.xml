@@ -328,6 +328,7 @@
     <string name="enter_your_username_or_emai">Enter your username or email and we\'ll \nSend you a link to get back into your \naccount</string>
     <string name="no_category">No category available</string>
     <string name="please_select_business_type">Please select business type</string>
+    <string name="pick_your_current_location">Pick Your Current Location</string>
 
 
 </resources>

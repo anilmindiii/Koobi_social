@@ -169,8 +169,8 @@ public class LoginActivity extends AppCompatActivity {
         ivInstragram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent  intent = new Intent(LoginActivity.this,InstaLoginActivity.class);
-                startActivity(intent);
+                /*Intent  intent = new Intent(LoginActivity.this,InstaLoginActivity.class);
+                startActivity(intent);*/
             }
         });
 

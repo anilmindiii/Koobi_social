@@ -100,6 +100,7 @@
             android:name=".activity.authentication.AddAddressActivity"
             android:label="@string/address_activity"
             android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.myprofile.activity.activity.UserProfileActivity"

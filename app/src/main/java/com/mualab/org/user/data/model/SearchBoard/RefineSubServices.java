@@ -9,4 +9,5 @@ import java.io.Serializable;
 public class RefineSubServices implements Serializable{
     public String id,title,image,serviceId;
     public boolean isSubItemChecked = false;
+    public boolean isSubItemCheckedFinal = false;
 }

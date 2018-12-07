@@ -4,9 +4,7 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.graphics.Bitmap;
 
 import android.location.Location;
@@ -20,14 +18,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -77,7 +72,6 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,6 +99,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected LocationRequest locationRequest;
     private String isFromFeedPost = "";
     Session session;
+    RefineSearchBoard locationData;
 
     public void setBgColor(int color) {
         if (rlHeader1 != null)
@@ -156,6 +151,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             item = (RefineSearchBoard) bundle.getSerializable("refineSearchBoard");
+            locationData = (RefineSearchBoard) bundle.getSerializable("locationData");
         }
 
         initView();
@@ -164,7 +160,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void run() {
                // if (!isFromFeedPost.equals("FeedPostActivity"))
-                    replaceFragment(SearchBoardFragment.newInstance(item), false);
+                    replaceFragment(SearchBoardFragment.newInstance(item,locationData), false);
             }
         });
 
@@ -436,7 +432,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 replaceFragment(FeedsFragment.newInstance(1), false);*/
                 break;
             case 123:
-                replaceFragment(SearchBoardFragment.newInstance(item), false);
+                replaceFragment(SearchBoardFragment.newInstance(item, locationData), false);
 
                 break;
 
@@ -509,7 +505,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     tvHeaderTitle.setVisibility(View.VISIBLE);
                     ibtnChat.setVisibility(View.GONE);
                     ivAppIcon.setVisibility(View.GONE);
-                    replaceFragment(SearchBoardFragment.newInstance(item), false);
+                    replaceFragment(SearchBoardFragment.newInstance(item, locationData), false);
                 }
                 break;
 
@@ -526,6 +522,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     ivAppIcon.setVisibility(View.VISIBLE);
                     ivHeaderBack.setVisibility(View.GONE);
                     session.saveFilter(null);
+                    locationData = null;
+                    item = null;
                     replaceFragment(NotificationFragment.newInstance("", ""), false);
 
                 }
@@ -542,6 +540,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     ibtnChat.setVisibility(View.VISIBLE);
                     ivAppIcon.setVisibility(View.GONE);
                     session.saveFilter(null);
+                    locationData = null;
+                    item = null;
                     replaceFragment(NotificationFragment.newInstance("", ""), false);
 
                 }
@@ -559,6 +559,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     ibtnChat.setVisibility(View.VISIBLE);
                     ivAppIcon.setVisibility(View.GONE);
                     session.saveFilter(null);
+                    locationData = null;
+                    item = null;
                     // replaceFragment(ExploreFragment.newInstance(), false);
                     replaceFragment(NotificationFragment.newInstance("", ""), false);
 
@@ -577,6 +579,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     ibtnChat.setVisibility(View.VISIBLE);
                     ivAppIcon.setVisibility(View.GONE);
                     session.saveFilter(null);
+                    locationData = null;
+                    item = null;
                     // replaceFragment(new NotificationFragment(), false);
 
                     replaceFragment(NotificationFragment.newInstance("", ""), false);

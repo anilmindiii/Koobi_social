@@ -56,7 +56,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="4dp"
                 android:visibility="visible"
-                android:background="@drawable/fill_star_icon"
+                android:background="@drawable/active_star_ico"
                 />
 
         </LinearLayout>

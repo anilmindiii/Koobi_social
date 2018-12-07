@@ -103,9 +103,8 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
     SimpleDateFormat simpleDateFormat;
     private Address address;
     private TextView txt_address;
-    private  int yearShow=1980,monthShow=0,dayShow=1;
+    private int yearShow = 1980, monthShow = 0, dayShow = 1;
     //private WebServiceAPI api;
-
 
 
     @Override
@@ -119,30 +118,37 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
         if (intent.getExtras() != null) {
             user = (User) intent.getSerializableExtra(Constant.USER);
 
-            if(!user.socialId.equals("") && user.socialId != null){
-                ed_firstName.setText(user.firstName);
-                ed_firstName.setSelection(user.firstName.length());
-                ed_lastName.setText(user.lastName);
-                Picasso.get().load(user.profileImage).placeholder(R.drawable.default_placeholder).into(profile_image);
-                Picasso.get()
-                        .load(user.profileImage)
-                        .into(new Target() {
-                            @Override
-                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                profileImageBitmap = bitmap;
-                            }
+            if (user != null) {
 
-                            @Override
-                            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                if (user.socialId != null) {
+                    if (!user.socialId.equals("")) {
+                        ed_firstName.setText(user.firstName);
+                        ed_firstName.setSelection(user.firstName.length());
+                        ed_lastName.setText(user.lastName);
+                        Picasso.get().load(user.profileImage).placeholder(R.drawable.default_placeholder).into(profile_image);
+                        Picasso.get()
+                                .load(user.profileImage)
+                                .into(new Target() {
+                                    @Override
+                                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                        profileImageBitmap = bitmap;
+                                    }
 
-                            }
+                                    @Override
+                                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
 
-                            @Override
-                            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                                    }
 
-                            }
-                        });
+                                    @Override
+                                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                                    }
+                                });
+                    }
+
+                }
             }
+
         }
         session = new Session(this);
         simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
@@ -218,7 +224,7 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
                 Intent intent = new Intent(Registration2Activity.this, AddAddressActivity.class);
                 if (address != null)
                     intent.putExtra("address", address);
-                intent.putExtra("activity","Registration");
+                intent.putExtra("activity", "Registration");
                 startActivityForResult(intent, 1001);
 
                 break;
@@ -263,7 +269,7 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
                 break;
 
             case R.id.tv_dob:
-                showDate(yearShow,monthShow,dayShow);
+                showDate(yearShow, monthShow, dayShow);
                 //datePicker();
                 //  setDateField();
 
@@ -293,9 +299,9 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
 
         if (isValidInput) {
 
-            String userName =  user.userName.toLowerCase();
+            String userName = user.userName.toLowerCase();
             final Map<String, String> params = new HashMap<>();
-            params.put("userName",userName);
+            params.put("userName", userName);
             new HttpTask(new HttpTask.Builder(this, "checkUser", new HttpResponceListner.Listener() {
                 @Override
                 public void onResponse(String response, String apiName) {
@@ -367,14 +373,13 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
         params.put("email", user.email);
         params.put("password", user.password);
 
-        if(user.contactNo != null && !user.contactNo.equals("")){
+        if (user.contactNo != null && !user.contactNo.equals("")) {
             params.put("countryCode", user.countryCode);
             params.put("contactNo", user.contactNo);
-        }else {
+        } else {
             params.put("countryCode", "");
             params.put("contactNo", "");
         }
-
 
 
         //  params.put("businessName", user.businessName);
@@ -393,10 +398,12 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
         params.put("deviceToken", deviceToken);
         params.put("appType", "social");
 
-        if(user.socialId != null && !user.socialId.equals("")){
-            params.put("socialId", user.socialId);
-            params.put("socialType", user.userType);
-        }else {
+        if (user.socialId != null) {
+            if (!user.socialId.equals("")) {
+                params.put("socialId", user.socialId);
+                params.put("socialType", user.userType);
+            }
+        } else {
             params.put("socialId", "");
             params.put("socialType", "");
         }
@@ -419,8 +426,8 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
                         session.createSession(user);
                         user.password = edConfirmPwd.getText().toString();
                         session.setPassword(user.password);
-                      user.id = userObj.getInt("_id");
-                       // checkUserRember(user);
+                        user.id = userObj.getInt("_id");
+                        // checkUserRember(user);
                         writeNewUser(user);
                     } else {
                         showToast(message);
@@ -445,9 +452,10 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
     }
 
     private void writeNewUser(User user) {
-        DatabaseReference mDatabase  = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         FirebaseUser firebaseUser = new FirebaseUser();
-        firebaseUser.firebaseToken = FirebaseInstanceId.getInstance().getToken();;
+        firebaseUser.firebaseToken = FirebaseInstanceId.getInstance().getToken();
+        ;
         firebaseUser.isOnline = 1;
         firebaseUser.lastActivity = ServerValue.TIMESTAMP;
         if (user.profileImage.isEmpty())
@@ -469,6 +477,7 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
     }
+
     // check permission or Get image from camera or gallery
     public void getPermissionAndPicImage() {
 
@@ -620,8 +629,6 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
     }
 
 
-
-
     private boolean validUserName(EditText editText) {
         String text = editText.getText().toString().trim();
         if (TextUtils.isEmpty(text)) {
@@ -712,18 +719,23 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
             progressView4.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
             progressView3.setBackgroundColor(ContextCompat.getColor(this, R.color.darkpink));
 
-        }if(!user.socialId.equals("") && user.socialId != null){
-            Intent intent = new Intent(Registration2Activity.this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-
-            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
-        else {
+        if (user.socialId != null) {
+            if (!user.socialId.equals("")) {
+                Intent intent = new Intent(Registration2Activity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            }else {
+                Intent intent = new Intent(Registration2Activity.this, RegistrationActivity.class);
+                startActivity(intent);
+                finish();
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            }
+        } else {
             Intent intent = new Intent(Registration2Activity.this, RegistrationActivity.class);
             startActivity(intent);
             finish();
-
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
     }
@@ -738,7 +750,7 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
 
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    void showDate(int year,int month,int day) {
+    void showDate(int year, int month, int day) {
         new SpinnerDatePickerDialogBuilder()
                 .context(Registration2Activity.this)
                 .callback(Registration2Activity.this)
@@ -750,32 +762,30 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
     }
 
     @Override
-    public void onDateSet(final com.mualab.org.user.customdobcalender.DatePicker view, int year, int monthOfYear, int dayOfMonth, int type,boolean isClicked) {
+    public void onDateSet(final com.mualab.org.user.customdobcalender.DatePicker view, int year, int monthOfYear, int dayOfMonth, int type, boolean isClicked) {
         Calendar calendar = new GregorianCalendar(year, monthOfYear, dayOfMonth);
 
         if (type == 0) {
-            if (!isClicked){
-                if (!tv_dob.getText().toString().equals("Date of Birth")){
-                    Calendar calendar_new=new GregorianCalendar(yearShow,monthShow,dayShow);
+            if (!isClicked) {
+                if (!tv_dob.getText().toString().equals("Date of Birth")) {
+                    Calendar calendar_new = new GregorianCalendar(yearShow, monthShow, dayShow);
                     tv_dob.setText(simpleDateFormat.format(calendar_new.getTime()));
-                }
-                else  tv_dob.setText(R.string.date_of_birth);
+                } else tv_dob.setText(R.string.date_of_birth);
 
-            }else {
-                Calendar calendar_new=new GregorianCalendar(yearShow,monthShow,dayShow);
+            } else {
+                Calendar calendar_new = new GregorianCalendar(yearShow, monthShow, dayShow);
                 tv_dob.setText(simpleDateFormat.format(calendar_new.getTime()));
             }
 
         } else {
             tv_dob.setText(simpleDateFormat.format(calendar.getTime()));
             user.dob = simpleDateFormat.format(calendar.getTime());
-            yearShow=year;
-            monthShow=monthOfYear;
-            dayShow=dayOfMonth;
+            yearShow = year;
+            monthShow = monthOfYear;
+            dayShow = dayOfMonth;
 
 
         }
-
 
 
     }
@@ -815,10 +825,6 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
         }
         return hasSoftwareKeys;
     }
-
-
-
-
 
 
 }
