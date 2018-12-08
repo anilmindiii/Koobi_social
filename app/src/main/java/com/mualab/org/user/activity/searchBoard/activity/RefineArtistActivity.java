@@ -386,9 +386,9 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
                     tv_refine_dnt.setText(date_time + " " + time);
 
                 }
-           if(location.equals("")){
-               tv_refine_loc.setVisibility(View.GONE);
-           }else  tv_refine_loc.setVisibility(View.VISIBLE);
+            if (location.equals("")) {
+                tv_refine_loc.setVisibility(View.GONE);
+            } else tv_refine_loc.setVisibility(View.VISIBLE);
 
             tv_refine_loc.setText(location);
 
@@ -494,7 +494,7 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
 
                         tv_refine_dnt.setVisibility(View.VISIBLE);
                         tv_refine_dnt.setText(selectDate);
-                        day =  day(Helper.formateDateFromstring("EEE MMM dd HH:mm:ss zzz yyyy", "EEE", date.toString()));
+                        day = day(Helper.formateDateFromstring("EEE MMM dd HH:mm:ss zzz yyyy", "EEE", date.toString()));
                     }
 
                     @Override
@@ -796,9 +796,9 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
                                         serviceName = serviceName.substring(0, serviceName.length() - 2);
                                     }
 
-                                    if(serviceName.equals("")){
+                                    if (serviceName.equals("")) {
                                         tv_business.setVisibility(View.GONE);
-                                    }else {
+                                    } else {
                                         tv_business.setVisibility(View.VISIBLE);
                                     }
                                     tv_business.setText(serviceName);
@@ -824,9 +824,9 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
                                         subserviceName = subserviceName.substring(0, subserviceName.length() - 2);
                                     }
 
-                                    if(subserviceName.equals("")){
+                                    if (subserviceName.equals("")) {
                                         tv_service_category.setVisibility(View.GONE);
-                                    }else tv_service_category.setVisibility(View.VISIBLE);
+                                    } else tv_service_category.setVisibility(View.VISIBLE);
                                     tv_service_category.setText(subserviceName);
 
                                 }
@@ -885,9 +885,9 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
 
                 }
 
-                if(place.getName().equals("")){
+                if (place.getName().equals("")) {
                     tv_refine_loc.setVisibility(View.GONE);
-                }else  tv_refine_loc.setVisibility(View.VISIBLE);
+                } else tv_refine_loc.setVisibility(View.VISIBLE);
 
                 tv_refine_loc.setText(place.getName());
                 location = "" + place.getName();
@@ -910,7 +910,7 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
 
         if (session.getSaveSearch() == null) {
             Intent intent = new Intent(RefineArtistActivity.this, MainActivity.class);
-            intent.putExtra("locationData",refineSearchBoard);
+            intent.putExtra("locationData", refineSearchBoard);
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             finish();
@@ -1014,9 +1014,9 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
                     serviceName = serviceName.substring(0, serviceName.length() - 2);
                 }
 
-                if(serviceName.equals("")){
+                if (serviceName.equals("")) {
                     tv_business.setVisibility(View.GONE);
-                }else {
+                } else {
                     tv_business.setVisibility(View.VISIBLE);
                 }
 
@@ -1065,7 +1065,7 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
         });
 
 
-        for (int i = 0; i < tempSubList.size(); i++){
+        for (int i = 0; i < tempSubList.size(); i++) {
             tempSubList.get(i).isSubItemChecked = false;
         }
 
@@ -1073,12 +1073,11 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
             for (int j = 0; j < tempSubList.size(); j++) {
                 if (finalSubList.get(i).id.equals(tempSubList.get(j).id)) {
 
-                    if(tempSubList.get(j).isSubItemCheckedFinal){
-                       tempSubList.get(j).isSubItemChecked = true;
-                   }else {
-                       tempSubList.get(j).isSubItemChecked = false;
-                   }
-
+                    if (tempSubList.get(j).isSubItemCheckedFinal) {
+                        tempSubList.get(j).isSubItemChecked = true;
+                    } else {
+                        tempSubList.get(j).isSubItemChecked = false;
+                    }
 
 
                 }
@@ -1133,9 +1132,9 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
                 if (subserviceName.endsWith(", ")) {
                     subserviceName = subserviceName.substring(0, subserviceName.length() - 2);
                 }
-                if(subserviceName.equals("")){
+                if (subserviceName.equals("")) {
                     tv_service_category.setVisibility(View.GONE);
-                }else tv_service_category.setVisibility(View.VISIBLE);
+                } else tv_service_category.setVisibility(View.VISIBLE);
                 tv_service_category.setText(subserviceName);
 
                 dialog.dismiss();

@@ -138,6 +138,7 @@
                     android:textColorHint="@color/gray"
                     android:singleLine="true"
                     android:maxLines="1"
+                    android:fontFamily="@font/nunito_regular"
                     android:maxLength="10"
                     android:background="@null"
                     android:textColor="@color/gray"

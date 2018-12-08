@@ -379,7 +379,7 @@ public class LoginActivity extends AppCompatActivity {
                                 final String firstname = object.getString("first_name");
                                 final String lastname = object.getString("last_name");
                                 final String fullname = firstname + " " + lastname;
-                                final String profileImage = "https://graph.facebook.com/" + sSocialId + "/picture?width=543&height=543";
+                                final String profileImage = "https://graph.facebook.com/" + sSocialId + "/picture?width=200&height=200";
                                 final String deviceToken = FirebaseInstanceId.getInstance().getToken();
 
                                 if(object.has("email")){

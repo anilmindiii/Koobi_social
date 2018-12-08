@@ -58,6 +58,7 @@ import com.mualab.org.user.Views.refreshviews.OnRefreshListener;
 import com.mualab.org.user.Views.refreshviews.RjRefreshLayout;
 import com.mualab.org.user.activity.authentication.LoginActivity;
 import com.mualab.org.user.activity.base.BaseFragment;
+import com.mualab.org.user.activity.main.MainActivity;
 import com.mualab.org.user.activity.searchBoard.activity.RefineArtistActivity;
 import com.mualab.org.user.activity.searchBoard.adapter.SearchBoardAdapter;
 import com.mualab.org.user.application.Mualab;
@@ -130,8 +131,9 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mContext = context;
         //if(context instanceof MainActivity)
-        //    ((MainActivity)context).setBgColor(R.color.screen_bg_color);
+            //((MainActivity)context).setBgColor(R.color.p);
     }
 
     @Override

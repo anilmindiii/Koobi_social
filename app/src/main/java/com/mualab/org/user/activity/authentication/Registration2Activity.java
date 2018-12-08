@@ -4,8 +4,10 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -33,6 +35,8 @@ import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
@@ -68,6 +72,10 @@ import com.squareup.picasso.Target;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -118,6 +126,12 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
         if (intent.getExtras() != null) {
             user = (User) intent.getSerializableExtra(Constant.USER);
 
+
+
+
+
+
+
             if (user != null) {
 
                 if (user.socialId != null) {
@@ -126,21 +140,14 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
                         ed_firstName.setSelection(user.firstName.length());
                         ed_lastName.setText(user.lastName);
                         Picasso.get().load(user.profileImage).placeholder(R.drawable.default_placeholder).into(profile_image);
-                        Picasso.get()
+                        Glide.with(this)
                                 .load(user.profileImage)
-                                .into(new Target() {
+                                .asBitmap()  // переводим его в нужный формат
+                                .fitCenter()
+                                .into(new SimpleTarget<Bitmap>(100,100) {
                                     @Override
-                                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                    public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
                                         profileImageBitmap = bitmap;
-                                    }
-
-                                    @Override
-                                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                                    }
-
-                                    @Override
-                                    public void onPrepareLoad(Drawable placeHolderDrawable) {
 
                                     }
                                 });
@@ -381,9 +388,9 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
             params.put("contactNo", "");
         }
 
-
+        String gender = user.gender.toLowerCase();
         //  params.put("businessName", user.businessName);
-        params.put("gender", user.gender);
+        params.put("gender", gender);
         params.put("dob", CalendarHelper.getStringYMDformatter(user.dob));
         params.put("address", address.stAddress1);
         params.put("city", address.city);
