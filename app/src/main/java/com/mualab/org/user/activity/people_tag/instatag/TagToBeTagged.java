@@ -15,6 +15,8 @@
  */
 
 package com.mualab.org.user.activity.people_tag.instatag;
+import com.mualab.org.user.activity.people_tag.models.TagDetail;
+
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -67,8 +69,7 @@ public class TagToBeTagged implements Serializable {
         this.tagId = tagId;
     }
 
-    public TagToBeTagged(String unique_tag_id, Double x_co_ord, Double y_co_ord,
-                         HashMap<String,TagDetail> tagDetails) {
+    public TagToBeTagged(String unique_tag_id, Double x_co_ord, Double y_co_ord, HashMap<String,TagDetail> tagDetails) {
         this.unique_tag_id = unique_tag_id;
         this.x_axis = x_co_ord;
         this.y_axis = y_co_ord;

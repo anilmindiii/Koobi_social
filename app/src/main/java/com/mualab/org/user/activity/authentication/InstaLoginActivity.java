@@ -172,7 +172,7 @@ public class InstaLoginActivity extends AppCompatActivity {
             try {
                 URL url = new URL(tokenURLFull);
                 HttpsURLConnection httpsURLConnection = (HttpsURLConnection) url.openConnection();
-                httpsURLConnection.setRequestMethod("POST");
+                httpsURLConnection.setRequestMethod("GET");
                 httpsURLConnection.setDoInput(true);
                 httpsURLConnection.setDoOutput(true);
                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(httpsURLConnection.getOutputStream());

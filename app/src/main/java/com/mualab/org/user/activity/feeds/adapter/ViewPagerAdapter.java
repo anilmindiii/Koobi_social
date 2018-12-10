@@ -128,8 +128,9 @@ public class ViewPagerAdapter extends PagerAdapter implements OnImageSwipeListen
         };
 
         postImages.setListener(new InstaTag.Listener() {
+
             @Override
-            public void onTagCliked(final TagDetail tagDetail) {
+            public void onTagCliked(final com.mualab.org.user.activity.people_tag.models.TagDetail tagDetail) {
                 if (isFromFeed){
                     if(tagDetail!=null){
                         if (tagDetail.userType!=null && !tagDetail.userType.equals("")){
@@ -156,7 +157,7 @@ public class ViewPagerAdapter extends PagerAdapter implements OnImageSwipeListen
             }
 
             @Override
-            public void onTagRemoved(TagDetail tagDetail) {
+            public void onTagRemoved(com.mualab.org.user.activity.people_tag.models.TagDetail tagDetail) {
                /* if (taggedImgMap.size()!=0){
                     // taggedImgMap.remove(position);
                     for(Map.Entry map  :  taggedImgMap.entrySet() ) {

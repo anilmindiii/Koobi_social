@@ -132,7 +132,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder.btnFollow.setVisibility(View.VISIBLE);
 
         if (!item.profileImage.equals("")){
-            Picasso.get().load(item.profileImage).placeholder(R.drawable.default_placeholder).
+            Picasso.with(context).load(item.profileImage).placeholder(R.drawable.default_placeholder).
                     fit().into(holder.ivProfile);
         }else {
             holder.ivProfile.setImageDrawable(context.getResources().getDrawable(R.drawable.default_placeholder));

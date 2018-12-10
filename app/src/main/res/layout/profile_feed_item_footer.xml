@@ -109,6 +109,7 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
         android:padding="4dp"
+        android:tint="@color/colorPrimary"
         android:src="@drawable/share_ico" />
 
 </RelativeLayout>

@@ -47,7 +47,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import com.mualab.org.user.activity.people_tag.models.TagDetail;
 import com.mualab.org.user.R;
 import com.mualab.org.user.activity.people_tag.listeners.RemoveDuplicateTagListener;
 
@@ -747,7 +747,7 @@ public class InstaTag extends RelativeLayout   {
                 HashMap<String, TagDetail> map = new HashMap();
                 map.put(txt, tagMap.get(txt));
 
-                tagsToBeTagged.add(new TagToBeTagged(txt, x, y,map ));
+                tagsToBeTagged.add(new TagToBeTagged(txt, x, y,map));
             }
         }
         return tagsToBeTagged;

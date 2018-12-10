@@ -38,6 +38,15 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.Camera" parent="AppTheme.FullScreen">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
+    </style>
+
     <style name="InOutAnimation">
         <item name="android:windowEnterAnimation">@anim/anim_out</item>
         <item name="android:windowExitAnimation">@anim/anim_in</item>

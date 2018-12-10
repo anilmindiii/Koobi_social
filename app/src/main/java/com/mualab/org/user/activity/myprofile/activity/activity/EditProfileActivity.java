@@ -162,7 +162,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         profile_image = findViewById(R.id.profile_image);
         radioGroup = findViewById(R.id.radioGroup);
         if (!user.profileImage.isEmpty()) {
-            Picasso.get().load(user.profileImage).placeholder(R.drawable.default_placeholder).
+            Picasso.with(this).load(user.profileImage).placeholder(R.drawable.default_placeholder).
                     fit().into(profile_image);
         }
         tvHeaderTitle.setText(R.string.edit);

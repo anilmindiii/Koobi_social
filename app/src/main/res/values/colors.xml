@@ -23,9 +23,50 @@
     <color name="gray3">#ececec</color>
     <item name="blue" type="color">#FF33B5E5</item>
 
+    <color name="light_blue">#ff0d8cd1</color>
+    <color name="yellow">#ffff00</color>
+    <color name="dark_yellow">#fdc301</color>
+    <color name="btn_active">#C65E97</color>
+    <color name="bg_chat">#ECECEC</color>
+    <color name="colorPrimaryTransprent1">#30860309</color>
+
+    <color name="btn_default_light_normal">#00000000</color>
+    <color name="btn_default_light_pressed">#40ffffff</color>
+    <color name="btn_send_normal">#02c754</color>
+    <color name="btn_send_pressed">#006633</color>
+    <color name="btn_default_shadow">#99000000</color>
+    <color name="btn_context_menu_normal">#ffffff</color>
+    <color name="btn_context_menu_pressed">#40000000</color>
+    <color name="btn_context_menu_text_red">#ffff0000</color>
+    <color name="text_like_counter">#2b5a83</color>
+    <color name="screen_bg_color">#f2f2f2</color>
+    <color name="bg_edit_color">#e5e5e5</color>
 
 
+    <color name="day_disabled_background_color">#F1F5F8</color>
+    <color name="day_disabled_text_color">#DEDEDE</color>
+    <color name="selected_day_background">#03A7E9</color>
+    <color name="current_day_of_month">#03A7E9</color>
+    <color name="dark_gray">#FF595959</color>
 
+    <color name="mcam_color_light">#FAFAFA</color>
+    <color name="mcam_color_dark">#424242</color>
+
+    <color name="ss_colorPrimary">#9E9E9E</color>
+    <color name="ss_colorPrimaryDark">#616161</color>
+    <color name="ss_colorAccent">#95ff00</color>
+
+    <color name="ss_progress_startColor">#fff83272</color>
+    <color name="ss_progress_endColor">#fff83272</color>
+    <color name="ss_progress_centerColor">#fff83272</color>
+
+    <color name="ss_secondaryProgress_startColor">#80f83272</color>
+    <color name="ss_secondaryProgress_endColor">#a0f83272</color>
+    <color name="ss_secondaryProgress_centerColor">#80f83272</color>
+
+    <color name="ss_background_startColor">#ff9d9e9d</color>
+    <color name="ss_background_endColor">#ff747674</color>
+    <color name="ss_background_centerColor">#ff5a5d5a</color>
 
 
 

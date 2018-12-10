@@ -125,21 +125,14 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
         Intent intent = getIntent();
         if (intent.getExtras() != null) {
             user = (User) intent.getSerializableExtra(Constant.USER);
-
-
-
-
-
-
-
             if (user != null) {
-
                 if (user.socialId != null) {
                     if (!user.socialId.equals("")) {
                         ed_firstName.setText(user.firstName);
                         ed_firstName.setSelection(user.firstName.length());
                         ed_lastName.setText(user.lastName);
-                        Picasso.get().load(user.profileImage).placeholder(R.drawable.default_placeholder).into(profile_image);
+                        ed_userName.setText(user.userName);
+                        Picasso.with(this).load(user.profileImage).placeholder(R.drawable.default_placeholder).into(profile_image);
                         Glide.with(this)
                                 .load(user.profileImage)
                                 .asBitmap()  // переводим его в нужный формат

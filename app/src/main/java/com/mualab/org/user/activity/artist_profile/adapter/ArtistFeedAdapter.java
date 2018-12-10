@@ -152,8 +152,8 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if(holder instanceof Holder){
             Holder h = (Holder) holder;
             if (!TextUtils.isEmpty(feeds.profileImage)) {
-                Picasso.get().load(feeds.profileImage).fit().into(h.ivProfile);
-            }else  Picasso.get().load(R.drawable.celbackgroung).into(h.ivProfile);
+                Picasso.with(mContext).load(feeds.profileImage).fit().into(h.ivProfile);
+            }else  Picasso.with(mContext).load(R.drawable.celbackgroung).into(h.ivProfile);
 
             h.tvUserName.setText(feeds.userName);
             h.tvPostTime.setText(feeds.crd);
@@ -250,11 +250,11 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 final FeedVideoHolder videoHolder = ((FeedVideoHolder) holder);
 
                 if(!TextUtils.isEmpty(feeds.videoThumbnail)){
-                    Picasso.get()
+                    Picasso.with(mContext)
                             .load(feeds.videoThumbnail)
                             .placeholder(R.drawable.gallery_placeholder)
                             .into(videoHolder.ivFeedCenter);
-                }else  Picasso.get()
+                }else  Picasso.with(mContext)
                         .load(R.drawable.gallery_placeholder)
                         .into(videoHolder.ivFeedCenter);
 

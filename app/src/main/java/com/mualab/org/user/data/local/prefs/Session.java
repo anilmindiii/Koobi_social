@@ -150,6 +150,7 @@ public class Session {
 
 
     public void logout() {
+
         editor.clear();
         editor.apply();
         try {

@@ -5,12 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.facebook.AccessToken;
@@ -29,6 +32,8 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.mualab.org.user.R;
+import com.mualab.org.user.activity.authentication.instagramLogin.ApplicationData;
+import com.mualab.org.user.activity.authentication.instagramLogin.InstagramApp;
 import com.mualab.org.user.activity.main.MainActivity;
 import com.mualab.org.user.application.Mualab;
 import com.mualab.org.user.chat.model.FirebaseUser;
@@ -59,6 +64,36 @@ public class LoginActivity extends AppCompatActivity {
     private long mLastClickTime = 0;
     private boolean isRemind = true;
     private CallbackManager callbackManager;
+    InstagramApp mApp;
+    private HashMap<String, String> userInfoHashmap = new HashMap<String, String>();
+
+    private Handler handler = new Handler(new Handler.Callback() {
+
+        @Override
+        public boolean handleMessage(Message msg) {
+            if (msg.what == InstagramApp.WHAT_FINALIZE) {
+                userInfoHashmap = mApp.getUserInfo();
+                String socialId = userInfoHashmap.get("id");
+                String full_name = userInfoHashmap.get("full_name");
+                String username = userInfoHashmap.get("username");
+                String profileImage = userInfoHashmap.get("profile_picture");
+
+               if(full_name.contains(" ")){
+                   String[] splited = full_name.split("\\s+");
+                   String firstname = splited[0];
+                   String lastname = splited[1];
+                   checkSocialUser(socialId,"insta","",firstname,lastname,profileImage,username);
+               }else {
+                   checkSocialUser(socialId,"insta","",full_name,"",profileImage,username);
+               }
+            } else if (msg.what == InstagramApp.WHAT_FINALIZE) {
+                Toast.makeText(LoginActivity.this, "Check your network.",
+                        Toast.LENGTH_SHORT).show();
+            }
+            return false;
+        }
+    });
+
 
     public static Intent newIntent(Context context) {
         return new Intent(context, LoginActivity.class);
@@ -108,6 +143,27 @@ public class LoginActivity extends AppCompatActivity {
 
         callbackManager = CallbackManager.Factory.create();
         facebookLogin();
+
+        mApp = new InstagramApp(this, ApplicationData.CLIENT_ID,
+                ApplicationData.CLIENT_SECRET, ApplicationData.CALLBACK_URL);
+
+        mApp.setListener(new InstagramApp.OAuthAuthenticationListener() {
+
+            @Override
+            public void onSuccess() {
+                // tvSummary.setText("Connected as " + mApp.getUserName());
+                //btnConnect.setText("Disconnect");
+                //llAfterLoginView.setVisibility(View.VISIBLE);
+                // userInfoHashmap = mApp.
+                mApp.fetchUserName(handler);
+            }
+
+            @Override
+            public void onFail(String error) {
+                Toast.makeText(LoginActivity.this, error, Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
     }
 
     @Override
@@ -169,8 +225,9 @@ public class LoginActivity extends AppCompatActivity {
         ivInstragram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent  intent = new Intent(LoginActivity.this,InstaLoginActivity.class);
-                startActivity(intent);*/
+                if (mApp.hasAccessToken()) {
+                    mApp.fetchUserName(handler);
+                }else mApp.authorize();
             }
         });
 
@@ -228,7 +285,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private void checkSocialUser(final String socialId, final String socialType, final String email, final String firstname, final String lastname, final String profileImage) {
+    private void checkSocialUser(final String socialId, final String socialType,
+                                 final String email, final String firstname,
+                                 final String lastname, final String profileImage, final String username) {
 
         if (!ConnectionDetector.isConnected()) {
             new NoConnectionDialog(LoginActivity.this, new NoConnectionDialog.Listner() {
@@ -236,7 +295,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onNetworkChange(Dialog dialog, boolean isConnected) {
                     if (isConnected) {
                         dialog.dismiss();
-                        checkSocialUser(socialId,socialType,email, firstname, lastname, profileImage);
+                        checkSocialUser(socialId,socialType,email, firstname, lastname, profileImage,username);
                     }
 
                 }
@@ -281,6 +340,7 @@ public class LoginActivity extends AppCompatActivity {
                         user.firstName = firstname;
                         user.lastName = lastname;
                         user.profileImage = profileImage;
+                        user.userName = username;
                         startActivityForResult(new Intent(LoginActivity.this, Registration2Activity.class)
                                 .putExtra(Constant.USER, user),2);
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -387,7 +447,7 @@ public class LoginActivity extends AppCompatActivity {
                                 }
 
 
-                                checkSocialUser(socialId,"facebook",email,firstname,lastname,profileImage);
+                                checkSocialUser(socialId,"facebook",email,firstname,lastname,profileImage,"");
 
 
                             } catch (JSONException e) {

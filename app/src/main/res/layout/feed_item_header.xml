@@ -13,26 +13,16 @@
         android:gravity="center_vertical"
         android:padding="5dp">
 
-        <RelativeLayout
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_user_image"
             android:layout_width="45dp"
-            android:id="@+id/rl_image"
-            android:background="@drawable/new_detail_chat_option_bg"
-
-            android:layout_height="45dp">
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/iv_user_image"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/user_ico"
-
-
-                android:background="@drawable/gradient_circle_img"
-                />
-
-        </RelativeLayout>
-
-
+            android:layout_height="45dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/default_placeholder"
+            android:background="@drawable/gradient_circle_img"
+            app:civ_border_width="1dp"
+            app:civ_border_color="@color/transparent"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,12 +31,8 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@+id/btnFollow"
-            android:layout_toRightOf="@+id/rl_image"
-            android:orientation="vertical"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="5dp"
-            android:layout_toEndOf="@+id/rl_image"
-            android:layout_toStartOf="@+id/btnFollow">
+            android:layout_toRightOf="@+id/iv_user_image"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_user_name"
@@ -64,6 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|left"
+                android:layout_marginTop="2dp"
                 android:text="indore city"
                 android:fontFamily="@font/nunito_regular"
                 android:ellipsize="end"
@@ -80,7 +67,6 @@
                 android:fontFamily="@font/nunito_regular"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:visibility="gone"
                 android:textColor="@color/text_color"
                 android:text="24/01/2018"
                 android:textSize="12sp" />

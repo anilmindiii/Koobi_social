@@ -55,7 +55,7 @@ import com.mualab.org.user.activity.feeds.adapter.ViewPagerAdapter;
 import com.mualab.org.user.activity.myprofile.activity.adapter.NavigationMenuAdapter;
 import com.mualab.org.user.activity.myprofile.activity.model.NavigationItem;
 import com.mualab.org.user.activity.people_tag.instatag.InstaTag;
-import com.mualab.org.user.activity.people_tag.instatag.TagDetail;
+import com.mualab.org.user.activity.people_tag.models.TagDetail;
 import com.mualab.org.user.activity.people_tag.instatag.TagToBeTagged;
 import com.mualab.org.user.application.Mualab;
 import com.mualab.org.user.data.feeds.Feeds;
@@ -195,7 +195,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         User user = Mualab.getInstance().getSessionManager().getUser();
 
         if (!user.profileImage.isEmpty()) {
-            Picasso.get().load(user.profileImage).placeholder(R.drawable.default_placeholder).
+            Picasso.with(this).load(user.profileImage).placeholder(R.drawable.default_placeholder).
                     fit().into(user_image);
         }
 
@@ -407,7 +407,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             rating.setRating(ratingCount);
 
             if (!profileData.profileImage.isEmpty()){
-                Picasso.get().load(profileData.profileImage).
+                Picasso.with(this).load(profileData.profileImage).
                         placeholder(R.drawable.default_placeholder).fit().into(iv_Profile);
             }
         }
@@ -771,11 +771,11 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             }
         });
 
-        Picasso.get().load(feeds.feed.get(index)).priority(Picasso.Priority.HIGH).noPlaceholder().into(postImage);
+        Picasso.with(this).load(feeds.feed.get(index)).priority(Picasso.Priority.HIGH).noPlaceholder().into(postImage);
 
         if(TextUtils.isEmpty(feeds.profileImage))
-            Picasso.get().load(R.drawable.default_placeholder).noPlaceholder().into(profileImage);
-        else Picasso.get().load(feeds.profileImage).noPlaceholder().into(profileImage);
+            Picasso.with(this).load(R.drawable.default_placeholder).noPlaceholder().into(profileImage);
+        else Picasso.with(this).load(feeds.profileImage).noPlaceholder().into(profileImage);
 
         builder = new Dialog(UserProfileActivity.this);
         builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1117,8 +1117,8 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         dialog.setContentView(dialogView);
         final InstaTag postImage = dialogView.findViewById(R.id.post_image);
         ImageView btnBack = dialogView.findViewById(R.id.btnBack);
-        TextView tvCertiTitle = dialogView.findViewById(R.id.tvCertiTitle);
-        tvCertiTitle.setText("Images");
+        TextView tvHeaderTitle = dialogView.findViewById(R.id.tvHeaderTitle);
+        tvHeaderTitle.setText("Images");
 
         postImage.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         postImage.setRootWidth(postImage.getMeasuredWidth());

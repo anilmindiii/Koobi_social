@@ -57,9 +57,9 @@ public class LikeListAdapter extends RecyclerView.Adapter<LikeListAdapter.ViewHo
 
         holder.progressBar.setVisibility(View.GONE);
         if(TextUtils.isEmpty(feedLike.profileImage)){
-            Picasso.get().load(R.drawable.default_placeholder).fit().into(holder.iv_profileImage);
+            Picasso.with(mContext).load(R.drawable.default_placeholder).fit().into(holder.iv_profileImage);
         }else {
-            Picasso.get().load(feedLike.profileImage).fit()
+            Picasso.with(mContext).load(feedLike.profileImage).fit()
                     .placeholder(R.drawable.default_placeholder)
                     .error(R.drawable.default_placeholder)
                     .into(holder.iv_profileImage);

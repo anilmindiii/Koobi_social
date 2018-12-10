@@ -49,6 +49,7 @@ import com.google.gson.Gson;
 import com.mualab.org.user.R;
 import com.mualab.org.user.activity.artist_profile.model.UserProfileData;
 import com.mualab.org.user.activity.base.BaseActivity;
+import com.mualab.org.user.activity.feeds.fragment.FeedsFragment;
 import com.mualab.org.user.activity.myprofile.activity.activity.UserProfileActivity;
 import com.mualab.org.user.activity.notification.fragment.NotificationFragment;
 import com.mualab.org.user.activity.searchBoard.fragment.SearchBoardFragment;
@@ -115,7 +116,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         setContentView(R.layout.activity_main);
         session = Mualab.getInstance().getSessionManager();
         user = session.getUser();
-        profileData=new UserProfileData();
+        profileData = new UserProfileData();
 
         if (user != null) {
             Mualab.currentUser = Mualab.getInstance().getSessionManager().getUser();
@@ -159,8 +160,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-               // if (!isFromFeedPost.equals("FeedPostActivity"))
-                    replaceFragment(SearchBoardFragment.newInstance(item,locationData), false);
+                // if (!isFromFeedPost.equals("FeedPostActivity"))
+                replaceFragment(SearchBoardFragment.newInstance(item, locationData), false);
             }
         });
 
@@ -376,7 +377,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         User user = Mualab.getInstance().getSessionManager().getUser();
 
         if (!user.profileImage.isEmpty()) {
-            Picasso.get().load(user.profileImage).placeholder(R.drawable.celbackgroung).
+            Picasso.with(this).load(user.profileImage).placeholder(R.drawable.celbackgroung).
                     fit().into(ivHeaderUser);
         }
 
@@ -490,7 +491,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 User user = Mualab.getInstance().getSessionManager().getUser();
                 Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
                 intent.putExtra("userId", String.valueOf(user.id));
-                startActivityForResult(intent,2000);
+                startActivityForResult(intent, 2000);
 
                 break;
 
@@ -516,7 +517,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     tvHeaderTitle.setText(getString(R.string.app_name));
                     ibtnFeed.setImageResource(R.drawable.active_feeds_ico);
                     ivHeaderUser.setVisibility(View.VISIBLE);
-                    //  replaceFragment(FeedsFragment.newInstance(1), false);
+
                     ibtnChat.setVisibility(View.VISIBLE);
                     tvHeaderTitle.setVisibility(View.GONE);
                     ivAppIcon.setVisibility(View.VISIBLE);
@@ -524,7 +525,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     session.saveFilter(null);
                     locationData = null;
                     item = null;
-                    replaceFragment(NotificationFragment.newInstance("", ""), false);
+                    replaceFragment(FeedsFragment.newInstance(1), false);
+                    //replaceFragment(NotificationFragment.newInstance("", ""), false);
 
                 }
                 break;
@@ -668,7 +670,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-
     private void addMyStory(Bitmap bitmap) {
 
         if (ConnectionDetector.isConnected()) {
@@ -723,7 +724,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                       // getDeviceLocation();
+                        // getDeviceLocation();
 
                         updateLocation();
                     }
@@ -735,20 +736,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         apiForGetArtist(0, false);*/
 
 
-
                 }
             }
 
         }
     }
 
-    private void apiForGetProfile(){
+    private void apiForGetProfile() {
 
         if (!ConnectionDetector.isConnected()) {
             new NoConnectionDialog(MainActivity.this, new NoConnectionDialog.Listner() {
                 @Override
                 public void onNetworkChange(Dialog dialog, boolean isConnected) {
-                    if(isConnected){
+                    if (isConnected) {
                         dialog.dismiss();
                         apiForGetProfile();
                     }
@@ -757,7 +757,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
 
         Map<String, String> params = new HashMap<>();
-        params.put("userId",String.valueOf(user.id));
+        params.put("userId", String.valueOf(user.id));
         params.put("viewBy", "");
         params.put("loginUserId", String.valueOf(user.id));
 
@@ -777,14 +777,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         Gson gson = new Gson();
 
                         profileData = gson.fromJson(String.valueOf(object), UserProfileData.class);
-                        Picasso.get().load(profileData.profileImage).placeholder(R.drawable.default_placeholder).
+                        Picasso.with(MainActivity.this).load(profileData.profileImage).placeholder(R.drawable.default_placeholder).
                                 fit().into(ivHeaderUser);
 
                         //   profileData = gson.fromJson(response, UserProfileData.class);
 
                         // updateViewType(profileData,R.id.ly_videos);
 
-                    }else {
+                    } else {
                         MyToast.getInstance(MainActivity.this).showDasuAlert(message);
                     }
 
@@ -797,20 +797,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             @Override
             public void ErrorListener(VolleyError error) {
-                try{
+                try {
 
                     Helper helper = new Helper();
-                    if (helper.error_Messages(error).contains("Session")){
+                    if (helper.error_Messages(error).contains("Session")) {
                         Mualab.getInstance().getSessionManager().logout();
                         FirebaseInstanceId.getInstance().deleteInstanceId();
                         //      MyToast.getInstance(BookingActivity.this).showSmallCustomToast(helper.error_Messages(error));
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
 
-            }})
+            }
+        })
                 .setAuthToken(user.authToken)
                 .setProgress(false)
                 .setBody(params, HttpTask.ContentType.APPLICATION_JSON));
@@ -925,14 +926,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     protected void setLatLng(@NonNull Location location) {
         Mualab.currentLocation.lat = location.getLatitude();
-        Mualab.currentLocation.lng= location.getLongitude();
+        Mualab.currentLocation.lng = location.getLongitude();
 
 
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.container);
 
-        if (currentFragment !=null && currentFragment instanceof SearchBoardFragment){
+        if (currentFragment != null && currentFragment instanceof SearchBoardFragment) {
             SearchBoardFragment boardFragment = (SearchBoardFragment) currentFragment;
-            boardFragment.hitApi(0,String.valueOf(location.getLatitude()),String.valueOf(location.getLongitude()));
+            boardFragment.hitApi(0, String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
         }
         /*if (address.isEmpty()) {
             address = getAddressFromLatLng(Agrinvest.LATITUDE, Agrinvest.LONGITUDE);
@@ -974,9 +975,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
         }
     };
-
-
-
 
 
 }

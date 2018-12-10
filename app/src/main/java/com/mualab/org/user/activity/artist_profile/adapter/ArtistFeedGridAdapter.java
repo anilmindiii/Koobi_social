@@ -61,7 +61,7 @@ public class ArtistFeedGridAdapter extends RecyclerView.Adapter<ArtistFeedGridAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
       Feeds feeds=feedItems.get(position);
-        Picasso.get().load(feeds.viewPagerlastPos);
+        Picasso.with(mContext).load(feeds.viewPagerlastPos);
     }
 
     @Override

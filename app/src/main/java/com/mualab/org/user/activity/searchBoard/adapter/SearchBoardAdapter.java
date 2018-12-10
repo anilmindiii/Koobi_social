@@ -104,7 +104,7 @@ public class SearchBoardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         /*    Picasso.with(context).load(item.profileImage).placeholder(R.drawable.user_ico).
                     fit().into(holder.ivProfile);*/
 
-        Picasso.get().load(item.profileImage).placeholder(R.drawable.default_placeholder).fit().into(holder.ivProfile);
+        Picasso.with(context).load(item.profileImage).placeholder(R.drawable.default_placeholder).fit().into(holder.ivProfile);
         }else {
             holder.ivProfile.setImageDrawable(context.getResources().getDrawable(R.drawable.default_placeholder));
         }

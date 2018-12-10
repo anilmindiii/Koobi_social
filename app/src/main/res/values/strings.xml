@@ -31,6 +31,44 @@
     <string name="error_session_expired_msg">Your session is expired please login again</string>
 
 
+    <!-- Material Camera Stuff -->
+    <string name="mcam_defaultDuration">00:00</string>
+    <string name="mcam_permissions_needed">Permissions Needed</string>
+    <string name="mcam_video_perm_warning">Permission to access your microphone and camera is needed, the camera will now close.</string>
+    <string name="mcam_retry">RETRY</string>
+    <string name="mcam_use_video">USE VIDEO</string>
+    <string name="mcam_use_stillshot">USE STILLSHOT</string>
+    <string name="mcam_portrait">Portrait</string>
+    <string name="mcam_portrait_warning">It\'s recommended that you record in landscape. Record in portrait?</string>
+    <string name="mcam_yes">Yes</string>
+    <string name="mcam_error">Error</string>
+    <string name="mcam_video_capture_unsupported">Your device does not support video capture.</string>
+    <string name="mcam_no_audio_access">You haven\'t given access to your microphone; no audio will be recorded.</string>
+    <string name="mcam_file_size_limit_reached">You\'ve reached the maximum file size!</string>
+    <string name="mcam_image_preview_error_title">Image preview error</string>
+    <string name="mcam_image_preview_error_message">Could not decode bitmap</string>
+    <string name="there_are_no_available_slots_please_select_another_day">There are no available slots. Please select another day.</string>
+    <string name="write_a_comment_here">Write a comment here…</string>
+    <string name="unfollow_user">Unfollow <b>@%s?</b></string>
+    <string name="no_comment_yet">No Comment yet</string>
+    <string name="no_like_yet">No like yet</string>
+    <string name="no_res_found">No data found</string>
+    <string name="no_data_found">No results found</string>
+
+    <string name="read_more">show more</string>
+    <string name="read_less">show less</string>
+    <string name="tag_services">Tag Services</string>
+    <string name="tag_people">Tag People</string>
+    <string name="instagram">Instagram</string>
+    <string name="facebook">Facebook</string>
+    <string name="write_a_caption">Write a caption…</string>
+    <string name="new_post">New Post</string>
+    <string name="unfollow">Unfollow</string>
+    <string name="explore">Explore</string>
+    <string name="add_more_story">Add More Story</string>
+    <string name="write_a_message">Write a message....</string>
+
+
     <!--Validation text-->
     <string name="error_required_field">Please enter required field</string>
     <string name="error_email_or_username_required">Please enter email or username</string>
@@ -219,6 +257,36 @@
     <string name="btn_book">Book</string>
 
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_distance">Distance</string>
+    <string name="text_ascending">Ascending</string>
+    <string name="text_descending">Descending</string>
+    <string name="text_live">Live</string>
+    <string name="title_location_permission">Need Location Permission</string>
+    <string name="text_ok">Ok</string>
+    <string name="text_location_permission">This application needs location permission.Allow location permission.</string>
+    <string name="text_comments">Comments</string>
+    <string name="gps_network_not_enabled">Gps network not enabled</string>
+    <string name="open_location_settings">Open setting and switch on the location</string>
+    <string name="alert_something_wenjt_wrong">Something went wrong!</string>
+    <string name="text_no_data_found">No user found</string>
+    <string name="text_opening_time">&#160;&#160;Opening Time</string>
+    <string name="text_working_hours">Working hours</string>
+    <string name="text_posts">Posts</string>
+    <string name="text_reviews">Reviews</string>
+    <string name="text_select_staff">Select Staff</string>
+    <string name="text_remove">Remove</string>
+    <string name="text_edit">Edit</string>
+    <string name="text_select_time">Select Time</string>
+    <string name="text_booking_info">Booking Info :</string>
+    <string name="text_confirm_booking">Confirm Booking</string>
+    <string name="text_continue_booking">Continue</string>
+    <string name="text_add_more_services">Add More</string>
+    <string name="text_today">Today</string>
+    <string name="text_re_book">Re-book</string>
+
+
     <string name="btn_book_now">Book Now</string>
     <string name="text_out_call">Out Call</string>
     <string name="text_out_call_services">Out Call Services</string>
@@ -229,6 +297,7 @@
     <string name="text_date_n_time">Date and Time</string>
     <string name="titel_refine">Filter</string>
     <string name="business_type">Business Type</string>
+    <string name="text_something_in_your_mind">Something in your mind</string>
     <string name="text_price">Price</string>
     <string name="_0">0</string>
     <string name="_995">£995</string>
@@ -247,6 +316,10 @@
     <string name="no_data_available">No data available!</string>
     <string name="text_follow">Follow</string>
     <string name="text_cancel">Cancel</string>
+
+    <!-- Easy Video Player Stuff -->
+    <string name="evp_submit">SUBMIT</string>
+    <string name="evp_retry">RETRY</string>
 
     <!--Profile-->
     <string name="text_certificate">Certificate</string>
@@ -329,6 +402,8 @@
     <string name="no_category">No category available</string>
     <string name="please_select_business_type">Please select business type</string>
     <string name="pick_your_current_location">Pick Your Current Location</string>
+    <string name="rec">REC</string>
+    <string name="cancel_label">Cancel</string>
 
 
 </resources>

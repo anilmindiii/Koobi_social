@@ -151,7 +151,30 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.authentication.InstaLoginActivity"></activity>
+        <activity android:name=".activity.authentication.InstaLoginActivity"/>
+
+        <activity
+            android:name=".activity.camera.CameraActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Camera" />
+
+        <activity
+            android:name=".activity.gellery.GalleryActivity"
+            android:theme="@style/StatusBarBlack" />
+
+        <activity android:name=".activity.gellery.CustomCameraActivity" />
+
+        <activity
+            android:name=".activity.feeds.activity.FeedPostActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
+
+        <activity
+            android:name=".activity.feeds.activity.CommentsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+
+
     </application>
 
 </manifest>

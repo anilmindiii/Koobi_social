@@ -16,16 +16,16 @@
 
         <ImageView
             android:id="@+id/btnBack"
-            android:layout_width="wrap_content"
+            android:layout_width="45dp"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:src="@drawable/white_back_ico"
-            android:layout_marginLeft="5dp"
+            android:padding="7dp"
             />
 
         <TextView
-            android:id="@+id/tvCertiTitle"
+            android:id="@+id/tvHeaderTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/text_certificate"
@@ -33,7 +33,7 @@
             android:textColor="@color/white"
             android:layout_gravity="center"
             android:textSize="18sp"
-            android:fontFamily="@font/nunito_semibold"
+            android:fontFamily="@font/nunito_bold"
             />
 
     </RelativeLayout>
