@@ -48,7 +48,7 @@
     <string name="mcam_image_preview_error_title">Image preview error</string>
     <string name="mcam_image_preview_error_message">Could not decode bitmap</string>
     <string name="there_are_no_available_slots_please_select_another_day">There are no available slots. Please select another day.</string>
-    <string name="write_a_comment_here">Write a comment here…</string>
+    <string name="write_a_comment_here">Write your comment</string>
     <string name="unfollow_user">Unfollow <b>@%s?</b></string>
     <string name="no_comment_yet">No Comment yet</string>
     <string name="no_like_yet">No like yet</string>
@@ -381,7 +381,7 @@
     <string name="discount_code">Discount Code</string>
     <string name="title_booking">My Bookings</string>
     <string name="following">Following</string>
-    <string name="comments">Comment</string>
+    <string name="comments">Comments</string>
     <string name="likes">Likes</string>
     <string name="business_invitation">Business Invitation</string>
     <string name="my_foldera">My Folders</string>
@@ -404,6 +404,7 @@
     <string name="pick_your_current_location">Pick Your Current Location</string>
     <string name="rec">REC</string>
     <string name="cancel_label">Cancel</string>
+    <string name="search_people">Search People...</string>
 
 
 </resources>

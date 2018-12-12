@@ -261,6 +261,10 @@ public class HttpTask {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
+                if(Mualab.currentUser!= null){
+                    authToken = Mualab.currentUser.authToken;
+                }
+
                 if (header == null) header = new HashMap<>();
                 if (authToken != null) {
                     header.put("authToken", authToken);
@@ -313,6 +317,10 @@ public class HttpTask {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
+                if(Mualab.currentUser!= null){
+                    authToken = Mualab.currentUser.authToken;
+                }
+
                 if (header == null) header = new HashMap<>();
                 if (authToken != null) {
                     header.put("authToken", authToken);
@@ -377,6 +385,10 @@ public class HttpTask {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
+                if(Mualab.currentUser!= null){
+                    authToken = Mualab.currentUser.authToken;
+                }
+
                 if (header == null) header = new HashMap<>();
                 if (authToken != null) {
                     header.put("authToken", authToken);
@@ -414,7 +426,7 @@ public class HttpTask {
             if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
                 // HTTP Status Code: 401 Unauthorized
                 MyToast.getInstance(context).showDasuAlert("Session Expired", "please login again.");
-               // Mualab.getInstance().getSessionManager().logout();
+                Mualab.getInstance().getSessionManager().logout();
 
             } else if (error.networkResponse != null && error.networkResponse.statusCode == 301) {
                 MyToast.getInstance(context).showDasuAlert("Inactive User", "Your account has been inactivated by admin, please contact to activate");

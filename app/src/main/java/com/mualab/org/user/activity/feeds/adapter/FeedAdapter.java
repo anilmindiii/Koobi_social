@@ -270,8 +270,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void setupTextFeedClickableViews(final FeedTextHolder holder) {
-        holder.tv_text.setHashtagColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
-        holder.tv_text.setMentionColor(ContextCompat.getColor(mContext, R.color.colorAccent));
+        holder.tv_text.setHashtagColor(ContextCompat.getColor(mContext, R.color.text_color));
+        holder.tv_text.setMentionColor(ContextCompat.getColor(mContext, R.color.text_color));
         holder.tv_text.setOnHyperlinkClickListener(new Function2<SocialView, CharSequence, Unit>() {
             @Override
             public Unit invoke(SocialView socialView, CharSequence charSequence) {
@@ -613,7 +613,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             public void ErrorListener(VolleyError error) {
 
             }
-        }).setParam(map)).execute("like"+feed._id);
+        }).setAuthToken(Mualab.currentUser.authToken).setParam(map)).execute("like"+feed._id);
 
     }
 

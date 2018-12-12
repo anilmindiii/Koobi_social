@@ -24,6 +24,7 @@
         android:src="@drawable/right_icon"
         android:layout_gravity="right|bottom"
         android:layout_margin="10dp"
+        android:tint="@color/colorPrimary"
         android:visibility="gone"/>
 
 

@@ -476,7 +476,7 @@ public class FeedSingleActivity extends AppCompatActivity implements View.OnClic
             public void ErrorListener(VolleyError error) {
 
             }
-        }).setParam(map)).execute("like" + feed._id);
+        }).setAuthToken(Mualab.currentUser.authToken).setParam(map)).execute("like" + feed._id);
     }
 
     @Override

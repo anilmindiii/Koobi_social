@@ -25,6 +25,7 @@
         android:ellipsize="end"
         android:fontFamily="@font/nunito_regular"
         android:padding="10dp"
+        android:textColorLink="@color/text_color"
         android:textColor="@color/text_color" />
 
     <include layout="@layout/feed_item_footer"

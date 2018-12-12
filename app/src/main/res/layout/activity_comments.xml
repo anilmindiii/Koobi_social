@@ -33,12 +33,12 @@
                android:id="@+id/iv_back_press"
                android:layout_width="48dp"
                android:layout_height="48dp"
-               android:padding="12dp"
+               android:padding="10dp"
                android:layout_alignParentLeft="true"
                android:layout_centerInParent="true"
                android:background="?attr/selectableItemBackgroundBorderless"
                android:src="@drawable/white_back_ico"
-               android:tint="@color/black" />
+               android:tint="@color/gray" />
 
            <TextView
                android:layout_width="wrap_content"
@@ -46,8 +46,16 @@
                style="@style/TextView.Bold"
                android:layout_centerInParent="true"
                android:layout_margin="5dp"
+               android:textColor="@color/black"
                android:text="@string/comments"
                android:textSize="18sp" />
+
+           <View
+               android:layout_width="match_parent"
+               android:layout_height="0.8dp"
+               android:layout_alignParentBottom="true"
+               android:background="@color/light_gray_shadow"/>
+
        </RelativeLayout>
 
    </RelativeLayout>
@@ -59,9 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@color/white"
+        android:background="@drawable/rounded_border_gray"
         android:orientation="horizontal">
 
         <View
@@ -69,42 +75,69 @@
             android:layout_height="0.5dp"
             android:background="@color/gray2" />
 
+
+
+        <TextView
+            android:layout_width="3dp"
+            android:layout_height="wrap_content"
+            android:background="@color/gray2"
+            android:minHeight="50dp"/>
+
+        <TextView
+            android:layout_width="3dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@color/gray2"
+            android:minHeight="50dp"/>
+
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
             android:minHeight="50dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:orientation="horizontal">
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/ivCamera"
                 android:layout_width="35dp"
                 android:layout_height="30dp"
-                android:layout_gravity="bottom"
+                android:layout_gravity="center_vertical"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/primary_bg_round"
+                android:tint="@color/colorPrimary"
                 android:src="@drawable/comment_camera"
                 android:visibility="visible" />
 
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:minHeight="35dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_gravity="center_vertical"
+                android:background="@drawable/rounded_border"
                 android:layout_weight="1">
 
                 <EditText
                     android:id="@+id/ed_comments"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:gravity="bottom"
+                    android:fontFamily="@font/nunito_regular"
                     android:inputType="textShortMessage|textMultiLine"
                     android:isScrollContainer="true"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textColor="@color/black"
                     android:textColorHint="@color/gray"
-                    android:maxLines="5"
+                    android:maxLines="3"
+                    android:layout_gravity="center"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:paddingRight="15dp"
                     android:background="@null"
                     android:hint="@string/write_a_comment_here"/>
 
@@ -121,22 +154,24 @@
                      android:hint="Write a comments here..."/>-->
             </FrameLayout>
 
-
-            <android.support.v7.widget.AppCompatButton
+            <TextView
                 android:id="@+id/btn_post_comments"
-                android:layout_width="70dp"
+                android:layout_width="wrap_content"
                 android:layout_height="25dp"
-                style="@style/My_Button.Invert"
-                android:layout_gravity="top"
+                android:layout_gravity="center_vertical"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="5dp"
                 android:textSize="14sp"
                 android:text="Post"
+                android:gravity="center"
+                android:textColor="@color/colorPrimary"
                 android:textAllCaps="false" />
 
         </LinearLayout>
+
+
 
     </RelativeLayout>
 
@@ -156,22 +191,19 @@
             <android.support.v7.widget.CardView
                 android:id="@+id/searchView"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="60dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginBottom="5dp"
-                app:contentPaddingLeft="5dp"
+                app:contentPaddingLeft="8dp"
                 app:contentPaddingRight="5dp"
+                app:cardCornerRadius="21dp"
+                android:elevation="1dp"
+                app:cardElevation="2dp"
                 app:cardUseCompatPadding="true"
                 app:cardBackgroundColor="@color/white">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:tint="@color/colorPrimary"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/places_ic_search"/>
 
                 <EditText
                     android:id="@+id/ed_search"
@@ -180,9 +212,9 @@
                     style="@style/My_Edittext"
                     android:textColor="@color/gray"
                     android:textColorHint="@color/gray"
-                    android:layout_marginStart="35dp"
+                    android:layout_marginStart="5dp"
                     android:background="@null"
-                    android:hint="@string/search"
+                    android:hint="@string/search_people"
                     android:inputType="textPersonName"
                     android:maxLines="1"
                     android:visibility="visible" />

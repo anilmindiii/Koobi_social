@@ -50,6 +50,7 @@ import com.mualab.org.user.R;
 import com.mualab.org.user.activity.artist_profile.model.UserProfileData;
 import com.mualab.org.user.activity.base.BaseActivity;
 import com.mualab.org.user.activity.feeds.fragment.FeedsFragment;
+import com.mualab.org.user.activity.gellery.GalleryActivity;
 import com.mualab.org.user.activity.myprofile.activity.activity.UserProfileActivity;
 import com.mualab.org.user.activity.notification.fragment.NotificationFragment;
 import com.mualab.org.user.activity.searchBoard.fragment.SearchBoardFragment;
@@ -118,6 +119,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         user = session.getUser();
         profileData = new UserProfileData();
 
+        if(getIntent().getStringExtra("FeedPostActivity") != null){
+            isFromFeedPost = getIntent().getStringExtra("FeedPostActivity");
+        }
+
         if (user != null) {
             Mualab.currentUser = Mualab.getInstance().getSessionManager().getUser();
             Mualab.feedBasicInfo.put("userId", "" + user.id);
@@ -160,8 +165,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                // if (!isFromFeedPost.equals("FeedPostActivity"))
-                replaceFragment(SearchBoardFragment.newInstance(item, locationData), false);
+                if (!isFromFeedPost.equals("FeedPostActivity")){
+                    replaceFragment(SearchBoardFragment.newInstance(item, locationData), false);
+                }else {
+                    ibtnFeed.callOnClick();
+                }
+
             }
         });
 
@@ -544,7 +553,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     session.saveFilter(null);
                     locationData = null;
                     item = null;
-                    replaceFragment(NotificationFragment.newInstance("", ""), false);
+
+                    Intent in = new Intent(MainActivity.this, GalleryActivity.class);
+                    startActivityForResult(in, 734);
+
 
                 }
 
@@ -952,6 +964,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (mFusedLocationClient == null)
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mFusedLocationClient.requestLocationUpdates(locationRequest, mLocationCallback, Looper.myLooper());
+
+        if (clickedId == 6) {
+            ibtnFeed.callOnClick();
+        }
     }
 
     @Override

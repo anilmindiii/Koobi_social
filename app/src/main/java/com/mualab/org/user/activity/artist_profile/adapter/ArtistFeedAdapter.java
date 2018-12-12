@@ -621,6 +621,7 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                     }
                 })
+                .setAuthToken(Mualab.currentUser.authToken)
                 .setParam(map)).execute("like"+feed._id);
 
     }

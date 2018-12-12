@@ -295,7 +295,7 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
             public void ErrorListener(VolleyError error) {
 
             }
-        })
+        }).setAuthToken(Mualab.currentUser.authToken)
                 .setParam(map)
                 .setProgress(false))
                 .execute("TAG_SEARCH");

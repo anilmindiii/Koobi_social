@@ -86,7 +86,8 @@ import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class Registration2Activity extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener, OnDateChangedListener {
+public class Registration2Activity extends AppCompatActivity implements View.OnClickListener,
+        DatePickerDialog.OnDateSetListener, OnDateChangedListener {
 
     public static String TAG = Registration2Activity.class.getName();
     private ViewSwitcher viewSwitcher;

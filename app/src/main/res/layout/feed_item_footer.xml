@@ -43,7 +43,7 @@
                 android:layout_marginLeft="4dp"
                 android:textColor="@color/text_color"
                 android:fontFamily="@font/nunito_regular"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -53,7 +53,7 @@
                 android:layout_marginLeft="4dp"
                 android:fontFamily="@font/nunito_regular"
                 android:textColor="@color/text_color"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -85,7 +85,7 @@
                 android:text="0"
                 android:textColor="@color/text_color"
                 android:fontFamily="@font/nunito_regular"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -94,7 +94,7 @@
                 android:layout_marginLeft="4dp"
                 android:fontFamily="@font/nunito_regular"
                 android:textColor="@color/text_color"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 

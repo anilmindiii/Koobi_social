@@ -5,9 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:id="@+id/container"
-
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
+
     <include
         android:id="@+id/header"
         layout="@layout/new_header_layout"

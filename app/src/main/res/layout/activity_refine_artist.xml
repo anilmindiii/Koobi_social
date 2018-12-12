@@ -140,6 +140,9 @@
                         android:layout_toRightOf="@+id/ivBusiness"
                         android:fontFamily="@font/nunito_regular"
                         android:textColor="@color/gray"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:ellipsize="end"
                         android:textColorHint="@color/text_color"
                         android:visibility="gone"/>
 
@@ -211,6 +214,9 @@
                         android:layout_marginLeft="35dp"
                         android:layout_marginStart="35dp"
                         android:layout_marginBottom="5dp"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:ellipsize="end"
                         android:fontFamily="@font/nunito_regular"
                         android:textColor="@color/gray"
                         android:visibility="gone"

@@ -172,8 +172,20 @@
         <activity
             android:name=".activity.feeds.activity.CommentsActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack"
             android:windowSoftInputMode="stateHidden" />
 
+        <activity
+            android:name=".activity.story.StoriesActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Camera" />
+
+        <activity android:name=".activity.feeds.activity.PreviewImageActivity" />
+
+        <activity
+            android:name=".activity.people_tag.activity.PeopleTagActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
 
     </application>
 

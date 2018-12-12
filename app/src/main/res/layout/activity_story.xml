@@ -121,7 +121,7 @@
             android:layout_weight="1" />
     </LinearLayout>
 
-    <views.statusstories.StoryStatusView
+    <com.mualab.org.user.Views.statusstories.StoryStatusView
         android:id="@+id/storiesStatus"
         android:layout_width="match_parent"
         android:layout_height="2dp"

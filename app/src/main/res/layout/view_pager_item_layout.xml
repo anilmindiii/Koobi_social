@@ -1,124 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white">
+    android:orientation="horizontal"
+    android:background="@color/white"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:weightSum="1.5">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="visible">
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="40dp"
+        android:layout_weight="2"
+        android:layout_gravity="center"
+        android:background="@drawable/rounded_border">
 
-        <LinearLayout
+        <EditText
+            android:id="@+id/ed_search"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            android:background="@null"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:hint="@string/text_something_in_your_mind"
+            android:textSize="@dimen/evp_text_size_medium"
+            android:textColor="@color/black"
+            android:fontFamily="@font/nunito_regular"/>
 
-            <com.github.siyamed.shapeimageview.RoundedImageView
-                android:id="@+id/iv_selectedImage"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:transitionName="profile"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop"
-                android:src="@drawable/gallery_placeholder"
-                app:siBorderColor="@color/colorPrimary"
-                app:siBorderWidth="1dp"
-                app:siRadius="3dp"
-                app:siSquare="true"
-                android:layout_marginLeft="7dp"
-                android:layout_marginTop="2dp"
-                android:visibility="gone"
-                tools:ignore="UnusedAttribute" />
-
-            <!--<de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/iv_selectedImage"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="2dp"
-                app:civ_border_width="1dp"
-                android:padding="1dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/defoult_user_img"
-                android:background="@drawable/gradient_circle_img"
-                android:visibility="gone"
-                />-->
-
-            <com.hendraanggrian.widget.SocialAutoCompleteTextView
-                android:id="@+id/edCaption"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|top"
-                android:background="@null"
-                android:gravity="top"
-                android:inputType="textMultiLine"
-                android:fontFamily="@font/nunito_regular"
-                android:hint="@string/text_something_in_your_mind"
-                android:padding="5dp"
-                android:maxLines="5"
-                android:lines="3"
-                android:textSize="14sp"
-                android:textColor="@color/text_color"
-                android:textColorHint="@color/text_color"
-                android:transitionName="text"
-                tools:ignore="UnusedAttribute"/>
-        </LinearLayout>
-
-
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/ly_main"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="bottom"
-            android:gravity="right">
+            android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/iv_get_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginRight="2dp"
-                android:src="@drawable/picture_ico"
-                android:tint="@color/colorPrimary" />
+        </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/iv_video_popup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="5dp"
-                android:src="@drawable/video_ico"
-                android:tint="@color/colorPrimary" />
+    </RelativeLayout>
 
-            <!-- <ImageView
-                 android:id="@+id/ivWeb"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:layout_gravity="center"
-                 android:layout_marginRight="4dp"
-                 android:src="@drawable/internet_ico"
-                 android:tint="@color/colorPrimary" />-->
+    <ImageView
+        android:id="@+id/gallay_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:layout_marginRight="5dp"
+        android:src="@drawable/picture_ico"
+        android:tint="@color/colorPrimary" />
 
-            <TextView
-                android:id="@+id/tv_post"
-                android:layout_width="80dp"
-                android:layout_height="25dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="@drawable/bg_selected"
-                android:gravity="center"
-                android:fontFamily="@font/nunito_regular"
-                android:text="@string/text_post"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

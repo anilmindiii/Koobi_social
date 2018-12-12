@@ -75,7 +75,7 @@ public class CommentsActivity extends AppCompatActivity {
     private TextView tv_no_comments;
     private EditText ed_comments, ed_search;
     private ProgressBar progress_bar;
-    private AppCompatButton btn_post_comments;
+    private TextView btn_post_comments;
     private RecyclerView recyclerView;
 
     private Feeds feed;
@@ -360,6 +360,7 @@ public class CommentsActivity extends AppCompatActivity {
 
             }
         }).setProgress(false)
+                .setAuthToken(Mualab.currentUser.authToken)
                 .setParam(map)).execute(TAG);
     }
 
@@ -475,6 +476,7 @@ public class CommentsActivity extends AppCompatActivity {
             }
         })
                 .setProgress(true)
+                .setAuthToken(Mualab.currentUser.authToken)
                 .setParam(map)).postImage("comment", bitmap);
     }
 

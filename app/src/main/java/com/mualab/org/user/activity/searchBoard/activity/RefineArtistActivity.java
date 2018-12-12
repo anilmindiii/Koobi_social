@@ -473,7 +473,9 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
                 Calendar c = new GregorianCalendar();
                 Date d1 = c.getTime();
                 dateTimeDialogFragment.setMinimumDateTime(d1);
-                dateTimeDialogFragment.setMaximumDateTime(new GregorianCalendar(2040, Calendar.DECEMBER, 31).getTime());
+                dateTimeDialogFragment.setMaximumDateTime(new GregorianCalendar(2040, 11, 31).getTime());
+
+
                 dateTimeDialogFragment.setDefaultDateTime(d1);
 
 // Define new day and month format

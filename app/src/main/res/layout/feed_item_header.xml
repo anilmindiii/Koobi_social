@@ -20,7 +20,7 @@
             android:layout_centerVertical="true"
             android:src="@drawable/default_placeholder"
             android:background="@drawable/gradient_circle_img"
-            app:civ_border_width="1dp"
+            app:civ_border_width="2dp"
             app:civ_border_color="@color/transparent"
             />
 
@@ -41,7 +41,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="Dharmraj Acharya"
-                android:fontFamily="@font/nunito_regular"
+                android:fontFamily="@font/nunito_bold"
                 android:textColor="@color/text_color"
                 android:textSize="14sp" />
 

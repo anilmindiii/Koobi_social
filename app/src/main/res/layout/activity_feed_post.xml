@@ -228,7 +228,7 @@
                         android:layout_width="45dp"
                         android:layout_height="45dp"
                         android:layout_gravity="center|right"
-                        android:src="@drawable/ic_switch_on" />
+                        android:src="@drawable/ic_switch_off" />
 
                 </LinearLayout>
 
@@ -270,25 +270,26 @@
                 </LinearLayout>
 
                 <RelativeLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_gravity="right"
                     android:padding="10dp"
                     android:id="@+id/tv_post"
-
+                    android:layout_marginTop="15dp"
                     android:layout_height="wrap_content"
                     tools:ignore="RtlHardcoded">
+
                     <Button
                         android:layout_width="80dp"
-
-                        android:background="@drawable/bg_selected"
-                        android:layout_marginTop="15dp"
+                        android:background="@drawable/rounded_primary_bg"
+                        android:layout_marginTop="20dp"
                         android:fontFamily="@font/nunito_regular"
                         android:text="@string/text_post"
                         android:textAllCaps="false"
                         android:id="@+id/btn_post"
+                        android:layout_centerInParent="true"
                         android:textColor="@color/white"
                         android:textSize="16sp"
-                        android:layout_height="25dp" />
+                        android:layout_height="30dp" />
 
 
                 </RelativeLayout>
