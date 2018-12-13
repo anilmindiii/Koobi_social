@@ -49,12 +49,15 @@ import com.google.gson.Gson;
 import com.mualab.org.user.R;
 import com.mualab.org.user.activity.artist_profile.model.UserProfileData;
 import com.mualab.org.user.activity.base.BaseActivity;
+import com.mualab.org.user.activity.feeds.activity.FeedSingleActivity;
 import com.mualab.org.user.activity.feeds.fragment.FeedsFragment;
 import com.mualab.org.user.activity.gellery.GalleryActivity;
 import com.mualab.org.user.activity.myprofile.activity.activity.UserProfileActivity;
 import com.mualab.org.user.activity.notification.fragment.NotificationFragment;
 import com.mualab.org.user.activity.searchBoard.fragment.SearchBoardFragment;
+import com.mualab.org.user.activity.story.StoriesActivity;
 import com.mualab.org.user.application.Mualab;
+import com.mualab.org.user.data.feeds.LiveUserInfo;
 import com.mualab.org.user.data.local.prefs.Session;
 import com.mualab.org.user.data.model.SearchBoard.RefineSearchBoard;
 import com.mualab.org.user.data.model.User;
@@ -74,6 +77,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,6 +106,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private String isFromFeedPost = "";
     Session session;
     RefineSearchBoard locationData;
+    private ArrayList<LiveUserInfo> liveUserList;
 
     public void setBgColor(int color) {
         if (rlHeader1 != null)
@@ -118,7 +123,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         session = Mualab.getInstance().getSessionManager();
         user = session.getUser();
         profileData = new UserProfileData();
-
+        liveUserList = new ArrayList<>();
         if(getIntent().getStringExtra("FeedPostActivity") != null){
             isFromFeedPost = getIntent().getStringExtra("FeedPostActivity");
         }
@@ -195,7 +200,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         /*Manage Notification*/
         Intent intent = getIntent();
-       /* if (intent != null) {
+        if (intent != null) {
             if (intent.getStringExtra("notifyId") != null ) {
                 String type = intent.getStringExtra("type");
                 String notifyId = intent.getStringExtra("notifyId");
@@ -258,7 +263,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                         break;
 
-                    case "12":
+                    /*case "12":
                         ibtnFeed.callOnClick();
                         replaceFragment(FeedsFragment.newInstance(1), false);
                         if (userType.equals("user")) {
@@ -337,17 +342,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                         startActivity(booking6);
                         break;
-
+*/
                 }
             }else if (intent.hasExtra("notifincationType")){
 
-                if (intent.getStringExtra("notifincationType").equals("15")){
+                /*if (intent.getStringExtra("notifincationType").equals("15")){
                     Intent chatIntent = new Intent(this, ChatActivity.class);
                     chatIntent.putExtra("opponentChatId",intent.getStringExtra("opponentChatId"));
                     chatIntent.putExtra("body",intent.getStringExtra("body"));
                     chatIntent.putExtra("userName",intent.getStringExtra("userName"));
                     startActivity(chatIntent);
-                }
+                }*/
             }
 
             if (intent.hasExtra("FeedPostActivity")) {
@@ -364,8 +369,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
 
         }else {
-            addFragment(SearchBoardFragment.newInstance(item), false);
-        }*/
+            addFragment(SearchBoardFragment.newInstance(item,locationData), false);
+        }
     }
 
     private void initView() {

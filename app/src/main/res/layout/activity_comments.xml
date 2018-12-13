@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:fitsSystemWindows="true"
     android:background="@color/white"
-    tools:context=".activity.feeds.activity.CommentsActivity">
+    tools:context=".activity.myprofile.activity.activity.EditProfileActivity">
 
    <RelativeLayout
        android:id="@+id/header"
@@ -166,6 +166,7 @@
                 android:textSize="14sp"
                 android:text="Post"
                 android:gravity="center"
+                android:fontFamily="@font/nunito_bold"
                 android:textColor="@color/colorPrimary"
                 android:textAllCaps="false" />
 
@@ -210,7 +211,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     style="@style/My_Edittext"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/text_color"
                     android:textColorHint="@color/gray"
                     android:layout_marginStart="5dp"
                     android:background="@null"

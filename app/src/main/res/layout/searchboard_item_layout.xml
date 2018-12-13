@@ -177,7 +177,7 @@
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/btnBook"
             android:orientation="horizontal"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="10dp"
 
             android:weightSum="1"
             android:layout_toStartOf="@+id/btnBook">

@@ -52,8 +52,8 @@
     <string name="unfollow_user">Unfollow <b>@%s?</b></string>
     <string name="no_comment_yet">No Comment yet</string>
     <string name="no_like_yet">No like yet</string>
-    <string name="no_res_found">No data found</string>
-    <string name="no_data_found">No results found</string>
+    <string name="no_res_found">No Results Found</string>
+    <string name="no_data_found">No Results Found</string>
 
     <string name="read_more">show more</string>
     <string name="read_less">show less</string>

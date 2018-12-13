@@ -101,9 +101,9 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
 
     private LinkedHashSet<String> tagList = new LinkedHashSet<>();
     private TextView tvLoaction;
-    private ImageView ivShareFbOn, ivShareTwitterOn, iv_postimage;
+    private ImageView ivShareFbOn, ivShareTwitterOn,ivShareInstaOn, iv_postimage;
 
-    private boolean isFbShared = true, isTwitteron = true;
+    private boolean isFbShared = true, isTwitteron = true,isInstaon= true;
     //private Double lat, lng;
     private TagAdapter tagAdapter;
     private UserSuggessionAdapter mentionAdapter;
@@ -183,6 +183,19 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
                 } else {
                     ivShareTwitterOn.setImageResource(R.drawable.ic_switch_on);
                     isTwitteron = true;
+                }
+            }
+        });
+
+        ivShareInstaOn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isInstaon) {
+                    ivShareInstaOn.setImageResource(R.drawable.ic_switch_off);
+                    isInstaon = false;
+                } else {
+                    ivShareInstaOn.setImageResource(R.drawable.ic_switch_on);
+                    isInstaon = true;
                 }
             }
         });
@@ -306,6 +319,7 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
         tvLoaction = findViewById(R.id.tv_loaction);
         ivShareFbOn = findViewById(R.id.iv_fb_on);
         ivShareTwitterOn = findViewById(R.id.iv_twitter_on);
+        ivShareInstaOn = findViewById(R.id.iv_insta_on);
         iv_postimage = findViewById(R.id.iv_selectedImage);
         if (thumbImage!=null)
             iv_postimage.setImageBitmap(thumbImage);
@@ -328,8 +342,8 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
         edCaption.setThreshold(1);
         edCaption.setHashtagEnabled(true);
         edCaption.setHyperlinkEnabled(true);
-        edCaption.setHashtagColor(ContextCompat.getColor(this, R.color.colorPrimary));
-        edCaption.setMentionColor(ContextCompat.getColor(this, R.color.colorAccent));
+        edCaption.setHashtagColor(ContextCompat.getColor(this, R.color.text_color));
+        edCaption.setMentionColor(ContextCompat.getColor(this, R.color.text_color));
 
         mentionAdapter = new UserSuggessionAdapter(this);
         mentionAdapter.clear();

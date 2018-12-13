@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Dharmraj Acharya"
+                android:text="Dharmraj Acharya "
                 android:fontFamily="@font/nunito_bold"
                 android:textColor="@color/text_color"
                 android:textSize="14sp" />

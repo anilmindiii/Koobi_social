@@ -159,7 +159,7 @@ public class CommentsActivity extends AppCompatActivity {
                 String commnets = ed_comments.getText().toString().trim();
                 if (!TextUtils.isEmpty(commnets)) {
                     btn_post_comments.setEnabled(false);
-                    KeyboardUtil.hideKeyboard(btn_post_comments, CommentsActivity.this);
+
                     apiForAddComments(commnets, null);
                     //apiPostTextComment(commnets, null);
                 } else {
@@ -329,9 +329,10 @@ public class CommentsActivity extends AppCompatActivity {
                             commentList.add(comment);
                         }
                         //recyclerView.smoothScrollToPosition(0);
+                        recyclerView.scrollToPosition(commentList.size()-1);
                         commentAdapter.notifyDataSetChanged();
                         //  recyclerView.scrollToPosition(0);
-                        recyclerView.scrollToPosition(commentList.size() - 1);
+                       // recyclerView.scrollToPosition(commentList.size() - 1);
                     } else {
 
                         if (commentList.size() == 0) {

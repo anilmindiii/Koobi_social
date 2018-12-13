@@ -31,8 +31,8 @@
             android:maxLines="1"
             android:singleLine="true"
             android:hint="@string/text_something_in_your_mind"
-            android:textSize="@dimen/evp_text_size_medium"
-            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textColor="@color/text_color"
             android:fontFamily="@font/nunito_regular"/>
 
         <RelativeLayout
@@ -49,7 +49,8 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_gravity="center"
-        android:layout_marginRight="5dp"
+        android:padding="2dp"
+        android:layout_marginRight="3dp"
         android:src="@drawable/picture_ico"
         android:tint="@color/colorPrimary" />
 

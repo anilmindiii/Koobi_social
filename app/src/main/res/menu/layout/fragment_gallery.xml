@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="@string/cancel_label"
-                android:textColor="@color/text_color"
+                android:textColor="@color/gray"
                 android:fontFamily="@font/roboto_bold"
                 android:textSize="16sp"
                 />
@@ -128,8 +128,7 @@
                         android:layout_height="35dp"
                         android:padding="4dp"
                         android:gravity="center"
-                        android:background="@drawable/selector_rounded_background"
-                        android:src="@android:drawable/ic_menu_crop" />
+                        android:src="@android:drawable/ic_menu_crop_1" />
 
                     <View
                         android:layout_width="0dp"

@@ -172,14 +172,10 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             if(feeds.userId==Mualab.currentUser.id){
                 h.btnFollow.setVisibility(View.GONE);
             }else {
-                h.btnFollow.setVisibility(View.VISIBLE);
+                h.btnFollow.setVisibility(View.GONE);
                 if (feeds.followingStatus == 1) {
-                    h.btnFollow.setBackgroundResource(R.drawable.btn_bg_blue_broder);
-                    h.btnFollow.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
                     h.btnFollow.setText(R.string.following);
                 } else {
-                    h.btnFollow.setBackgroundResource(R.drawable.button_effect_invert);
-                    h.btnFollow.setTextColor(ContextCompat.getColor(mContext, R.color.white));
                     h.btnFollow.setText(R.string.follow);
                 }
             }
@@ -367,8 +363,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void setupFeedVideoClickableViews(final FeedVideoHolder videoHolder) {
-        videoHolder.tv_text.setHashtagColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
-        videoHolder.tv_text.setMentionColor(ContextCompat.getColor(mContext, R.color.colorAccent));
+        videoHolder.tv_text.setHashtagColor(ContextCompat.getColor(mContext, R.color.text_color));
+        videoHolder.tv_text.setMentionColor(ContextCompat.getColor(mContext, R.color.text_color));
         videoHolder.tv_text.setOnHyperlinkClickListener(new Function2<SocialView, CharSequence, Unit>() {
             @Override
             public Unit invoke(SocialView socialView, CharSequence charSequence) {
@@ -467,8 +463,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void setupClickableViews(final CellFeedViewHolder cellFeedViewHolder) {
-        cellFeedViewHolder.tv_text.setHashtagColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
-        cellFeedViewHolder.tv_text.setMentionColor(ContextCompat.getColor(mContext, R.color.colorAccent));
+        cellFeedViewHolder.tv_text.setHashtagColor(ContextCompat.getColor(mContext, R.color.text_color));
+        cellFeedViewHolder.tv_text.setMentionColor(ContextCompat.getColor(mContext, R.color.text_color));
         cellFeedViewHolder.tv_text.setOnHyperlinkClickListener(new Function2<SocialView, CharSequence, Unit>() {
             @Override
             public Unit invoke(SocialView socialView, CharSequence charSequence) {
@@ -770,8 +766,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private void apiForFollowUnFollow(final Feeds feeds, final int position) {
         Map<String, String> map = new HashMap<>();
-        map.put("userId", ""+Mualab.currentUser.id);
-        map.put("followerId", ""+feeds.userId);
+        map.put("userId", ""+ Mualab.currentUser.id);
+        map.put("followerId", ""+ feeds.userId);
 
         new HttpTask(new HttpTask.Builder(mContext, "followFollowing", new HttpResponceListner.Listener() {
             @Override
