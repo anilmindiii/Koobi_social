@@ -442,6 +442,7 @@
                 android:layout_gravity="center"
                 android:text="@string/loading"
                 android:visibility="gone"
+                android:fontFamily="@font/nunito_regular"
                 android:textColor="@color/colorPrimary" />
 
         </LinearLayout>

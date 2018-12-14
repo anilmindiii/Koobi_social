@@ -27,6 +27,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.VideoView;
 import android.widget.ViewSwitcher;
@@ -77,7 +78,8 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
     private boolean isStartRecord;
     private Bitmap thumbImage;
     private Button btnTakePhoto;
-    private ImageButton btnCameraMode, btnFlashLight,switchCamera;
+    private ImageButton  btnFlashLight,gallery_icon;
+    private ImageView switchCamera,btnCameraMode;
     //private Chronometer mChronometer;
 
     private int currentState;
@@ -212,6 +214,7 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
         //rvFilters = findViewById(R.id.rvFilters);
         btnTakePhoto = findViewById(R.id.btnTakePhoto);
         btnCameraMode = findViewById(R.id.btnCameraMode);
+        gallery_icon = findViewById(R.id.gallery_icon);
         btnFlashLight = findViewById(R.id.btnFlashLight);
         switchCamera = findViewById(R.id.switchCamera);
         //ivBack = findViewById(R.id.ivBack);
@@ -228,6 +231,7 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
         findViewById(R.id.btnBack).setOnClickListener(this);
         findViewById(R.id.btnCameraMode).setOnClickListener(this);
         findViewById(R.id.add_to_story).setOnClickListener(this);
+        findViewById(R.id.gallery_icon).setOnClickListener(this);
         isCameraSession = true;
     }
 
@@ -379,6 +383,10 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
             case R.id.btnCameraMode:
                 changeCameraSessionMode();
                 break;
+
+            case R.id.gallery_icon:
+
+                break;
         }
     }
 
@@ -397,7 +405,7 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
             //btnTakePhoto.setOnTouchListener(onTouchListener);
         }else {
             isCameraSession = true;
-            btnCameraMode.setImageResource(R.drawable.ic_videocam_white);
+            btnCameraMode.setImageResource(R.drawable.video_player_ico);
             currentState = STATE_TAKE_PHOTO;
             btnTakePhoto.setText("");
             updateState(currentState);

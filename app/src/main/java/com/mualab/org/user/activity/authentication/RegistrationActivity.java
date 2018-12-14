@@ -565,6 +565,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                     jsonObject.put("phone", user.contactNo);
                     jsonObject.put("code", user.countryCode);
                     jsonObject.put("otp", apiOTP);
+                    MyToast.getInstance(RegistrationActivity.this).showDasuAlert("OTP : "+apiOTP);
                     SharedPreferanceUtils.setParam(RegistrationActivity.this, "OTP", jsonObject.toString());
                     final AppCompatButton btnResendOtp = findViewById(R.id.tv_resend_otp);
                     btnResendOtp.setEnabled(true);

@@ -43,11 +43,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.FullScreen"
         tools:ignore="GoogleAppIndexingWarning">
+
         <activity
             android:name=".activity.main.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/StatusBarBlack"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
+            <intent-filter>
+                <action android:name="ChatActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".activity.authentication.LoginActivity"
             android:screenOrientation="portrait" />
@@ -107,6 +115,9 @@
             </intent-filter>
         </service>
 
+        <activity
+            android:name=".activity.feeds.activity.FeedSingleActivity"
+            android:theme="@style/StatusBarBlack" />
 
         <activity
             android:name=".activity.authentication.ChooseCountryActivity"
@@ -140,6 +151,13 @@
             android:name=".activity.feeds.activity.LikeFeedActivity"
             android:screenOrientation="portrait"
             android:theme="@style/StatusBarBlack" />
+
+        <activity
+            android:name=".activity.feeds.activity.CommentsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack"
+            android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".activity.artist_profile.activity.FollowersActivity"
             android:theme="@style/StatusBarBlack" />
@@ -155,6 +173,7 @@
             android:label="@string/app_name"
             android:theme="@style/FullyTranslucent"
             tools:replace="android:theme"/>
+
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
@@ -185,11 +204,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/StatusBarBlack" />
 
-        <activity
-            android:name=".activity.feeds.activity.CommentsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/StatusBarBlack"
-            android:windowSoftInputMode="stateHidden" />
+
 
         <activity
             android:name=".activity.story.StoriesActivity"

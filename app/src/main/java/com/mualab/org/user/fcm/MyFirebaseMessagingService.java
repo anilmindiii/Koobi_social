@@ -2,9 +2,38 @@ package com.mualab.org.user.fcm;
 
 
 
+import android.annotation.TargetApi;
+import android.app.ActivityManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
+import android.support.v4.app.NotificationCompat;
+import android.util.Log;
+import android.widget.RemoteViews;
+
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.mualab.org.user.R;
+import com.mualab.org.user.activity.main.MainActivity;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
@@ -14,7 +43,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
- /*       // TODO(developer): Handle FCM messages here.
+        // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
@@ -54,7 +83,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 //  scheduleJob();
                 handleNow(urlImageString,body,title,notifincationType,notifyId,userName,userType);
             }
-        }*/
+        }
 
 
     }
@@ -68,7 +97,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     /**
      * Handle time allotted to BroadcastReceivers.
      */
-   /* private void handleNow(String urlImageString, String body, String title, String notifincationType, String notifyId,String userName,String userType) {
+    private void handleNow(String urlImageString, String body, String title, String notifincationType, String notifyId,String userName,String userType) {
         sendNotification(urlImageString,body,title,notifincationType,notifyId,userName, userType);
     }
 
@@ -132,7 +161,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         intent.putExtra("title",title);
         intent.putExtra("userName",userName);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 *//* Request code *//*, intent,
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 , intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
         String CHANNEL_ID = "my_channel_01";// The id of the channel.
@@ -211,5 +240,4 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         return output;
     }
-*/
 }

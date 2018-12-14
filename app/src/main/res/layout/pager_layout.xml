@@ -21,6 +21,7 @@
         app:canWeAddTags="false"
         android:transitionName="image"
         tools:ignore="UnusedAttribute"
+        android:gravity="center"
         app:carrotBottomColor="@color/dark_grey"
         app:carrotLeftColor="@color/dark_grey"
         app:carrotRightColor="@color/dark_grey"

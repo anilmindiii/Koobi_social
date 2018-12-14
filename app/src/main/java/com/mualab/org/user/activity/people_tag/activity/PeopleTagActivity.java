@@ -11,6 +11,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -36,7 +38,6 @@ import com.mualab.org.user.activity.people_tag.instatag.InstaTag;
 import com.mualab.org.user.activity.people_tag.instatag.TagImageView;
 import com.mualab.org.user.activity.people_tag.instatag.TagToBeTagged;
 import com.mualab.org.user.activity.people_tag.interfaces.SomeOneClickListener;
-
 import com.mualab.org.user.activity.people_tag.listeners.RemoveDuplicateTagListener;
 import com.mualab.org.user.activity.people_tag.listeners.TagListClickListener;
 import com.mualab.org.user.activity.people_tag.models.SomeOne;
@@ -50,12 +51,15 @@ import com.mualab.org.user.data.remote.HttpTask;
 import com.mualab.org.user.listener.RecyclerViewScrollListener;
 import com.mualab.org.user.utils.KeyboardUtil;
 import com.mualab.org.user.utils.ScreenUtils;
+import com.mualab.org.user.utils.StatusBarUtil;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,7 +127,7 @@ public class PeopleTagActivity extends AppCompatActivity implements View.OnClick
         SearchView searchview = findViewById(R.id.searchview);
 
         RecyclerView rycTags = findViewById(R.id.rycTags);
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL);
         rycTags.setLayoutManager(layoutManager);
         taggedArrayList = new ArrayList<>();
         tagListAdapter = new TagListAdapter(PeopleTagActivity.this, taggedArrayList,taggedImgMap);

@@ -71,7 +71,19 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp" />
 
+
+
     </com.mualab.org.user.Views.refreshviews.RjRefreshLayout>
+
+    <TextView
+        android:id="@+id/tv_no_data_msg"
+        style="@style/TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/no_res_found"
+        android:fontFamily="@font/nunito_regular"
+        android:textColor="@color/text_color" />
 
 
     <LinearLayout
@@ -98,7 +110,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/loading"
+            android:fontFamily="@font/nunito_regular"
             android:textColor="@color/text_color" />
+
+
     </LinearLayout>
 
 

@@ -11,6 +11,8 @@
         android:layout_height="match_parent"
         app:canWeAddTags="true"
         android:transitionName="image"
+        android:gravity="center"
+        android:layout_centerInParent="true"
         tools:ignore="UnusedAttribute"
         app:carrotBottomColor="@color/dark_grey"
         app:carrotLeftColor="@color/dark_grey"

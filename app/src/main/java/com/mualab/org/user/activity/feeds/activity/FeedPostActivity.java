@@ -743,7 +743,7 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
         map.put("serviceTagId", "");
         map.put("userId", "" + Mualab.currentUser.id);
         map.put("location", address.placeName);
-        map.put("city", TextUtils.isEmpty(address.city)?"":address.city);
+        map.put("city", TextUtils.isEmpty(address.city)?"":address.state);
         map.put("country", TextUtils.isEmpty(address.country)?"":address.country);
         if (TextUtils.isEmpty(address.latitude) || TextUtils.isEmpty(address.longitude)) {
             map.put("latitude", "");

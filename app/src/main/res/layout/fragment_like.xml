@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 style="@style/My_Edittext"
-                android:textColor="@color/gray"
+                android:textColor="@color/text_color"
                 android:textColorHint="@color/gray"
                 android:layout_marginStart="5dp"
                 android:background="@null"

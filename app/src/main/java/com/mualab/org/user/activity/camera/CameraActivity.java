@@ -90,7 +90,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     private Bitmap profileImageBitmap;
 
     private Button btnTakePhoto;
-    private ImageButton btnCameraMode, btnFlashLight;
+    private ImageButton  btnFlashLight;
+    ImageView btnCameraMode;
     //private Chronometer mChronometer;
 
     private int currentState;
@@ -243,7 +244,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         //rvFilters = findViewById(R.id.rvFilters);
         btnTakePhoto = findViewById(R.id.btnTakePhoto);
         btnCameraMode = findViewById(R.id.btnCameraMode);
-        btnCameraMode = findViewById(R.id.btnCameraMode);
         img_gallery = findViewById(R.id.img_gallery);
         //ivBack = findViewById(R.id.ivBack);
 
@@ -317,7 +317,9 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
 
             case R.id.img_gallery:
-                getPermissionAndPicImage();
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, 234);
                 break;
 
            /* case R.id.btnAccept:
@@ -432,7 +434,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             //btnTakePhoto.setOnTouchListener(onTouchListener);
         }else {
             isCameraSession = true;
-            btnCameraMode.setImageResource(R.drawable.ic_videocam_white);
+            btnCameraMode.setImageResource(R.drawable.video_player_ico);
             currentState = STATE_TAKE_PHOTO;
             btnTakePhoto.setText("");
             updateState(currentState);

@@ -163,6 +163,7 @@ public class LikeFeedActivity extends AppCompatActivity {
                             tvMsg.setVisibility(View.VISIBLE);
                         } else {
                             ll_loadingBox.setVisibility(View.GONE);
+                            tvMsg.setVisibility(View.GONE);
                         }
                         likeListAdapter.notifyDataSetChanged();
                     }else {
@@ -170,6 +171,7 @@ public class LikeFeedActivity extends AppCompatActivity {
                             tvMsg.setText(getString(R.string.text_empty_data));
                             tvMsg.setVisibility(View.VISIBLE);
                         } else {
+                            tvMsg.setVisibility(View.GONE);
                             ll_loadingBox.setVisibility(View.GONE);
                         }
                     }

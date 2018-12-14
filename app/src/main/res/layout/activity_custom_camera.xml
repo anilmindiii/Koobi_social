@@ -61,9 +61,10 @@
                     android:layout_marginTop="2dp">
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_white_x"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:tint="@color/white"
+                        android:src="@drawable/white_back_ico"
                         android:layout_centerInParent="true"/>
 
                 </RelativeLayout>
@@ -93,6 +94,14 @@
                     android:background="@drawable/btn_default_light"
                     android:src="@drawable/ic_flash_off_white"
                     tools:ignore="ContentDescription" />
+
+                <ImageView
+                    android:id="@+id/switchCamera"
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/switch_camera"/>
+
             </LinearLayout>
 
             <LinearLayout
@@ -151,12 +160,13 @@
                     android:layout_weight="1">
 
                     <ImageButton
-                        android:id="@+id/switchCamera"
+                        android:id="@+id/gallery_icon"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_gravity="center"
                         android:background="@drawable/btn_capture_options"
-                        android:src="@drawable/ic_camera_rear_white" />
+                        android:src="@drawable/gallery_ico"
+                        android:visibility="gone"/>
                 </FrameLayout>
 
                 <FrameLayout
@@ -179,14 +189,21 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1">
 
-                    <ImageButton
-                        android:id="@+id/btnCameraMode"
+                    <RelativeLayout
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_gravity="center"
-                        android:background="@drawable/btn_capture_options"
-                        android:src="@drawable/ic_videocam_white"
+                        android:background="@drawable/btn_capture_options"></RelativeLayout>
+
+                    <ImageView
+                        android:id="@+id/btnCameraMode"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center"
+                        android:tint="@color/white"
+                        android:src="@drawable/video_player_ico"
                         />
+
                 </FrameLayout>
             </LinearLayout>
 

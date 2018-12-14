@@ -64,7 +64,10 @@ public class GioAddressTask extends AsyncTask<Void, Void, Void> {
             adr.stAddress2 = address.getAddressLine(1);
             adr.latitude = String.valueOf(latLng.latitude);
             adr.longitude = String.valueOf(latLng.longitude);
-            adr.placeName = adr.city+", "+adr.country;
+            if(adr.city == null){
+                adr.placeName = adr.state+", "+adr.country;
+            }else adr.placeName = adr.city+", "+adr.country;
+
             if(listner!=null) listner.onSuccess(adr);
         }
     }

@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:text="@string/loading"
         android:gravity="center"
+        android:fontFamily="@font/nunito_regular"
         android:textColor="@color/black"
         android:visibility="gone" />
 </LinearLayout>

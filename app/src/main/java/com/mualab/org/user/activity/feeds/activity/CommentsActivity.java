@@ -94,7 +94,7 @@ public class CommentsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments);
-        setStatusbarColor();
+    //    setStatusbarColor();
         Intent intent = getIntent();
         feeds = new ArrayList<>();
         if (intent != null) {
@@ -295,7 +295,7 @@ public class CommentsActivity extends AppCompatActivity {
         map.put("feedId", "" + feed._id);
         map.put("userId", "" + Mualab.currentUser.id);
         map.put("page", "" + pageNo);
-        map.put("search", search.toLowerCase());
+        map.put("search", search.toLowerCase().trim());
         map.put("limit", "20");
         map.put("age", "25");
         map.put("gender", "male");
@@ -328,6 +328,7 @@ public class CommentsActivity extends AppCompatActivity {
                             comment.comment = myString;
                             commentList.add(comment);
                         }
+                        tv_no_comments.setVisibility(View.GONE);
                         //recyclerView.smoothScrollToPosition(0);
                         recyclerView.scrollToPosition(commentList.size()-1);
                         commentAdapter.notifyDataSetChanged();
@@ -339,7 +340,7 @@ public class CommentsActivity extends AppCompatActivity {
                             tv_no_comments.setVisibility(View.VISIBLE);
                             tv_no_comments.setText(getString(R.string.text_empty_data));
                         } else {
-
+                            tv_no_comments.setVisibility(View.GONE);
                         }
                     }
                 } catch (JSONException e) {
@@ -347,6 +348,8 @@ public class CommentsActivity extends AppCompatActivity {
                     if (commentList.size() == 0) {
                         tv_no_comments.setVisibility(View.VISIBLE);
                         tv_no_comments.setText(getString(R.string.text_empty_data));
+                    }else {
+                        tv_no_comments.setVisibility(View.GONE);
                     }
                 }
             }
