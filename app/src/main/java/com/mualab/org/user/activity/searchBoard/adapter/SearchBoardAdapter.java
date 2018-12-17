@@ -90,9 +90,13 @@ public class SearchBoardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         holder.tvArtistName.setText(item.userName);
         holder.rating.setRating(Float.parseFloat(item.ratingCount));
 
-        double d = Double.parseDouble(item.distance);
-        item.distance = String.format("%.2f", d);
-        holder.tvDistance.setText(String.format("%s miles", item.distance));
+        try {
+            double d = Double.parseDouble(item.distance);
+            item.distance = String.format("%.2f", d);
+            holder.tvDistance.setText(String.format("%s miles", item.distance));
+        }catch (NumberFormatException e){
+
+        }
 
         long rCount = Long.parseLong(item.reviewCount);
 

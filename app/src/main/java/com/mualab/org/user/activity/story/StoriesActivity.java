@@ -198,6 +198,15 @@ public class StoriesActivity extends SwipeBackActivity implements StoryStatusVie
                 storyStatusView.reverse();
             }
         });
+
+        reverse.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                storyStatusView.pause();
+                return false;
+            }
+        });
+
         reverse.setOnTouchListener(onTouchListener);
 
         // bind skip view
@@ -208,6 +217,15 @@ public class StoriesActivity extends SwipeBackActivity implements StoryStatusVie
                 storyStatusView.skip();
             }
         });
+
+        skip.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                storyStatusView.pause();
+                return false;
+            }
+        });
+
         skip.setOnTouchListener(onTouchListener);
 
         findViewById(R.id.actions).setOnTouchListener(new View.OnTouchListener() {
@@ -545,7 +563,7 @@ public class StoriesActivity extends SwipeBackActivity implements StoryStatusVie
         //If File is not present create directory
         if (!fileStorage.exists()) bool = fileStorage.mkdir();
 
-        if (bool) {
+        if (true) {
             outputFile = new File(fileStorage, downloadFileName);//Create Output file in Main File
 
             //Create New File if not present

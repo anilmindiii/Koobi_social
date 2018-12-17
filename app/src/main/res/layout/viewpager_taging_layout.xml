@@ -13,7 +13,6 @@
         android:transitionName="image"
         android:gravity="center"
         android:layout_centerInParent="true"
-        tools:ignore="UnusedAttribute"
         app:carrotBottomColor="@color/dark_grey"
         app:carrotLeftColor="@color/dark_grey"
         app:carrotRightColor="@color/dark_grey"

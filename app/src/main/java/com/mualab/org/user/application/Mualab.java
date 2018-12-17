@@ -18,6 +18,7 @@ import com.android.volley.toolbox.Volley;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.interceptors.HttpLoggingInterceptor;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,6 +32,7 @@ import com.mualab.org.user.data.model.User;
 import com.mualab.org.user.utils.LocationDetector;
 import com.mualab.org.user.utils.constants.Constant;
 
+import io.fabric.sdk.android.Fabric;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,6 +75,7 @@ public class Mualab extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         mInstance = this;
         mInstance.getSessionManager();
         currentLocation = new Location();

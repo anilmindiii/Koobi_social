@@ -11,7 +11,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -23,9 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -51,15 +48,10 @@ import com.mualab.org.user.data.remote.HttpTask;
 import com.mualab.org.user.listener.RecyclerViewScrollListener;
 import com.mualab.org.user.utils.KeyboardUtil;
 import com.mualab.org.user.utils.ScreenUtils;
-import com.mualab.org.user.utils.StatusBarUtil;
-import com.squareup.picasso.Picasso;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +59,7 @@ import java.util.Map;
 public class PeopleTagActivity extends AppCompatActivity implements View.OnClickListener {
     private RecyclerView mRecyclerViewSomeOneToBeTagged;
     private LinearLayout mHeaderSearchSomeOne,llSearchPeople;
-    // private RelativeLayout mHeaderSomeOneToBeTagged;
+    /* private RelativeLayout mHeaderSomeOneToBeTagged; */
     private int mAddTagInX, mAddTagInY;
     private PeopleAdapter mSomeOneAdapter;
     private List<String> images;
@@ -91,7 +83,7 @@ public class PeopleTagActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //  StatusBarUtil.setColorNoTranslucent(this, getResources().getColor(R.color.colorPrimary));
+        /* StatusBarUtil.setColorNoTranslucent(this, getResources().getColor(R.color.colorPrimary)); */
 
         setContentView(R.layout.activity_people_tag);
         list = new ArrayList<>();
@@ -100,7 +92,7 @@ public class PeopleTagActivity extends AppCompatActivity implements View.OnClick
         if (intent != null) {
             startIndex = intent.getIntExtra("startIndex", 0);
             images = (ArrayList<String>) intent.getSerializableExtra("imageArray");
-            //  taggedImgMap = (HashMap<Integer, ArrayList<TagToBeTagged>>) intent.getSerializableExtra("hashmap");
+            /* taggedImgMap = (HashMap<Integer, ArrayList<TagToBeTagged>>) intent.getSerializableExtra("hashmap"); */
         }
 
         int widthPixels = ScreenUtils.getScreenWidth(PeopleTagActivity.this);
