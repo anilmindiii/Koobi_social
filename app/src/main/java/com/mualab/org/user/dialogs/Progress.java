@@ -24,16 +24,6 @@ public class Progress {
         activity.addContentView(progressBarView, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT));
     }
 
-    public Progress setText(int resourceId) {
-        ((TextView) progressBarView.findViewById(R.id.progress_bar_text)).setText(resourceId);
-        return this;
-    }
-
-    public Progress setText(String text) {
-        ((TextView) progressBarView.findViewById(R.id.progress_bar_text)).setText(text);
-        return this;
-    }
-
     public static void show(Context context) {
         //if(progress==null)
         if(progress!=null){

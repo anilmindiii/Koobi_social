@@ -26,6 +26,7 @@ import com.hendraanggrian.socialview.SocialView;
 import com.hendraanggrian.widget.SocialTextView;
 import com.mualab.org.user.R;
 
+import com.mualab.org.user.activity.feeds.activity.ReportActivity;
 import com.mualab.org.user.activity.feeds.listener.OnImageSwipeListener;
 import com.mualab.org.user.application.Mualab;
 import com.mualab.org.user.data.feeds.Feeds;
@@ -266,8 +267,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void setupTextFeedClickableViews(final FeedTextHolder holder) {
-        holder.tv_text.setHashtagColor(ContextCompat.getColor(mContext, R.color.text_color));
-        holder.tv_text.setMentionColor(ContextCompat.getColor(mContext, R.color.text_color));
+        holder.tv_text.setHashtagColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+        holder.tv_text.setMentionColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
         holder.tv_text.setOnHyperlinkClickListener(new Function2<SocialView, CharSequence, Unit>() {
             @Override
             public Unit invoke(SocialView socialView, CharSequence charSequence) {
@@ -340,6 +341,14 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
         });
 
+        holder.iv_report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, ReportActivity.class);
+                mContext.startActivity(intent);
+            }
+        });
+
         holder.btnFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -363,8 +372,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void setupFeedVideoClickableViews(final FeedVideoHolder videoHolder) {
-        videoHolder.tv_text.setHashtagColor(ContextCompat.getColor(mContext, R.color.text_color));
-        videoHolder.tv_text.setMentionColor(ContextCompat.getColor(mContext, R.color.text_color));
+        videoHolder.tv_text.setHashtagColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+        videoHolder.tv_text.setMentionColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
         videoHolder.tv_text.setOnHyperlinkClickListener(new Function2<SocialView, CharSequence, Unit>() {
             @Override
             public Unit invoke(SocialView socialView, CharSequence charSequence) {
@@ -438,6 +447,14 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
         });
 
+        videoHolder.iv_report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, ReportActivity.class);
+                mContext.startActivity(intent);
+            }
+        });
+
         videoHolder.ivFeedCenter.setOnTouchListener(new MyOnDoubleTapListener(mContext, videoHolder));
 
         videoHolder.btnFollow.setOnClickListener(new View.OnClickListener() {
@@ -463,8 +480,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void setupClickableViews(final CellFeedViewHolder cellFeedViewHolder) {
-        cellFeedViewHolder.tv_text.setHashtagColor(ContextCompat.getColor(mContext, R.color.text_color));
-        cellFeedViewHolder.tv_text.setMentionColor(ContextCompat.getColor(mContext, R.color.text_color));
+        cellFeedViewHolder.tv_text.setHashtagColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+        cellFeedViewHolder.tv_text.setMentionColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
         cellFeedViewHolder.tv_text.setOnHyperlinkClickListener(new Function2<SocialView, CharSequence, Unit>() {
             @Override
             public Unit invoke(SocialView socialView, CharSequence charSequence) {
@@ -543,6 +560,15 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
         });
 
+        cellFeedViewHolder.iv_report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, ReportActivity.class);
+                mContext.startActivity(intent);
+            }
+        });
+
+
         cellFeedViewHolder.btnFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -616,7 +642,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     static class Holder extends RecyclerView.ViewHolder {
         protected CheckBox likeIcon;
         protected ImageView ivLike;
-        protected ImageView ivProfile, ivShare, ivComments; //btnLike
+        protected ImageView ivProfile, ivShare, ivComments,iv_report; //btnLike
         protected LinearLayout ly_like_count, ly_comments;
         protected TextView tvUserName, tvUserLocation, tvPostTime;
         protected TextView tv_like_count, tv_comments_count;
@@ -628,6 +654,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             /*Common ui*/
             ivProfile =  itemView.findViewById(R.id.iv_user_image);
             ivShare =  itemView.findViewById(R.id.iv_share);
+            iv_report =  itemView.findViewById(R.id.iv_report);
             ivComments = itemView.findViewById(R.id.iv_comments);
             tv_text = itemView.findViewById(R.id.tv_text);
             tvUserName = itemView.findViewById(R.id.tv_user_name);

@@ -137,7 +137,6 @@ public class LoginActivity extends AppCompatActivity {
                 mLastClickTime = SystemClock.elapsedRealtime();
                 startActivity(new Intent(LoginActivity.this, RegistrationActivity.class));
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                finish();
             }
         });
 

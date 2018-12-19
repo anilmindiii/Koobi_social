@@ -69,24 +69,32 @@
 
                 </FrameLayout>
 
-                <com.hendraanggrian.widget.SocialAutoCompleteTextView
-                    android:id="@+id/edCaption"
+                <android.support.v4.widget.NestedScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/My_Edittext"
-                    android:minLines="4"
-                    android:maxLines="10"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:gravity="left|top"
-                    android:hint="@string/write_a_caption"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/black"
-                    android:background="@null"
-                    android:transitionName="text"
-                    tools:ignore="RtlHardcoded,UnusedAttribute"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    />
+                    android:layout_height="110dp"
+                    android:scrollbars="none">
+
+
+                    <com.hendraanggrian.widget.SocialAutoCompleteTextView
+                        android:id="@+id/edCaption"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:minHeight="110dp"
+                        style="@style/My_Edittext_styel"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:gravity="left|top"
+                        android:hint="@string/write_a_caption"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black"
+                        android:background="@null"
+                        android:transitionName="text"
+                        tools:ignore="RtlHardcoded,UnusedAttribute"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                        />
+
+                </android.support.v4.widget.NestedScrollView>
+
 
             </LinearLayout>
 

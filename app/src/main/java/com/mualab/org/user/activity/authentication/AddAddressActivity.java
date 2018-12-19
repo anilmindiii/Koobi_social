@@ -236,6 +236,15 @@ public class AddAddressActivity extends AppCompatActivity {
                         Double lat = Double.parseDouble(latitude);
                         Double lng = Double.parseDouble(longitude);
                         iv_picode_search.setVisibility(View.GONE);
+
+                        city = "";
+                        state = "";
+                        country = "";
+                        country = "";
+                        stAddress1 = "";
+                        stAddress2 ="";
+                        placeName = "";
+
                         new GioAddress(AddAddressActivity.this, lat, lng).execute();
 
                     } else MyToast.getInstance(AddAddressActivity.this).showDasuAlert(getString(R.string.msg_some_thing_went_wrong));
@@ -335,7 +344,10 @@ public class AddAddressActivity extends AppCompatActivity {
                 placeName = place.getName().toString();
 
                 // ed_pinCode.setText(postalCode);
-                ed_locality.setText(stAddress1);
+                stAddress1 = placeName+" "+stAddress1;
+
+
+                //ed_locality.setText(stAddress1);
                 new GioAddress(AddAddressActivity.this, place.getLatLng().latitude,
                         place.getLatLng().longitude).execute();
 
@@ -397,7 +409,11 @@ public class AddAddressActivity extends AppCompatActivity {
                 stAddress1 = address.getAddressLine(0);
                 stAddress2 = address.getAddressLine(1);
 
-                ed_locality.setText(TextUtils.isEmpty(stAddress1) ? "" : stAddress1);
+                if(placeName.equals("null")){
+                    placeName = "";
+                }
+
+                ed_locality.setText(TextUtils.isEmpty( placeName+" "+stAddress1) ? "" :  placeName+" "+stAddress1);
                 // ed_pinCode.setText(postalCode);
 
             }

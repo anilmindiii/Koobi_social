@@ -26,6 +26,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        dataBinding {
+            enabled = true
+        }
     }
     buildTypes {
         release {
@@ -79,6 +83,8 @@ dependencies {
     implementation 'com.otaliastudios:cameraview:1.4.1'
     implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
     implementation 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
+    implementation 'com.deep.videotrimmer:videotrimmer:1.0'
+
     implementation files('libs/aspectjrt-1.7.3 (1).jar')
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.7@aar') {
         transitive = true;

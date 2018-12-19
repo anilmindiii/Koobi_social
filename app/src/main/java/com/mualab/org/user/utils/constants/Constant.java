@@ -30,7 +30,7 @@ public class Constant {
     public static final int REQUEST_CODE_PICK = 235;
     public static final int SELECT_FILE = 1;
     public final static int REQUEST_CHECK_SETTINGS_GPS = 96;
-
+    public static String croppedVideoURI;
 
     public static final String CLIENT_ID = "235f0bad46fb41a5af0c1309b99481e6";
     public static final String CLIENT_SECRET = "4de6d8b1305f48e6bada5f87ab9e5f9b";

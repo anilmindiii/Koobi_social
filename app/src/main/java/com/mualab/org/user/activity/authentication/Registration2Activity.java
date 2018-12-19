@@ -472,7 +472,8 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
 
         mDatabase.child("users").child(String.valueOf(user.id)).setValue(firebaseUser);
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("user", user);
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -504,7 +505,7 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
                 //Bitmap bitmap = ImagePicker.getImageFromResult(this, requestCode, resultCode, data);
                 Uri imageUri = ImagePicker.getImageURIFromResult(this, requestCode, resultCode, data);
                 if (imageUri != null) {
-                    CropImage.activity(imageUri).setCropShape(CropImageView.CropShape.RECTANGLE).setAspectRatio(400, 400).start(this);
+                    CropImage.activity(imageUri).setCropShape(CropImageView.CropShape.OVAL).setAspectRatio(400, 400).start(this);
                 } else {
                     showToast(getString(R.string.msg_some_thing_went_wrong));
                 }

@@ -31,6 +31,7 @@ import com.mualab.org.user.activity.feeds.activity.FeedPostActivity;
 import com.mualab.org.user.activity.gellery.GalleryActivity;
 import com.mualab.org.user.activity.gellery.adapter.VideoGridViewAdapter;
 import com.mualab.org.user.activity.gellery.model.Media;
+import com.mualab.org.user.activity.video_trim.VideoTrimmerActivity;
 import com.mualab.org.user.data.model.MediaUri;
 import com.mualab.org.user.dialogs.MyToast;
 import com.mualab.org.user.utils.ScreenUtils;
@@ -161,7 +162,7 @@ public class VideoGalleryFragment extends Fragment implements View.OnClickListen
             case R.id.tvNext:
                 if (mediaUri!=null){
                     videoView.stopPlayback();
-                    Intent  intent = new Intent(context, FeedPostActivity.class);
+                    Intent  intent = new Intent(context, VideoTrimmerActivity.class);
                     intent.putExtra("caption", "");
                     intent.putExtra("mediaUri", mediaUri);
                     intent.putExtra("thumbImage", thumbImage);

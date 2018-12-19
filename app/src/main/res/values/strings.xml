@@ -23,7 +23,7 @@
     <string name="enter_the_email">Enter the email</string>
     <string name="forgot_pwd_remind_txt">We will send you a message with a link to reset your password.</string>
     <string name="reset_password">Reset Password</string>
-
+    <string name="str_cropping_video_please_wait">Cropping Video Please Wait</string>
     <!--Network related message-->
 
     <string name="msg_some_thing_went_wrong">Some thing went wrong, please try again later.</string>
@@ -49,6 +49,7 @@
     <string name="mcam_image_preview_error_message">Could not decode bitmap</string>
     <string name="there_are_no_available_slots_please_select_another_day">There are no available slots. Please select another day.</string>
     <string name="write_a_comment_here">Write your comment</string>
+    <string name="write_a_description_here">Write your description</string>
     <string name="unfollow_user">Unfollow <b>@%s?</b></string>
     <string name="no_comment_yet">No Comment yet</string>
     <string name="no_like_yet">No like yet</string>
@@ -405,6 +406,10 @@
     <string name="rec">REC</string>
     <string name="cancel_label">Cancel</string>
     <string name="search_people">Search People...</string>
+    <string name="please_provide_the_following_details_to_report_this_post">Please provide the following details to report this post</string>
+    <string name="link">link</string>
+    <string name="select_reason">Select Reason</string>
+    <string name="description">Description</string>
 
 
 </resources>

@@ -69,6 +69,7 @@ import com.mualab.org.user.data.remote.HttpResponceListner;
 import com.mualab.org.user.data.remote.HttpTask;
 import com.mualab.org.user.data.remote.UploadImage;
 import com.mualab.org.user.dialogs.MyToast;
+import com.mualab.org.user.dialogs.Progress;
 import com.mualab.org.user.utils.ConnectionDetector;
 import com.mualab.org.user.utils.KeyboardUtil;
 import com.mualab.org.user.utils.LocationDetector;
@@ -251,7 +252,7 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
                 handler = null;
                 runnable = null;
                 //checkLocationPermisssion();
-                initProgressBar();
+                //initProgressBar();
             }
         }, 1000);
     }
@@ -342,8 +343,9 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
         edCaption.setThreshold(1);
         edCaption.setHashtagEnabled(true);
         edCaption.setHyperlinkEnabled(true);
-        edCaption.setHashtagColor(ContextCompat.getColor(this, R.color.text_color));
-        edCaption.setMentionColor(ContextCompat.getColor(this, R.color.text_color));
+        edCaption.setHashtagColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        edCaption.setMentionColor(ContextCompat.getColor(this, R.color.colorPrimary));
+
 
         mentionAdapter = new UserSuggessionAdapter(this);
         mentionAdapter.clear();
@@ -577,7 +579,8 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
 
         if(mAlertDialog==null){
             LayoutInflater li = LayoutInflater.from(this);
-            @SuppressLint("InflateParams") View layout = li.inflate(R.layout.layout_processing_dialog, null);
+            @SuppressLint("InflateParams")
+            View layout = li.inflate(R.layout.layout_processing_dialog, null);
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                     150, FrameLayout.LayoutParams.WRAP_CONTENT);
             layout.setLayoutParams(params);
@@ -592,15 +595,11 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void showProgressBar() {
-        if (mAlertDialog != null) {
-            mAlertDialog.show();
-        }
+        Progress.show(this);
     }
 
     private void hideProgressBar() {
-        if (mAlertDialog != null) {
-            mAlertDialog.dismiss();
-        }
+        Progress.hide(this);
     }
 
     private void sendToBackGroundService() {

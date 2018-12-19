@@ -529,6 +529,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         header.put("countryCode", user.countryCode);
         header.put("contactNo", user.contactNo);
         header.put("email", user.email);
+        header.put("userType", "user");
         header.put("socialId", TextUtils.isEmpty(user.socialId)?"":user.socialId);
 
         new HttpTask(new HttpTask.Builder(this, "phonVerification", new HttpResponceListner.Listener() {
@@ -565,6 +566,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                     jsonObject.put("phone", user.contactNo);
                     jsonObject.put("code", user.countryCode);
                     jsonObject.put("otp", apiOTP);
+                    jsonObject.put("userType", "user");
                     MyToast.getInstance(RegistrationActivity.this).showDasuAlert("OTP : "+apiOTP);
                     SharedPreferanceUtils.setParam(RegistrationActivity.this, "OTP", jsonObject.toString());
                     final AppCompatButton btnResendOtp = findViewById(R.id.tv_resend_otp);

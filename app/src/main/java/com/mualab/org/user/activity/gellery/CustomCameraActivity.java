@@ -6,7 +6,9 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
@@ -298,10 +300,13 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
                     thumbImage = ivTakenPhoto.getDrawingCache();
                     String path = MediaStore.Images.Media.insertImage(CustomCameraActivity.this.
                             getContentResolver(), thumbImage, "Title", null);
+
                     thumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(
                             ImageVideoUtil.generatePath(Uri.parse(path), CustomCameraActivity.this)),
                             150, 150);
                     //  thumbImage = ImageVideoUtil.getVideoToThumbnil(captureMediaUri, CustomCameraActivity.this);
+
+
 
                 }else {
                     thumbImage = ivTakenPhoto.getBitmap();
@@ -388,6 +393,29 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
 
                 break;
         }
+    }
+
+    public Bitmap getThumbnailBitmap(Uri uri){
+        String[] proj = { MediaStore.Images.Media.DATA };
+
+        // This method was deprecated in API level 11
+        // Cursor cursor = managedQuery(contentUri, proj, null, null, null);
+
+        CursorLoader cursorLoader = new CursorLoader(CustomCameraActivity.this, uri, proj, null, null, null);
+        Cursor cursor = cursorLoader.loadInBackground();
+
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
+
+        cursor.moveToFirst();
+        long imageId = cursor.getLong(column_index);
+        //cursor.close();
+
+        Bitmap bitmap = MediaStore.Images.Thumbnails.getThumbnail(
+                getContentResolver(), imageId,
+                MediaStore.Images.Thumbnails.MINI_KIND,
+                (BitmapFactory.Options) null );
+
+        return bitmap;
     }
 
     @SuppressLint("ClickableViewAccessibility")

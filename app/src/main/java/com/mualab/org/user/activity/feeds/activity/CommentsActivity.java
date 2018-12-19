@@ -45,6 +45,7 @@ import com.mualab.org.user.data.remote.HttpResponceListner;
 import com.mualab.org.user.data.remote.HttpTask;
 import com.mualab.org.user.dialogs.MyToast;
 import com.mualab.org.user.dialogs.NoConnectionDialog;
+import com.mualab.org.user.dialogs.Progress;
 import com.mualab.org.user.image.cropper.CropImage;
 import com.mualab.org.user.image.cropper.CropImageView;
 import com.mualab.org.user.image.picker.ImagePicker;
@@ -377,6 +378,7 @@ public class CommentsActivity extends AppCompatActivity {
         map.put("postUserId", "" + feed.userId);
         map.put("type", bitmap == null ? "text" : "image");
 
+
         if (bitmap == null) {
             try {
                 enCodedStatusCode = URLEncoder.encode(comments,
@@ -384,6 +386,8 @@ public class CommentsActivity extends AppCompatActivity {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
+        }else {
+            Progress.show(this);
         }
 
         if (comments != null)
@@ -395,6 +399,7 @@ public class CommentsActivity extends AppCompatActivity {
                 Log.d("Responce", response);
                 btn_post_comments.setEnabled(true);
                 String status = "";
+                Progress.hide(CommentsActivity.this);
                 try {
                     JSONObject js = new JSONObject(response);
                     status = js.getString("status");
@@ -477,6 +482,7 @@ public class CommentsActivity extends AppCompatActivity {
                     tv_no_comments.setVisibility(View.VISIBLE);
                     tv_no_comments.setText(getString(R.string.msg_some_thing_went_wrong));
                 }
+                Progress.hide(CommentsActivity.this);
             }
         })
                 .setProgress(true)

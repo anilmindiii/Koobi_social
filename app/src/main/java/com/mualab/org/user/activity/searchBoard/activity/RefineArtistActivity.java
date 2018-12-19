@@ -155,7 +155,7 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
 
         progress_bar = findViewById(R.id.progress_bar);
         viewSelectRadius = findViewById(R.id.viewSelectRadius);
-        RelativeLayout rlRefineLocation1 = findViewById(R.id.rlRefineLocation);
+        LinearLayout rlRefineLocation1 = findViewById(R.id.rlRefineLocation);
         RelativeLayout rlPrice1 = findViewById(R.id.rlPrice);
         rlPriceSeekBar = findViewById(R.id.rlPriceSeekBar);
         seekBarPrice = findViewById(R.id.seekBarPrice);
@@ -261,8 +261,8 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
         lvExpandable = findViewById(R.id.lvService);
         RelativeLayout rlService = findViewById(R.id.rlService);
         RelativeLayout rlPrice = findViewById(R.id.rlPrice);
-        RelativeLayout rlRefineLocation = findViewById(R.id.rlRefineLocation);
-        RelativeLayout rlDnT = findViewById(R.id.rlDnT);
+        LinearLayout rlRefineLocation = findViewById(R.id.rlRefineLocation);
+        LinearLayout rlDnT = findViewById(R.id.rlDnT);
 
 
         setRefineData();
@@ -909,8 +909,8 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onBackPressed() {
-
-        if (session.getSaveSearch() == null) {
+        RefineSearchBoard board =  session.getSaveSearch();
+        if (board == null) {
             Intent intent = new Intent(RefineArtistActivity.this, MainActivity.class);
             intent.putExtra("locationData", refineSearchBoard);
             startActivity(intent);
