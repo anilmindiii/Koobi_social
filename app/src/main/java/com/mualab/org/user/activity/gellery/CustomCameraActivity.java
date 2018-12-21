@@ -16,6 +16,7 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -302,8 +303,13 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
                             getContentResolver(), thumbImage, "Title", null);
 
                     thumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(
-                            ImageVideoUtil.generatePath(Uri.parse(path), CustomCameraActivity.this)),
-                            150, 150);
+                            ImageVideoUtil.generatePath(captureMediaUri, CustomCameraActivity.this)),
+                            100, 100);
+
+                    thumbImage = ThumbnailUtils.createVideoThumbnail(captureMediaUri.getPath(),
+                            MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
+                    //imageView.setImageBitmap(bitmap);
+
                     //  thumbImage = ImageVideoUtil.getVideoToThumbnil(captureMediaUri, CustomCameraActivity.this);
 
 
@@ -315,7 +321,7 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
                             getContentResolver(), thumbImage, "Title", null);
                     thumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(
                             ImageVideoUtil.generatePath(Uri.parse(path), CustomCameraActivity.this)),
-                            150, 150);
+                            100, 100);
                     mediaUri.addUri(path);
                 }
 

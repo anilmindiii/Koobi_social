@@ -327,7 +327,7 @@ public class CommentsActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                             comment.comment = myString;
-                            commentList.add(comment);
+                            commentList.add(0,comment);
                         }
                         tv_no_comments.setVisibility(View.GONE);
                         //recyclerView.smoothScrollToPosition(0);
@@ -538,7 +538,7 @@ public class CommentsActivity extends AppCompatActivity {
                         comment.timeElapsed = "1 second ago";
                         comment.commentLikeCount = 0;
                         comment.isLike = 0;
-                        commentList.add(comment);
+                        commentList.add(0,comment);
                     }
                     if (commentList.size() == 0) {
                         tv_no_comments.setVisibility(View.VISIBLE);

@@ -263,6 +263,7 @@ public class AddAddressActivity extends AppCompatActivity {
             @Override
             public void ErrorListener(VolleyError error) {
                 Log.d("responce", "e");
+                ed_locality.setText("");
             }
         })
                 .setBaseURL(api)
@@ -458,7 +459,6 @@ public class AddAddressActivity extends AppCompatActivity {
     }
 
     public void showLocationSettingDailod() {
-
 
         android.app.AlertDialog.Builder builder1 = new android.app.AlertDialog.Builder(AddAddressActivity.this);
         builder1.setTitle("GPS Services Not Active");

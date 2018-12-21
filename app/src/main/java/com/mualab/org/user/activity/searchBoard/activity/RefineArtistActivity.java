@@ -78,7 +78,6 @@ import java.util.Map;
 import static com.mualab.org.user.utils.constants.Constant.PLACE_AUTOCOMPLETE_REQUEST_CODE;
 
 public class RefineArtistActivity extends AppCompatActivity implements View.OnClickListener, DatePickerListener {
-    private ExpandableListView lvExpandable;
     private boolean isServiceOpen = false, isClear = false, isFavClick;
     private ImageView ivDistance;
     private TextView tv_refine_dnt, tv_refine_loc;
@@ -258,7 +257,6 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
             }
         });
 
-        lvExpandable = findViewById(R.id.lvService);
         RelativeLayout rlService = findViewById(R.id.rlService);
         RelativeLayout rlPrice = findViewById(R.id.rlPrice);
         LinearLayout rlRefineLocation = findViewById(R.id.rlRefineLocation);
@@ -266,52 +264,6 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
 
 
         setRefineData();
-
-
-        lvExpandable.setAdapter(expandableListAdapter);
-
-        lvExpandable.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
-            @Override
-            public void onGroupCollapse(int i) {
-
-            }
-        });
-
-        lvExpandable.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-
-            @Override
-            public void onGroupExpand(int groupPosition) {
-                RefineServices item = services.get(groupPosition);
-                item.isExpand = true;
-            }
-        });
-
-        // Listview Group collasped listener
-        lvExpandable.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
-
-            @Override
-            public void onGroupCollapse(int groupPosition) {
-                RefineServices item = services.get(groupPosition);
-                item.isExpand = false;
-
-            }
-        });
-
-
-        lvExpandable.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long l) {
-                onGroupClickListener(expandableListView, view, groupPosition, l);
-                return false;
-            }
-        });
-
-        lvExpandable.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
-                return false;
-            }
-        });
 
         rlService.setOnClickListener(this);
         rlPrice.setOnClickListener(this);

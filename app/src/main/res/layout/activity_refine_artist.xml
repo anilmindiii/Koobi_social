@@ -143,6 +143,7 @@
                         android:maxLines="1"
                         android:singleLine="true"
                         android:ellipsize="end"
+                        android:paddingRight="3dp"
                         android:textColorHint="@color/text_color"
                         android:visibility="gone"/>
 
@@ -220,24 +221,12 @@
                         android:fontFamily="@font/nunito_regular"
                         android:textColor="@color/gray"
                         android:visibility="gone"
+                        android:paddingRight="3dp"
                         />
 
                 </LinearLayout>
 
 
-
-
-                <com.mualab.org.user.Views.Expandable.NonScrollExpandableListView
-                    android:id="@+id/lvService"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
-                    android:childDivider="@color/white"
-                    android:divider="@null"
-                    android:dividerHeight="1dp"
-                    android:groupIndicator="@null"
-                    android:nestedScrollingEnabled="true"
-                    android:visibility="gone" />
 
                 <View
                     android:layout_width="match_parent"
@@ -321,7 +310,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
+                        android:layout_alignParentTop="true"
                         android:background="@drawable/map_ico" />
 
                     <LinearLayout
@@ -354,6 +343,7 @@
                             android:textColor="@color/gray"
                             android:text="1-17 Miles"
                             android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
                             android:visibility="gone" />
 
 
@@ -490,6 +480,7 @@
                         android:layout_marginLeft="35dp"
                         android:layout_marginStart="35dp"
                         android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
                         android:fontFamily="@font/nunito_regular"
                         android:textColor="@color/gray"
                         android:text="@string/continue_txt"

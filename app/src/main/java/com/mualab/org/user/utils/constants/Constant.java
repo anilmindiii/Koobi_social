@@ -26,6 +26,7 @@ public class Constant {
 
     public static final int POST_FEED_DATA = 1039;
     public static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1001;
+    public static final int TextTagREQCODE = 1431;
     public static final int CAMERA_REQUEST = 234;
     public static final int REQUEST_CODE_PICK = 235;
     public static final int SELECT_FILE = 1;

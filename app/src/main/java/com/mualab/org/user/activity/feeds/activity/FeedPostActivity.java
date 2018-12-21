@@ -37,6 +37,7 @@ import android.widget.Filter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -56,6 +57,7 @@ import com.hendraanggrian.socialview.SocialView;
 import com.hendraanggrian.widget.FilteredAdapter;
 import com.hendraanggrian.widget.SocialAutoCompleteTextView;
 import com.mualab.org.user.R;
+import com.mualab.org.user.activity.explore.model.ExSearchTag;
 import com.mualab.org.user.activity.feeds.adapter.UserSuggessionAdapter;
 import com.mualab.org.user.activity.main.MainActivity;
 import com.mualab.org.user.activity.people_tag.activity.PeopleTagActivity;
@@ -102,22 +104,22 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
 
     private LinkedHashSet<String> tagList = new LinkedHashSet<>();
     private TextView tvLoaction;
-    private ImageView ivShareFbOn, ivShareTwitterOn,ivShareInstaOn, iv_postimage;
+    private ImageView ivShareFbOn, ivShareTwitterOn, ivShareInstaOn, iv_postimage;
 
-    private boolean isFbShared = true, isTwitteron = true,isInstaon= true;
+    private boolean isFbShared = true, isTwitteron = true, isInstaon = true;
     //private Double lat, lng;
     private TagAdapter tagAdapter;
     private UserSuggessionAdapter mentionAdapter;
     private SocialAutoCompleteTextView edCaption;
-    private TextView tvMediaSize,tvTagCount;
+    private TextView tvMediaSize, tvTagCount;
     private Bitmap thumbImage = null;
     private ArrayList<String> hashTags = new ArrayList<>();
     //  private HashMap<Integer,ArrayList<TagToBeTagged>> taggedImgMap = new HashMap<>();
 
     private int feedType;
-    private String caption;
+    private String caption, textTagString = null;
     private String lastTxt;
-    private String tages = "";
+    private String tages = "", allIds = "";
 
     private MediaUri mediaUri;
     private AlertDialog mAlertDialog;
@@ -132,10 +134,11 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
 
     private Handler handler;
     private Runnable runnable;
-    private  long mLastClickTime = 0;
-    private String tagJson="",tagIdsArray="";
-    private  List<ArrayList<TagToBeTagged>> listOfValues ;
+    private long mLastClickTime = 0;
+    private String tagJson = "", tagIdsArray = "";
+    private List<ArrayList<TagToBeTagged>> listOfValues;
     private Button btn_post;
+    private List<ExSearchTag> tempTxtTagHoriList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,7 +146,7 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_feed_post);
         //setStatusbarColor();
         Intent intent = getIntent();
-        if (intent!= null) {
+        if (intent != null) {
             caption = intent.getStringExtra("caption");
             thumbImage = intent.getParcelableExtra("thumbImage");
             mediaUri = (MediaUri) intent.getSerializableExtra("mediaUri");
@@ -322,7 +325,7 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
         ivShareTwitterOn = findViewById(R.id.iv_twitter_on);
         ivShareInstaOn = findViewById(R.id.iv_insta_on);
         iv_postimage = findViewById(R.id.iv_selectedImage);
-        if (thumbImage!=null)
+        if (thumbImage != null)
             iv_postimage.setImageBitmap(thumbImage);
 
         edCaption = findViewById(R.id.edCaption);
@@ -343,7 +346,7 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
         edCaption.setThreshold(1);
         edCaption.setHashtagEnabled(true);
         edCaption.setHyperlinkEnabled(true);
-        edCaption.setHashtagColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        edCaption.setHashtagColor(ContextCompat.getColor(this, R.color.text_color));
         edCaption.setMentionColor(ContextCompat.getColor(this, R.color.colorPrimary));
 
 
@@ -361,10 +364,10 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
 
     @SuppressLint("DefaultLocale")
     private void updateUi() {
-        if(mediaUri != null){
-            if (mediaUri.mediaType == Constant.IMAGE_STATE && mediaUri.uriList.size()>0){
+        if (mediaUri != null) {
+            if (mediaUri.mediaType == Constant.IMAGE_STATE && mediaUri.uriList.size() > 0) {
                 findViewById(R.id.ll_tagPepole).setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 findViewById(R.id.ll_tagPepole).setVisibility(View.GONE);
             }
 
@@ -380,9 +383,9 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
         if (mediaUri != null) {
 
             if (mediaUri.mediaType == Constant.VIDEO_STATE) {
-                if (thumbImage!=null){
+                if (thumbImage != null) {
                     videoThumb = thumbImage;
-                }else {
+                } else {
                     String filePath = ImageVideoUtil.generatePath(Uri.parse(mediaUri.uri), this);
                     videoThumb = ImageVideoUtil.getVidioThumbnail(filePath, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
                 }
@@ -419,7 +422,7 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        if (SystemClock.elapsedRealtime() - mLastClickTime < 600){
+        if (SystemClock.elapsedRealtime() - mLastClickTime < 600) {
             return;
         }
         mLastClickTime = SystemClock.elapsedRealtime();
@@ -432,7 +435,7 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
         switch (v.getId()) {
 
             case R.id.ll_tagPepole:
-                if (feedType == Constant.IMAGE_STATE){
+                if (feedType == Constant.IMAGE_STATE) {
                     if (mediaUri != null && mediaUri.uriList != null && mediaUri.uriList.size() > 0) {
 
                         if (mediaUri.mediaType == Constant.IMAGE_STATE) {
@@ -452,6 +455,22 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
                                     .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION));
                         }
                     }
+                } else {
+
+                    if (!edCaption.getText().toString().trim().equals("")) {
+
+                        Intent intent = new Intent(FeedPostActivity.this, TextTagActivity.class);
+                        intent.putExtra("tempTxtTagHoriList", (Serializable) tempTxtTagHoriList);
+                        intent.putExtra("allIds", allIds);
+                        startActivityForResult(intent, Constant.TextTagREQCODE);
+
+                    } else {
+                        Animation shake = AnimationUtils.loadAnimation(FeedPostActivity.this, R.anim.shake);
+                        edCaption.startAnimation(shake);
+                        findViewById(R.id.tv_post).setEnabled(true);
+                    }
+
+
                 }
 
                 // startActivity(new Intent(FeedPostActivity.this, DemoTagActivity.class));
@@ -465,13 +484,13 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
                 break;*/
 
             case R.id.tv_post:
-                if (listOfValues.size()!=0){
+                if (listOfValues.size() != 0) {
                     Gson gson = new GsonBuilder().create();
                     ArrayList<String> tagIdsArrayList = new ArrayList<>();
-                    for (int i = 0; i<listOfValues.size();i++){
-                        for (TagToBeTagged tag : listOfValues.get(i)){
-                            HashMap<String,TagDetail> tagDetails = tag.getTagDetails();
-                            for(Map.Entry map  :  tagDetails.entrySet() ) {
+                    for (int i = 0; i < listOfValues.size(); i++) {
+                        for (TagToBeTagged tag : listOfValues.get(i)) {
+                            HashMap<String, TagDetail> tagDetails = tag.getTagDetails();
+                            for (Map.Entry map : tagDetails.entrySet()) {
                                 TagDetail tagDetail = tagDetails.get(map.getKey());
                                 tagIdsArrayList.add(tagDetail.tagId);
                             }
@@ -496,13 +515,13 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
                 }
                 break;
             case R.id.btn_post:
-                if (listOfValues.size()!=0){
+                if (listOfValues.size() != 0) {
                     Gson gson = new GsonBuilder().create();
                     ArrayList<String> tagIdsArrayList = new ArrayList<>();
-                    for (int i = 0; i<listOfValues.size();i++){
-                        for (TagToBeTagged tag : listOfValues.get(i)){
-                            HashMap<String,TagDetail> tagDetails = tag.getTagDetails();
-                            for(Map.Entry map  :  tagDetails.entrySet() ) {
+                    for (int i = 0; i < listOfValues.size(); i++) {
+                        for (TagToBeTagged tag : listOfValues.get(i)) {
+                            HashMap<String, TagDetail> tagDetails = tag.getTagDetails();
+                            for (Map.Entry map : tagDetails.entrySet()) {
                                 TagDetail tagDetail = tagDetails.get(map.getKey());
                                 tagIdsArrayList.add(tagDetail.tagId);
                             }
@@ -569,7 +588,7 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
 
         } else {
             findViewById(R.id.tv_post).setEnabled(true);
-            showToast( getString(R.string.error_msg_network));
+            showToast(getString(R.string.error_msg_network));
           /*  MySnackBar.showSnackbar(FeedPostActivity.this, findViewById(R.id.activity_add_post),
                     getString(R.string.error_msg_network));*/
         }
@@ -577,7 +596,7 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
 
     private void initProgressBar() {
 
-        if(mAlertDialog==null){
+        if (mAlertDialog == null) {
             LayoutInflater li = LayoutInflater.from(this);
             @SuppressLint("InflateParams")
             View layout = li.inflate(R.layout.layout_processing_dialog, null);
@@ -627,13 +646,13 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
                 Place place = PlaceAutocomplete.getPlace(this, data);
                 address = new LocationUtil().getAddressDetails(place);
 
-                if(TextUtils.isEmpty(place.getName())){
-                    String city = ""+place.getLocale();
+                if (TextUtils.isEmpty(place.getName())) {
+                    String city = "" + place.getLocale();
                     String country = place.getLocale().getCountry();
-                    if(TextUtils.isEmpty(city))
+                    if (TextUtils.isEmpty(city))
                         city = "";
 
-                    if(!TextUtils.isEmpty(country))
+                    if (!TextUtils.isEmpty(country))
                         address.placeName = city + ", " + country;
                     else address.placeName = city;
                 }
@@ -643,7 +662,7 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
                 Status status = PlaceAutocomplete.getStatus(this, data);
                 // TODO: Handle the error.
             }
-        }else if(requestCode == Constant.REQUEST_CHECK_SETTINGS){
+        } else if (requestCode == Constant.REQUEST_CHECK_SETTINGS) {
 
             final LocationSettingsStates states = LocationSettingsStates.fromIntent(data);
             switch (resultCode) {
@@ -657,7 +676,7 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
                 default:
                     break;
             }
-        }else  if (requestCode == 100 && resultCode != 0) {
+        } else if (requestCode == 100 && resultCode != 0) {
             if (data != null) {
                 tagJson = data.getStringExtra("tagJson");
                 listOfValues = (List<ArrayList<TagToBeTagged>>) data.getSerializableExtra("listOfValues");
@@ -665,12 +684,22 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
                 tvTagCount.setText(tagCount);
             }
         }
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == Constant.TextTagREQCODE && data != null) {
+                allIds = data.getStringExtra("allIds");
+                textTagString = data.getStringExtra("caption");
+                int tagCount = data.getIntExtra("tagCount", 0);
+                tvTagCount.setText(tagCount + "");
+                tempTxtTagHoriList = (List<ExSearchTag>) data.getSerializableExtra("tempTxtTagHoriList");
+            }
+        }
     }
 
     @Override
     public void onBackPressed() {
         KeyboardUtil.hideKeyboard(this.getCurrentFocus(), this);
-        if(handler!=null)
+        if (handler != null)
             handler.removeCallbacks(runnable);
         super.onBackPressed();
     }
@@ -737,13 +766,19 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
 
         Map<String, String> map = new HashMap<>();
         map.put("feedType", feedTypetxt);
+
+        if (textTagString != null) {
+            caption = caption + "  " + textTagString;
+        }
+
         map.put("caption", caption);
+
         map.put("tag", tages);
         map.put("serviceTagId", "");
         map.put("userId", "" + Mualab.currentUser.id);
         map.put("location", address.placeName);
-        map.put("city", TextUtils.isEmpty(address.city)?"":address.state);
-        map.put("country", TextUtils.isEmpty(address.country)?"":address.country);
+        map.put("city", TextUtils.isEmpty(address.city) ? "" : address.state);
+        map.put("country", TextUtils.isEmpty(address.country) ? "" : address.country);
         if (TextUtils.isEmpty(address.latitude) || TextUtils.isEmpty(address.longitude)) {
             map.put("latitude", "");
             map.put("longitude", "");
@@ -755,12 +790,12 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
         ArrayList<String> tagIdsArrayList = new ArrayList<>();
         String emptyArray = gson.toJson(tagIdsArrayList);
 
-        if (tagJson!=null && !tagJson.equals(""))
-            map.put("peopleTag",tagJson);
+        if (tagJson != null && !tagJson.equals(""))
+            map.put("peopleTag", tagJson);
         else
-            map.put("peopleTag",emptyArray);
+            map.put("peopleTag", emptyArray);
 
-        if (tagIdsArray!=null && !tagIdsArray.equals(""))
+        if (tagIdsArray != null && !tagIdsArray.equals(""))
             map.put("tagData", tagIdsArray);
         else
             map.put("tagData", emptyArray);
@@ -815,7 +850,7 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
                 resetView();
                 // setResult(Activity.RESULT_OK);
                 Intent i = new Intent(FeedPostActivity.this, MainActivity.class);
-                i.putExtra("FeedPostActivity","FeedPostActivity");
+                i.putExtra("FeedPostActivity", "FeedPostActivity");
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(i);
                 finish();
@@ -877,14 +912,14 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
                                 }
                             }).execute();
 
-                }else getCurrentLocation();
+                } else getCurrentLocation();
             }
         });
 
 
     }
 
-    private void getCurrentLocation(){
+    private void getCurrentLocation() {
         LocationDetector locationDetector = new LocationDetector();
         FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(FeedPostActivity.this);
         if (locationDetector.isLocationEnabled(FeedPostActivity.this) && locationDetector.checkLocationPermission(FeedPostActivity.this)) {
@@ -907,7 +942,7 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
                         }
                     });
 
-        }else {
+        } else {
             locationDetector.showLocationSettingDailod(FeedPostActivity.this);
         }
     }
@@ -959,14 +994,14 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    private void uploadVideo(Bitmap videoThumb){
+    private void uploadVideo(Bitmap videoThumb) {
         /*/storage/emulated/0/DCIM/Camera/20180808_113328.mp4*/
         Map<String, String> map = prepareCommonPostData();
         String uri = mediaUri.uri;
 
-        if (mediaUri.videoFile!=null)
+        if (mediaUri.videoFile != null)
             tempFile = mediaUri.videoFile;
-        else{
+        else {
             String path = ImageVideoUtil.generatePath(Uri.parse(uri), this);
             tempFile = new File(path);
         }
@@ -985,14 +1020,14 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
                         resetView();
                         //  setResult(Activity.RESULT_OK);
                         Intent i = new Intent(FeedPostActivity.this, MainActivity.class);
-                        i.putExtra("FeedPostActivity","FeedPostActivity");
+                        i.putExtra("FeedPostActivity", "FeedPostActivity");
                         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(i);
                         finish();
-                    }else {
+                    } else {
                         MyToast.getInstance(FeedPostActivity.this).showSmallMessage(message);
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -1001,7 +1036,8 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
             public void ErrorListener(VolleyError error) {
                 findViewById(R.id.tv_post).setEnabled(true);
                 hideProgressBar();
-            }})
+            }
+        })
                 .setAuthToken(Mualab.currentUser.authToken)
                 .setParam(map)
                 .setProgress(false))
@@ -1055,7 +1091,7 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
             new File(Uri.parse(uri).getPath()).delete();
     }
 
-    private void saveTempAndCompress(String uri){
+    private void saveTempAndCompress(String uri) {
         String path = ImageVideoUtil.generatePath(Uri.parse(uri), this);
         tempFile = new File(path); //com.mualab.org.user.util.media.FileUtils.getFile(this, Uri.parse(uri));
         new VideoCompressor().execute();
@@ -1068,7 +1104,7 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
         protected void onPreExecute() {
             super.onPreExecute();
             showProgressBar();
-            Log.d(TAG,"Start video compression");
+            Log.d(TAG, "Start video compression");
         }
 
         @Override
@@ -1079,19 +1115,19 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
         @Override
         protected void onPostExecute(String filePath) {
             super.onPostExecute(filePath);
-            if(!filePath.equals("")){
+            if (!filePath.equals("")) {
                 mUploadUri = filePath;
-                Log.d(TAG,"Compression successfully!");
-                if(mDeleteCompressedMedia){
+                Log.d(TAG, "Compression successfully!");
+                if (mDeleteCompressedMedia) {
                     uploadVideo(videoThumb);
                 }
-            }else {
+            } else {
                 hideProgressBar();
             }
         }
     }
 
-    protected void setStatusbarColor(){
+    protected void setStatusbarColor() {
         Window window = this.getWindow();
         // clear FLAG_TRANSLUCENT_STATUS flag:
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

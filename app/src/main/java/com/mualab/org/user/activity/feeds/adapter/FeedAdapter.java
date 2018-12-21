@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,6 +33,7 @@ import com.mualab.org.user.activity.feeds.activity.ReportActivity;
 import com.mualab.org.user.activity.feeds.listener.OnImageSwipeListener;
 import com.mualab.org.user.application.Mualab;
 import com.mualab.org.user.data.feeds.Feeds;
+import com.mualab.org.user.data.remote.API;
 import com.mualab.org.user.data.remote.HttpResponceListner;
 import com.mualab.org.user.data.remote.HttpTask;
 import com.mualab.org.user.dialogs.MyToast;
@@ -39,6 +43,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
@@ -65,6 +70,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Feeds> feedItems;
     private Listener listener;
     private boolean loading;
+
+
 
     public void showHideLoading(boolean b) {
         loading = b;
@@ -267,7 +274,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void setupTextFeedClickableViews(final FeedTextHolder holder) {
-        holder.tv_text.setHashtagColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+        holder.tv_text.setHashtagColor(ContextCompat.getColor(mContext, R.color.text_color));
         holder.tv_text.setMentionColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
         holder.tv_text.setOnHyperlinkClickListener(new Function2<SocialView, CharSequence, Unit>() {
             @Override
@@ -335,17 +342,34 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.ivShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int adapterPosition = holder.getAdapterPosition();
+                Feeds feed = feedItems.get(adapterPosition);
+                sharOnsocial(holder.tv_text.getText().toString(),feed._id);
                 // int adapterPosition = holder.getAdapterPosition();
                 // Feeds feed = feedItems.get(adapterPosition);
                 // shareDialog(feed, 0);
             }
         });
 
-        holder.iv_report.setOnClickListener(new View.OnClickListener() {
+        holder.ly_report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                holder.ly_report.setVisibility(View.GONE);
                 Intent intent = new Intent(mContext, ReportActivity.class);
+                intent.putExtra("feedOwenerId",feedItems.get(holder.getAdapterPosition()).userId);
+                intent.putExtra("feedId",feedItems.get(holder.getAdapterPosition())._id);
                 mContext.startActivity(intent);
+            }
+        });
+
+        holder.iv_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(holder.ly_report.getVisibility() == View.VISIBLE){
+                    holder.ly_report.setVisibility(View.GONE);
+                }else {
+                    holder.ly_report.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -372,7 +396,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void setupFeedVideoClickableViews(final FeedVideoHolder videoHolder) {
-        videoHolder.tv_text.setHashtagColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+        videoHolder.tv_text.setHashtagColor(ContextCompat.getColor(mContext, R.color.text_color));
         videoHolder.tv_text.setMentionColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
         videoHolder.tv_text.setOnHyperlinkClickListener(new Function2<SocialView, CharSequence, Unit>() {
             @Override
@@ -440,18 +464,35 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         videoHolder.ivShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int adapterPosition = videoHolder.getAdapterPosition();
+                Feeds feed = feedItems.get(adapterPosition);
+                sharOnsocial("",feed._id);
                 /*int adapterPosition = videoHolder.getAdapterPosition();
                 Feeds feed = feedItems.get(adapterPosition);
                 int innerPosition = 0;
-                //  shareDialog(feed, innerPosition);*/
+                  shareDialog(feed, innerPosition);*/
             }
         });
 
-        videoHolder.iv_report.setOnClickListener(new View.OnClickListener() {
+        videoHolder.ly_report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                videoHolder.ly_report.setVisibility(View.GONE);
                 Intent intent = new Intent(mContext, ReportActivity.class);
+                intent.putExtra("feedOwenerId",feedItems.get(videoHolder.getAdapterPosition()).userId);
+                intent.putExtra("feedId",feedItems.get(videoHolder.getAdapterPosition())._id);
                 mContext.startActivity(intent);
+            }
+        });
+
+        videoHolder.iv_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(videoHolder.ly_report.getVisibility() == View.VISIBLE){
+                    videoHolder.ly_report.setVisibility(View.GONE);
+                }else {
+                    videoHolder.ly_report.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -480,7 +521,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void setupClickableViews(final CellFeedViewHolder cellFeedViewHolder) {
-        cellFeedViewHolder.tv_text.setHashtagColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+        cellFeedViewHolder.tv_text.setHashtagColor(ContextCompat.getColor(mContext, R.color.text_color));
         cellFeedViewHolder.tv_text.setMentionColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
         cellFeedViewHolder.tv_text.setOnHyperlinkClickListener(new Function2<SocialView, CharSequence, Unit>() {
             @Override
@@ -551,20 +592,39 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         cellFeedViewHolder.ivShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int adapterPosition = cellFeedViewHolder.getAdapterPosition();
+                Feeds feed = feedItems.get(adapterPosition);
+                sharOnsocial("",feed._id);
                /* int adapterPosition = cellFeedViewHolder.getAdapterPosition();
                 Feeds feed = feedItems.get(adapterPosition);
                 int innerPosition = 0;
                 if (cellFeedViewHolder.weakRefViewPager != null)
-                    innerPosition = cellFeedViewHolder.weakRefViewPager.get().getCurrentItem();
-                // shareDialog(feed, innerPosition);*/
+                    innerPosition = cellFeedViewHolder.weakRefViewPager.get().getCurrentItem();*/
+                // shareDialog(feed, innerPosition);
+
+
             }
         });
 
-        cellFeedViewHolder.iv_report.setOnClickListener(new View.OnClickListener() {
+        cellFeedViewHolder.ly_report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                cellFeedViewHolder.ly_report.setVisibility(View.GONE);
                 Intent intent = new Intent(mContext, ReportActivity.class);
+                intent.putExtra("feedOwenerId",feedItems.get(cellFeedViewHolder.getAdapterPosition()).userId);
+                intent.putExtra("feedId",feedItems.get(cellFeedViewHolder.getAdapterPosition())._id);
                 mContext.startActivity(intent);
+            }
+        });
+
+        cellFeedViewHolder.iv_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(cellFeedViewHolder.ly_report.getVisibility() == View.VISIBLE){
+                    cellFeedViewHolder.ly_report.setVisibility(View.GONE);
+                }else {
+                    cellFeedViewHolder.ly_report.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -642,19 +702,21 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     static class Holder extends RecyclerView.ViewHolder {
         protected CheckBox likeIcon;
         protected ImageView ivLike;
-        protected ImageView ivProfile, ivShare, ivComments,iv_report; //btnLike
+        protected ImageView ivProfile, ivShare, ivComments,iv_menu; //btnLike
         protected LinearLayout ly_like_count, ly_comments;
         protected TextView tvUserName, tvUserLocation, tvPostTime;
         protected TextView tv_like_count, tv_comments_count;
         protected SocialTextView tv_text;
         protected AppCompatButton btnFollow;
+        RelativeLayout ly_report;
 
         public Holder(View itemView) {
             super(itemView);
             /*Common ui*/
             ivProfile =  itemView.findViewById(R.id.iv_user_image);
             ivShare =  itemView.findViewById(R.id.iv_share);
-            iv_report =  itemView.findViewById(R.id.iv_report);
+            ly_report =  itemView.findViewById(R.id.ly_report);
+            iv_menu =  itemView.findViewById(R.id.iv_menu);
             ivComments = itemView.findViewById(R.id.iv_comments);
             tv_text = itemView.findViewById(R.id.tv_text);
             tvUserName = itemView.findViewById(R.id.tv_user_name);
@@ -823,5 +885,16 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 notifyItemChanged(position);
             }
         }).setParam(map)).execute("followFollowing");
+    }
+
+
+    private void sharOnsocial(String text,int feedId) {
+        Intent sharIntent = new Intent(Intent.ACTION_SEND);
+        //sharIntent.setType("image/png");
+        sharIntent.setType("text/plain");
+        sharIntent.putExtra(Intent.EXTRA_SUBJECT, "Koobi Social");
+        sharIntent.putExtra(Intent.EXTRA_TEXT, text+"\n"+"profile url:" +API.BASE_URL+"feedDetails/"+ feedId +"\n");
+        mContext.startActivity(Intent.createChooser(sharIntent, "Share:"));
+
     }
 }

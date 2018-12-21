@@ -13,7 +13,8 @@
         android:textColor="@color/dark_gray"
         android:text="@string/description"
         android:fontFamily="@font/nunito_regular"
-        android:textSize="@dimen/mcam_content_inset"/>
+        android:textSize="@dimen/evp_text_size_medium" />
+
 
 
 </RelativeLayout>

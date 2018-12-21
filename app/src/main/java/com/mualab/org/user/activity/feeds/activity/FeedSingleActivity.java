@@ -42,6 +42,7 @@ import com.mualab.org.user.data.feeds.LiveUserInfo;
 import com.mualab.org.user.data.remote.HttpResponceListner;
 import com.mualab.org.user.data.remote.HttpTask;
 import com.mualab.org.user.dialogs.NoConnectionDialog;
+import com.mualab.org.user.dialogs.Progress;
 import com.mualab.org.user.listener.FeedsListner;
 import com.mualab.org.user.utils.ConnectionDetector;
 import com.mualab.org.user.utils.WrapContentLinearLayoutManager;
@@ -61,7 +62,7 @@ public class FeedSingleActivity extends AppCompatActivity implements View.OnClic
     private Feeds feed;
     private List<Feeds> list = new ArrayList<>();
     private Feeds feeds;
-    private LinearLayout ll_progress;
+
     private BaseListner feedsListner;
     private TextView tvHeaderTitle;
     private ViewPagerAdapter.LongPressListner longPressListner;
@@ -114,7 +115,6 @@ public class FeedSingleActivity extends AppCompatActivity implements View.OnClic
     @SuppressLint("SetTextI18n")
     public void init() {
         RecyclerView rvFeed = findViewById(R.id.rvFeed);
-        ll_progress = findViewById(R.id.ll_progress);
         ImageView btnBack = findViewById(R.id.btnBack);
         tvHeaderTitle = findViewById(R.id.tvHeaderTitle);
         tvHeaderTitle.setText(R.string.text_post);
@@ -138,7 +138,7 @@ public class FeedSingleActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void getUpdatedFeed(final boolean enableprogress) {
-
+        Progress.show(this);
         if (!ConnectionDetector.isConnected()) {
             new NoConnectionDialog(FeedSingleActivity.this, new NoConnectionDialog.Listner() {
                 @Override
@@ -166,7 +166,7 @@ public class FeedSingleActivity extends AppCompatActivity implements View.OnClic
 
                     if (status.equalsIgnoreCase("success")) {
                         list.clear();
-                        ll_progress.setVisibility(View.GONE);
+                        Progress.hide(FeedSingleActivity.this);
                        /* if(isPulltoRefrash){
                             isPulltoRefrash = false;
                             mRefreshLayout.stopRefresh(true, 500);
@@ -291,7 +291,6 @@ public class FeedSingleActivity extends AppCompatActivity implements View.OnClic
 
                 }*/
 
-                ll_progress.setVisibility(enableprogress ? View.VISIBLE : View.GONE);
             }
         }).setParam(map)).execute("feed" + feed._id);
     }

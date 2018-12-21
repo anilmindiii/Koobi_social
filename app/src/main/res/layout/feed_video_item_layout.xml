@@ -67,45 +67,87 @@
         android:layout_height="wrap_content"/>
 
     <RelativeLayout
-        android:id="@+id/rl_imageView"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_marginBottom="1dp"
-        android:layout_marginTop="1dp">
+        android:layout_height="290dp">
 
-        <ImageView
-            android:id="@+id/ivFeedCenter"
+        <RelativeLayout
+            android:id="@+id/rl_imageView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:foregroundGravity="center"
-            android:scaleType="centerCrop"
-            android:foreground="@drawable/play_bg_icon"
-            android:src="@drawable/gallery_placeholder" />
+            android:layout_height="250dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="1dp">
 
-        <View
-            android:id="@+id/vBgLike"
-            android:layout_width="220dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_centerInParent="true"
-            android:background="@drawable/bg_like_circle_background"
-            android:visibility="invisible" />
+            <ImageView
+                android:id="@+id/ivFeedCenter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foregroundGravity="center"
+                android:scaleType="centerCrop"
+                android:foreground="@drawable/play_bg_icon"
+                android:src="@drawable/gallery_placeholder" />
 
-        <ImageView
-            android:id="@+id/ivLike"
+            <View
+                android:id="@+id/vBgLike"
+                android:layout_width="220dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_centerInParent="true"
+                android:background="@drawable/bg_like_circle_background"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:id="@+id/ivLike"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="center"
+                android:src="@drawable/inactive_like_ico"
+                android:tint="@color/colorPrimary"
+                android:visibility="invisible" />
+
+
+        </RelativeLayout>
+
+        <include
+            layout="@layout/feed_item_footer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="center"
-            android:src="@drawable/inactive_like_ico"
-            android:tint="@color/colorPrimary"
-            android:visibility="invisible" />
+            android:layout_alignParentBottom="true"
+            android:layout_height="40dp" />
+
+
+        <RelativeLayout
+            android:id="@+id/ly_report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="22dp"
+            android:layout_marginRight="33dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="center"
+                android:src="@drawable/shape_img"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="center"
+                android:text="Report this post"
+                android:textColor="@color/dark_gray"
+                android:textSize="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="15dp"
+                android:fontFamily="@font/nunito_regular"
+                />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
-    <include
-        layout="@layout/feed_item_footer"
-        android:layout_width="match_parent"
-        android:layout_height="40dp" />
+
 
     <com.hendraanggrian.widget.SocialTextView
         android:id="@+id/tv_text"

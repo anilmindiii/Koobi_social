@@ -13,35 +13,73 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="320dp"
-        android:id="@+id/rl_imageView"
-        >
+        android:layout_height="360dp">
 
-        <android.support.v4.view.ViewPager
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/viewpager"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="320dp"
+            android:id="@+id/rl_imageView">
 
-        <LinearLayout
-            android:id="@+id/ll_Dot"
+            <android.support.v4.view.ViewPager
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <LinearLayout
+                android:id="@+id/ll_Dot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_alignParentBottom="true"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal" />
+
+
+        </RelativeLayout>
+
+        <include layout="@layout/feed_item_footer"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_height="40dp" />
+
+        <RelativeLayout
+            android:id="@+id/ly_report"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:layout_marginBottom="22dp"
+            android:layout_marginRight="33dp"
+            android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal" />
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="center"
+                android:src="@drawable/shape_img" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="center"
+                android:text="Report this post"
+                android:textColor="@color/dark_gray"
+                android:textSize="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="15dp"
+                android:fontFamily="@font/nunito_regular"
+                />
+
+        </RelativeLayout>
+
+
+
+
 
 
     </RelativeLayout>
-
-
-    <include layout="@layout/feed_item_footer"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        />
 
     <com.hendraanggrian.widget.SocialTextView
         android:id="@+id/tv_text"

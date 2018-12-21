@@ -146,10 +146,7 @@
                     android:textColor="@color/gray"
                     android:layout_marginTop="9dp"
                     android:paddingBottom="7dp"
-                    android:inputType="textPostalAddress|textCapCharacters"
-                    />
-
-
+                    android:inputType="textPostalAddress|textCapCharacters" />
 
 
                 <ImageView

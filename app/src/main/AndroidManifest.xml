@@ -53,6 +53,17 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="koobi.co.uk:8042"
+                    android:pathPrefix="/api"
+                    android:scheme="http" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activity.authentication.LoginActivity"
@@ -208,7 +219,12 @@
             android:name="io.fabric.ApiKey"
             android:value="f584c59e1354706f33ae4e5508ac9cb630282533" />
 
-        <activity android:name=".activity.feeds.activity.ReportActivity"
+        <activity
+            android:name=".activity.feeds.activity.ReportActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
+
+        <activity android:name=".activity.feeds.activity.TextTagActivity"
             android:screenOrientation="portrait"
             android:theme="@style/StatusBarBlack"/>
     </application>
