@@ -131,7 +131,7 @@ public class ReportActivity extends AppCompatActivity {
 
                 SubmitReportInfo submitReportInfo = new SubmitReportInfo();
                 submitReportInfo.description = ed_description.getText().toString().trim();
-                submitReportInfo.feedId = dataBean._id;
+                submitReportInfo.feedId = feedId;
                 submitReportInfo.feedOwnerId = feedOwenerId;
                 submitReportInfo.myId = Mualab.currentUser.id+"";
                 submitReportInfo.reason = tv_reason.getText().toString().trim();

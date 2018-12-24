@@ -233,14 +233,14 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.tvCustomerApp).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String appPackageName = "com.mualab.org.biz";//getPackageName(); // getPackageName() from Context or Activity object
+               /* String appPackageName = "com.mualab.org.biz";//getPackageName(); // getPackageName() from Context or Activity object
                 try {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
                 } catch (android.content.ActivityNotFoundException anfe) {
                     showToast(getString(R.string.under_development));
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
                 }
-
+*/
 
             }
         });
@@ -302,9 +302,12 @@ public class LoginActivity extends AppCompatActivity {
 
         }
 
+        String deviceToken = FirebaseInstanceId.getInstance().getToken();//"androidTest";
+
         Map<String, String> params = new HashMap<>();
         params.put("socialId", socialId);
         params.put("socialType", socialType);
+        params.put("deviceToken", deviceToken);
 
 
         new HttpTask(new HttpTask.Builder(this, "checksocialLogin", new HttpResponceListner.Listener() {

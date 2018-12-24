@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="22dp"
             android:layout_marginRight="33dp"
-            android:layout_gravity="right"
+            android:layout_gravity="right|bottom"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:visibility="gone">

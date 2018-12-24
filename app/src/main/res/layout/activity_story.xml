@@ -14,8 +14,8 @@
             android:id="@+id/ivPhoto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@null"
-            android:scaleType="fitXY" />
+            android:layout_centerInParent="true"
+            android:contentDescription="@null"/>
 
         <RelativeLayout
             android:id="@+id/lyVideoView"
@@ -128,7 +128,8 @@
         android:layout_gravity="top"
         android:layout_marginTop="8dp"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginRight="5dp"
+        />
 
     <RelativeLayout
         android:id="@+id/addMoreStory"
@@ -153,7 +154,7 @@
             android:layout_height="wrap_content"
             style="@style/TextView.Medium"
             android:textSize="11sp"
-            android:text="@string/add_more_story"
+            android:text="@string/add"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/ic_add_to_story"
             android:layout_marginTop="7dp"

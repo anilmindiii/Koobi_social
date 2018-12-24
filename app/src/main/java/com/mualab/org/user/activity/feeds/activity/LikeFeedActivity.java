@@ -46,6 +46,7 @@ public class LikeFeedActivity extends AppCompatActivity {
     private TextView tvMsg;
     private int feedId;
     private int myUserId;
+    private ImageView ivUserProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +79,9 @@ public class LikeFeedActivity extends AppCompatActivity {
         ed_search = findViewById(R.id.ed_search);
         ll_loadingBox = findViewById(R.id.ll_loadingBox);
         progress_bar = findViewById(R.id.progress_bar);
+        ivUserProfile = findViewById(R.id.ivUserProfile);
 
+        ivUserProfile.setVisibility(View.GONE);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);

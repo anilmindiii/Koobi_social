@@ -33,10 +33,10 @@
                 <corners android:radius="5dip" />
                 <gradient
                     android:angle="270"
-                    android:centerColor="@color/ss_progress_centerColor"
+                    android:centerColor="@color/colorPrimary"
                     android:centerY="0.75"
-                    android:endColor="@color/ss_progress_endColor"
-                    android:startColor="@color/ss_progress_startColor" />
+                    android:endColor="@color/colorPrimary"
+                    android:startColor="@color/colorPrimary" />
             </shape>
         </clip>
     </item>

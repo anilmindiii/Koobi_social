@@ -153,6 +153,7 @@
     <string name="independent">Independent</string>
     <string name="business">Business</string>
     <string name="email_id">Email</string>
+    <string name="trimming_progress">Trimming your video...</string>
     <string name="phone_number">Phone Number</string>
     <string name="continue_txt">Continue</string>
     <string name="country_activity">Choose a country</string>
@@ -410,6 +411,7 @@
     <string name="link">link</string>
     <string name="select_reason">Select Reason</string>
     <string name="description">Description</string>
+    <string name="add">Add</string>
 
 
 </resources>

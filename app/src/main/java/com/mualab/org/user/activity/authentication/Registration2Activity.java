@@ -82,6 +82,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -209,6 +210,13 @@ public class Registration2Activity extends AppCompatActivity implements View.OnC
         edConfirmPwd = findViewById(R.id.edConfirmPwd);
         findViewById(R.id.btnContinue2).setOnClickListener(this);
         findViewById(R.id.alreadyHaveAnAccount).setOnClickListener(this);
+
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+
+        yearShow = calendar.get(Calendar.YEAR);
+        monthShow = calendar.get(Calendar.MONTH) + 1;
+        dayShow = calendar.get(Calendar.DAY_OF_MONTH);
+
     }
 
 

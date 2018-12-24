@@ -148,7 +148,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
             //showImage.setUri(media.uri);
             try {
 
-                showImage.setImageUri(media.uri);
+                showImage.setImageBitmap(ImageVideoUtil.getBitmapFromUri(context,media.uri));
 
                 //showImage.setImageBitmap(ImageVideoUtil.getBitmapFromUri(context,media.uri));
 
@@ -235,7 +235,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
         ivMultiSelection.setOnClickListener(this);
     }
 
-    private void refreshUi(Uri uri) {
+    private void refreshUi(Uri uri)  {
 
         if (isSupportMultipal) {
             ivImage.setVisibility(View.VISIBLE);
@@ -251,7 +251,13 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
         } else {
             showImage.setVisibility(View.VISIBLE);
             ivImage.setVisibility(View.GONE);
-            showImage.setImageUri(uri);
+            try{
+                showImage.setImageBitmap(ImageVideoUtil.getBitmapFromUri(context,uri));
+            }
+            catch (Exception e){
+                e.printStackTrace();
+
+            }
         }
     }
 
@@ -306,10 +312,10 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
 
             case R.id.tvNext:
                 if (!isSupportMultipal) {
-                    // cropImageAsync();
+                     cropImageAsync();
 
 
-                    Intent intent = new Intent(context, FeedPostActivity.class);
+                   /* Intent intent = new Intent(context, FeedPostActivity.class);
                     if (mSelected != null && mSelected.size() > 0) {
                         MediaUri mediaUri = new MediaUri();
                         mediaUri.mediaType = Constant.IMAGE_STATE;
@@ -335,7 +341,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
 
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    startActivityForResult(intent, Constant.POST_FEED_DATA);
+                    startActivityForResult(intent, Constant.POST_FEED_DATA);*/
                     // else startActivityForResult(intent, Constant.POST_FEED_DATA);
 
                 } else {

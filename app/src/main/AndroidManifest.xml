@@ -227,6 +227,13 @@
         <activity android:name=".activity.feeds.activity.TextTagActivity"
             android:screenOrientation="portrait"
             android:theme="@style/StatusBarBlack"/>
+
+        <activity
+            android:name=".VideoTrim.videoActivity.TrimmerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack"
+            android:noHistory="true"/>
+
     </application>
 
 </manifest>

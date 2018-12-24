@@ -496,7 +496,7 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
         params.put("userId", String.valueOf(Mualab.currentUser.id));
         // params.put("appType", "user");
 
-        HttpTask task = new HttpTask(new HttpTask.Builder(mContext, "artistSearch", new HttpResponceListner.Listener() {
+        HttpTask task = new HttpTask(new HttpTask.Builder(getActivity(), "artistSearch", new HttpResponceListner.Listener() {
             @Override
             public void onResponse(String response, String apiName) {
                 try {

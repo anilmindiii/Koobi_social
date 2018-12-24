@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,9 +26,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.mualab.org.user.R;
+import com.mualab.org.user.VideoTrim.videoActivity.TrimmerActivity;
+import com.mualab.org.user.VideoTrim.videoUtil.FileUtils;
 import com.mualab.org.user.activity.feeds.activity.FeedPostActivity;
 import com.mualab.org.user.activity.gellery.GalleryActivity;
 import com.mualab.org.user.activity.gellery.adapter.VideoGridViewAdapter;
@@ -43,6 +48,9 @@ import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.mualab.org.user.utils.constants.Constant.EXTRA_VIDEO_PATH;
+import static com.mualab.org.user.utils.constants.Constant.VIDEO_TOTAL_DURATION;
 
 
 public class VideoGalleryFragment extends Fragment implements View.OnClickListener,
@@ -160,22 +168,45 @@ public class VideoGalleryFragment extends Fragment implements View.OnClickListen
                 break;
 
             case R.id.tvNext:
+               // MyToast.getInstance(context).showDasuAlert(getResources().getString(R.string.under_development));
                 if (mediaUri!=null){
                     videoView.stopPlayback();
-                    Intent  intent = new Intent(context, VideoTrimmerActivity.class);
+                    //Intent  intent = new Intent(context, VideoTrimmerActivity.class);
+
+                    File file = new File(mediaUri.uri);
+                    long length = file.length();
+                    length = length/1024;
+
+                    length = length/1034;
+                    //Toast.makeText(getActivity(), "Video size:"+length+"KB",Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(context, TrimmerActivity.class);
+                    intent.putExtra(EXTRA_VIDEO_PATH, mediaUri.uri);
+                    intent.putExtra(VIDEO_TOTAL_DURATION, getMediaDuration(Uri.parse(mediaUri.uri)));
+                    intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 59);
+
                     intent.putExtra("caption", "");
                     intent.putExtra("mediaUri", mediaUri);
                     intent.putExtra("thumbImage", thumbImage);
                     intent.putExtra("feedType", mediaUri.mediaType);
                     intent.putExtra("requestCode", Constant.POST_FEED_DATA);
 
+                    startActivity(intent);
+
                     //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    startActivityForResult(intent, Constant.POST_FEED_DATA);
+                    //intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    //startActivityForResult(intent, Constant.POST_FEED_DATA);
 
                 }
                 break;
         }
+    }
+
+
+    private int getMediaDuration(Uri uriOfFile) {
+        MediaPlayer mp = MediaPlayer.create(context, uriOfFile);
+        int duration = mp.getDuration();
+        return duration;
     }
 
     @Override
@@ -240,7 +271,7 @@ public class VideoGalleryFragment extends Fragment implements View.OnClickListen
             // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
             long fileSizeInMB = fileSizeInKB / 1024;
 
-            if(fileSizeInMB>50){
+          /*  if(fileSizeInMB>50){
                 mediaUri = null;
                 MyToast.getInstance(context).showSmallMessage("You can't upload more then 50mb.");
             }else {
@@ -259,8 +290,23 @@ public class VideoGalleryFragment extends Fragment implements View.OnClickListen
                 videoView.requestFocus();
                 videoView.start();
                 expandToolbar();
+            }*/
 
-            }
+            filePath = ImageVideoUtil.generatePath(media.uri, context);
+            media.thumbImage = ImageVideoUtil.getVidioThumbnail(filePath); //ImageVideoUtil.getCompressBitmap();
+
+            mediaUri = new MediaUri();
+            mediaUri.uri = String.valueOf(media.uri);
+            mediaUri.uriList.add(String.valueOf(media.uri));
+            mediaUri.mediaType = Constant.VIDEO_STATE;
+            mediaUri.isFromGallery = true;
+            thumbImage = media.thumbImage;
+
+            //  videoView.setMediaController(mediaController);
+            videoView.setVideoURI(media.uri);
+            videoView.requestFocus();
+            videoView.start();
+            expandToolbar();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -318,7 +364,7 @@ public class VideoGalleryFragment extends Fragment implements View.OnClickListen
                         // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
                         long fileSizeInMB = fileSizeInKB / 1024;
 
-                        if(fileSizeInMB>50){
+                      /*  if(fileSizeInMB>50){
                             mediaUri = null;
                             MyToast.getInstance(context).showSmallMessage("You can't upload more then 50mb.");
                         }else {
@@ -333,9 +379,17 @@ public class VideoGalleryFragment extends Fragment implements View.OnClickListen
                             thumbImage = media.thumbImage;
 
                             //  videoView.setMediaController(mediaController);
+                        }*/
 
+                        filePath = ImageVideoUtil.generatePath(media.uri, context);
+                        media.thumbImage = ImageVideoUtil.getVidioThumbnail(filePath); //ImageVideoUtil.getCompressBitmap();
 
-                        }
+                        mediaUri = new MediaUri();
+                        mediaUri.uri = String.valueOf(media.uri);
+                        mediaUri.uriList.add(String.valueOf(media.uri));
+                        mediaUri.mediaType = Constant.VIDEO_STATE;
+                        mediaUri.isFromGallery = true;
+                        thumbImage = media.thumbImage;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

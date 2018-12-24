@@ -68,7 +68,7 @@
                    style="@style/TextView.Bold"
                    android:layout_centerInParent="true"
                    android:layout_alignParentRight="true"
-                   android:layout_margin="10dp"
+                   android:layout_margin="15dp"
                    android:textColor="@color/black"
                    android:text="Done"
                    android:textSize="16sp" />
@@ -85,8 +85,6 @@
            android:orientation="vertical"
            android:background="@color/white"
            android:gravity="center_horizontal">
-
-
 
            <android.support.v7.widget.CardView
                android:id="@+id/searchView"
@@ -117,6 +115,7 @@
                    android:hint="@string/search_people"
                    android:inputType="textPersonName"
                    android:maxLines="1"
+                   android:imeOptions="actionDone"
                    android:visibility="visible" />
 
            </android.support.v7.widget.CardView>
@@ -126,6 +125,8 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:divider="@null"
+               android:paddingLeft="10dp"
+               android:paddingRight="10dp"
                android:orientation="horizontal"
                android:background="@color/white"
                app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
@@ -133,15 +134,16 @@
            <View
                android:id="@+id/view_div"
                android:layout_width="match_parent"
-               android:layout_height="1dp"
+               android:layout_height="0.7dp"
                android:layout_marginTop="8dp"
-               android:background="@color/gray"
+               android:background="@color/gray2"
+               android:paddingBottom="10dp"
                android:visibility="gone"/>
+
 
            <android.support.v7.widget.RecyclerView
                android:id="@+id/rv_some_one_to_be_tagged"
                android:layout_width="match_parent"
-               android:layout_marginTop="15dp"
                android:layout_height="match_parent"
                android:background="@color/white" />
 

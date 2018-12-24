@@ -60,6 +60,8 @@ import com.otaliastudios.cameraview.SizeSelectors;
 
 import java.io.File;
 
+import static com.mualab.org.user.utils.media.ImageVideoUtil.generatePath;
+import static com.mualab.org.user.utils.media.ImageVideoUtil.getVidioThumbnail;
 
 
 public class CustomCameraActivity extends AppCompatActivity implements View.OnClickListener{
@@ -302,12 +304,20 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
                     String path = MediaStore.Images.Media.insertImage(CustomCameraActivity.this.
                             getContentResolver(), thumbImage, "Title", null);
 
-                    thumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(
-                            ImageVideoUtil.generatePath(captureMediaUri, CustomCameraActivity.this)),
-                            100, 100);
 
-                    thumbImage = ThumbnailUtils.createVideoThumbnail(captureMediaUri.getPath(),
-                            MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
+
+                    String filePath = generatePath(Uri.parse(path), CustomCameraActivity.this);
+
+                  thumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(
+                            generatePath(Uri.parse(filePath), CustomCameraActivity.this)),
+                            150, 150);
+
+
+                    //thumbImage =  getVidioThumbnail(filePath, MediaStore.Images.Thumbnails.MICRO_KIND);
+
+
+                    /* thumbImage = ThumbnailUtils.createVideoThumbnail(captureMediaUri.getPath(),
+                            MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);*/
                     //imageView.setImageBitmap(bitmap);
 
                     //  thumbImage = ImageVideoUtil.getVideoToThumbnil(captureMediaUri, CustomCameraActivity.this);
@@ -320,8 +330,8 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
                     String path = MediaStore.Images.Media.insertImage(CustomCameraActivity.this.
                             getContentResolver(), thumbImage, "Title", null);
                     thumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(
-                            ImageVideoUtil.generatePath(Uri.parse(path), CustomCameraActivity.this)),
-                            100, 100);
+                            generatePath(Uri.parse(path), CustomCameraActivity.this)),
+                            150, 150);
                     mediaUri.addUri(path);
                 }
 

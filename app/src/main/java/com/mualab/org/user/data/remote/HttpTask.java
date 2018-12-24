@@ -214,7 +214,10 @@ public class HttpTask {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                listener.ErrorListener(error);
+                if(listener != null){
+                    listener.ErrorListener(error);
+                }
+
                 if (context != null) {
                     if (progress)
                         Progress.hide(context);

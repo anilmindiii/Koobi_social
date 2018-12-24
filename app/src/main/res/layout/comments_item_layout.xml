@@ -83,7 +83,6 @@
                     android:textColor="@color/mcam_color_dark"
                     android:ellipsize="end"
                     android:fontFamily="@font/nunito_regular"
-                    android:maxLines="20"
                     android:text="Anil chourasiya"/>
 
                 <LinearLayout

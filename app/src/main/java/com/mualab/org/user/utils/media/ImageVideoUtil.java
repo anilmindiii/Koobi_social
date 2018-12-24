@@ -149,7 +149,7 @@ public class ImageVideoUtil {
     }
 
     @TargetApi(19)
-    private static String generateFromKitkat(Uri uri, Context context) {
+    public static String generateFromKitkat(Uri uri, Context context) {
         String filePath = null;
 
         try{

@@ -35,6 +35,9 @@ public class TextTagAdapter extends RecyclerView.Adapter<TextTagAdapter.ViewHold
         this.valueListner = valueListner;
         this.tempTxtTagHoriList =  tempTxtTagHoriList;
         this.ids = allIds;
+        if(allIds == null){
+            ids = "";
+        }
     }
 
 
@@ -93,7 +96,20 @@ public class TextTagAdapter extends RecyclerView.Adapter<TextTagAdapter.ViewHold
             if (!txtTagList.get(pos).isCheck) {
 
                 txtTagList.get(pos).isCheck = true;
-                ids = String.valueOf(txtTagList.get(pos).id) + "," + ids;
+
+                if(ids.contains(id+",")){
+                    ids = ids.replace(id+",","");
+                }
+                else if(ids.contains(","+id)){
+                    ids = ids.replace(","+id,"");
+                }
+                else if(ids.contains(id)){
+                    ids = ids.replace(id,"");
+                }else {
+                    ids = String.valueOf(txtTagList.get(pos).id) + "," + ids;
+                }
+
+
 
                 tempTxtTagHoriList.add(txtTagList.get(pos));
 

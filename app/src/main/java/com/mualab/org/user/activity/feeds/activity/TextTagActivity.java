@@ -83,12 +83,12 @@ public class TextTagActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 for(int i=0;i<tempTxtTagHoriList.size();i++){
-                    uniTextUserNames = "  @"+ tempTxtTagHoriList.get(i).uniTxt + uniTextUserNames;
+                    uniTextUserNames = " @"+ tempTxtTagHoriList.get(i).uniTxt + uniTextUserNames;
                 }
 
 
-                if (uniTextUserNames.startsWith("  @")) {
-                    uniTextUserNames = uniTextUserNames.startsWith(",") ? uniTextUserNames.substring(1) : uniTextUserNames;
+                if (uniTextUserNames.startsWith(" @")) {
+                    uniTextUserNames = uniTextUserNames.startsWith(" @") ? uniTextUserNames.substring(1) : uniTextUserNames;
                 }
 
                 Intent intent = new Intent();
@@ -109,7 +109,7 @@ public class TextTagActivity extends AppCompatActivity {
             // adapter.notifyDataSetChanged();
             if(tempTxtTagHoriList.size() != 0){
                 view_div.setVisibility(View.VISIBLE);
-            } view_div.setVisibility(View.GONE);
+            }else view_div.setVisibility(View.GONE);
         }
 
 
@@ -147,7 +147,7 @@ public class TextTagActivity extends AppCompatActivity {
 
                 if(tempTxtTagHoriList.size() != 0){
                     view_div.setVisibility(View.VISIBLE);
-                } view_div.setVisibility(View.GONE);
+                }else view_div.setVisibility(View.GONE);
 
             }
         },tempTxtTagHoriList,allIds);
@@ -188,7 +188,7 @@ public class TextTagActivity extends AppCompatActivity {
         adapter = new TagTextHorizontalAdapter(tempTxtTagList, TextTagActivity.this, new TagTextHorizontalAdapter.onDataChangeListner() {
             @Override
             public void dataChange(ExSearchTag searchTag) {
-                String id = String.valueOf(searchTag.id);
+
 
                 for(int i =0;i<list.size();i++){
                     if(list.get(i).id == searchTag.id){
@@ -196,6 +196,7 @@ public class TextTagActivity extends AppCompatActivity {
                     }
                 }
 
+                String id = String.valueOf(searchTag.id);
 
                 if (allIds.contains(id + ",")) {
                     allIds = allIds.replace((id + ","), "");
@@ -208,6 +209,10 @@ public class TextTagActivity extends AppCompatActivity {
                 }
 
                 textTagAdapter.notifyDataSetChanged();
+
+                if(tempTxtTagHoriList.size() != 0){
+                    view_div.setVisibility(View.VISIBLE);
+                }else view_div.setVisibility(View.GONE);
             }
         });
 

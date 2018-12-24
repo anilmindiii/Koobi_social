@@ -531,7 +531,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     tvHeaderTitle.setText(getString(R.string.app_name));
                     ibtnFeed.setImageResource(R.drawable.active_feeds_ico);
                     ivHeaderUser.setVisibility(View.VISIBLE);
-
+                    SearchBoardFragment.isFavClick = false;
                     ibtnChat.setVisibility(View.VISIBLE);
                     tvHeaderTitle.setVisibility(View.GONE);
                     ivAppIcon.setVisibility(View.VISIBLE);
@@ -549,6 +549,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 if (clickedId != 6) {
                     setInactiveTab();
                     clickedId = 6;
+                    SearchBoardFragment.isFavClick = false;
                     ibtnAddFeed.setImageResource(R.drawable.active_add_ico);
                     tvHeaderTitle.setText(R.string.title_explore);
                     ivHeaderUser.setVisibility(View.VISIBLE);
@@ -571,6 +572,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 if (clickedId != 4) {
                     setInactiveTab();
                     clickedId = 4;
+                    SearchBoardFragment.isFavClick = false;
                     tvHeaderTitle.setText(R.string.title_explore);
                     ibtnSearch.setImageResource(R.drawable.active_search_ico);
                     ivHeaderUser.setVisibility(View.VISIBLE);
@@ -590,6 +592,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 if (clickedId != 5) {
                     setInactiveTab();
                     clickedId = 5;
+                    SearchBoardFragment.isFavClick = false;
                     tvHeaderTitle.setText(getString(R.string.title_searchboard));
                     ibtnNotification.setImageResource(R.drawable.active_notifications_ico);
                     tvHeaderTitle.setText(R.string.title_notification);

@@ -108,6 +108,7 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
     String serviceName = "";
     Handler seekBarHandler;
     RatingBar userRating;
+    private Date setOldDate;
 
     public RefineArtistActivity() {
     }
@@ -299,6 +300,7 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
             sortType = refineSearchBoard.sortType;
             time = refineSearchBoard.time;
             date_time = refineSearchBoard.date;
+            setOldDate = refineSearchBoard.oldDate;
 
 
             if (refineSearchBoard.priceFilter != null)
@@ -428,7 +430,10 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
                 dateTimeDialogFragment.setMaximumDateTime(new GregorianCalendar(2040, 11, 31).getTime());
 
 
-                dateTimeDialogFragment.setDefaultDateTime(d1);
+                if (setOldDate != null) {
+                    dateTimeDialogFragment.setDefaultDateTime(setOldDate);
+                } else dateTimeDialogFragment.setDefaultDateTime(d1);
+
 
 // Define new day and month format
                 try {
@@ -441,6 +446,7 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
                 dateTimeDialogFragment.setOnButtonClickListener(new SwitchDateTimeDialogFragment.OnButtonClickListener() {
                     @Override
                     public void onPositiveButtonClick(Date date) {
+                        setOldDate = date;
                         String selectDate = Helper.formateDateFromstring("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy hh:mm aa", date.toString());
                         date_time = Helper.formateDateFromstring("EEE MMM dd HH:mm:ss zzz yyyy", "dd/MM/yyyy", date.toString());
 
@@ -630,6 +636,8 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
             refineSearchBoard.isFavClick = SearchBoardFragment.isFavClick;
             refineSearchBoard.day = day;
             refineSearchBoard.rating = String.valueOf(rating);
+            if (setOldDate != null)
+                refineSearchBoard.oldDate = setOldDate;
 
             refineSearchBoard.refineServices.addAll(services);
             refineSearchBoard.tempSerevice.addAll(tempSerevice);
@@ -861,7 +869,7 @@ public class RefineArtistActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onBackPressed() {
-        RefineSearchBoard board =  session.getSaveSearch();
+        RefineSearchBoard board = session.getSaveSearch();
         if (board == null) {
             Intent intent = new Intent(RefineArtistActivity.this, MainActivity.class);
             intent.putExtra("locationData", refineSearchBoard);

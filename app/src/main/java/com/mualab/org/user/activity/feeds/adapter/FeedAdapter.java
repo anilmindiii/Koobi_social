@@ -164,6 +164,11 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Picasso.with(mContext).load(feeds.profileImage).fit().into(h.ivProfile);
             }else  Picasso.with(mContext).load(R.drawable.default_placeholder).into(h.ivProfile);
 
+            if(feeds.userId == Mualab.currentUser.id){
+                h.iv_menu.setVisibility(View.GONE);
+
+            }else  h.iv_menu.setVisibility(View.VISIBLE);
+
             h.tvUserName.setText(feeds.userName);
             h.tvPostTime.setText(feeds.crd);
             h.tvUserLocation.setText(TextUtils.isEmpty(feeds.location)?"N/A":feeds.location);
@@ -893,7 +898,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         //sharIntent.setType("image/png");
         sharIntent.setType("text/plain");
         sharIntent.putExtra(Intent.EXTRA_SUBJECT, "Koobi Social");
-        sharIntent.putExtra(Intent.EXTRA_TEXT, text+"\n"+"profile url:" +API.BASE_URL+"feedDetails/"+ feedId +"\n");
+        sharIntent.putExtra(Intent.EXTRA_TEXT, "http://koobi.co.uk:8042/");
         mContext.startActivity(Intent.createChooser(sharIntent, "Share:"));
 
     }

@@ -202,7 +202,7 @@ public class StoriesActivity extends SwipeBackActivity implements StoryStatusVie
         reverse.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-              //  storyStatusView.pause();
+                storyStatusView.pause();
                 return false;
             }
         });
@@ -221,7 +221,7 @@ public class StoriesActivity extends SwipeBackActivity implements StoryStatusVie
         skip.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-               // storyStatusView.pause();
+                storyStatusView.pause();
                 return false;
             }
         });

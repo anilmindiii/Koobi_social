@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.mualab.org.user.R;
 import com.mualab.org.user.activity.explore.model.ExSearchTag;
 import com.squareup.picasso.Picasso;
@@ -46,12 +47,14 @@ public class TagTextHorizontalAdapter extends RecyclerView.Adapter<TagTextHorizo
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         final ExSearchTag searchTag = tempTxtTagHoriList.get(position);
 
-        if (searchTag.imageUrl != null && !searchTag.imageUrl.equals("")) {
+        /*if (searchTag.imageUrl != null && !searchTag.imageUrl.equals("")) {
             Picasso.with(mContext).load(searchTag.imageUrl).
                     placeholder(R.drawable.default_placeholder).into(holder.iv_user_image);
         } else {
             holder.iv_user_image.setImageResource(R.drawable.default_placeholder);
-        }
+        }*/
+
+        Glide.with(mContext).load(searchTag.imageUrl).placeholder(R.drawable.default_placeholder).into(holder.iv_user_image);
 
 
         holder.tv_user_name.setText(searchTag.title);

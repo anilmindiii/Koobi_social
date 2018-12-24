@@ -74,7 +74,7 @@
                 android:padding="2dp"
                 android:fontFamily="@font/nunito_regular"
                 android:visibility="visible"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:layout_marginRight="10dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"

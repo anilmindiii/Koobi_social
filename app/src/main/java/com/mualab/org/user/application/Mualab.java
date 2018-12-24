@@ -61,11 +61,14 @@ public class Mualab extends Application {
     private static final String SHARED_PREF_NAME = "koobi_tag_preferences";
 
     public static Mualab getInstance() {
-        if (mInstance.mSharedPreferences == null) {
-            mInstance.mSharedPreferences =
-                    mInstance.getSharedPreferences(SHARED_PREF_NAME,
-                            Context.MODE_PRIVATE);
+        if(mInstance != null){
+            if (mInstance.mSharedPreferences == null) {
+                mInstance.mSharedPreferences =
+                        mInstance.getSharedPreferences(SHARED_PREF_NAME,
+                                Context.MODE_PRIVATE);
+            }
         }
+
         return mInstance;
     }
 
