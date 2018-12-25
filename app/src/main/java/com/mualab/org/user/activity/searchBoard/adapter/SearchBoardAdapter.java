@@ -1,6 +1,7 @@
 package com.mualab.org.user.activity.searchBoard.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.SystemClock;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mualab.org.user.R;
+import com.mualab.org.user.activity.artist_profile.activity.ArtistProfileActivity;
 import com.mualab.org.user.activity.feeds.adapter.LoadingViewHolder;
 import com.mualab.org.user.data.model.SearchBoard.ArtistsSearchBoard;
 import com.mualab.org.user.utils.Util;
@@ -200,19 +202,17 @@ public class SearchBoardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     context.startActivity(intent);*/
                     break;
 
-              /*  case R.id.ivProfile:
+                case R.id.ivProfile:
                     Intent intent2 = new Intent(context, ArtistProfileActivity.class);
                     intent2.putExtra("item",item);
-                    //intent2.putExtra("artistId",item._id);
-                    context.startActivity(intent2);*/
+                    intent2.putExtra("artistId",item._id);
+                    context.startActivity(intent2);
 
                 case R.id.lyContainer:
-/*
                     Intent intent3 = new Intent(context, ArtistProfileActivity.class);
                     intent3.putExtra("item",item);
-                    //intent2.putExtra("artistId",item._id);
+                    intent3.putExtra("artistId",item._id);
                     context.startActivity(intent3);
-*/
                     break;
             }
         }

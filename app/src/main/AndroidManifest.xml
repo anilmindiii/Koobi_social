@@ -95,6 +95,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/Base.Theme.AppCompat" />
 
+        <activity
+            android:name=".activity.artist_profile.activity.ArtistProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
+
         <provider
             android:name=".application.GenericFileProvider"
             android:authorities="${applicationId}.provider"
@@ -233,6 +238,16 @@
             android:screenOrientation="portrait"
             android:theme="@style/StatusBarBlack"
             android:noHistory="true"/>
+
+        <activity
+            android:name=".activity.explore.SearchFeedActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
+
+        <activity
+            android:name=".activity.explore.ExplorSearchActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
 
     </application>
 

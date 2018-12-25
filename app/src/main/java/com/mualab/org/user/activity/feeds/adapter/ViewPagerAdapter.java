@@ -1,6 +1,7 @@
 package com.mualab.org.user.activity.feeds.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
@@ -14,11 +15,14 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.mualab.org.user.R;
+import com.mualab.org.user.activity.artist_profile.activity.ArtistProfileActivity;
 import com.mualab.org.user.activity.feeds.listener.OnImageSwipeListener;
+import com.mualab.org.user.activity.myprofile.activity.activity.UserProfileActivity;
 import com.mualab.org.user.activity.people_tag.instatag.InstaTag;
 import com.mualab.org.user.activity.people_tag.instatag.TagDetail;
 import com.mualab.org.user.activity.people_tag.instatag.TagToBeTagged;
 import com.mualab.org.user.data.feeds.Feeds;
+import com.mualab.org.user.data.model.SearchBoard.ArtistsSearchBoard;
 import com.mualab.org.user.listener.OnDoubleTapListener;
 import com.mualab.org.user.utils.ScreenUtils;
 
@@ -136,19 +140,15 @@ public class ViewPagerAdapter extends PagerAdapter implements OnImageSwipeListen
                         if (tagDetail.userType!=null && !tagDetail.userType.equals("")){
                             if (tagDetail.tagId!=null && !tagDetail.tagId.equals("")){
                                 if (tagDetail.userType.equals("user")){
-/*
                                     Intent intent = new Intent(context, UserProfileActivity.class);
                                     intent.putExtra("userId",tagDetail.tagId);
                                     context.startActivity(intent);
-*/
                                 }else {
-/*
                                     ArtistsSearchBoard item = new ArtistsSearchBoard();
                                     item._id = tagDetail.tagId;
                                     Intent intent2 = new Intent(context, ArtistProfileActivity.class);
                                     intent2.putExtra("item",item);
                                     context.startActivity(intent2);
-*/
                                 }
                             }
                         }

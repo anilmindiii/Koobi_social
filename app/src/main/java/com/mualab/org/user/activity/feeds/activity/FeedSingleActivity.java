@@ -57,7 +57,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FeedSingleActivity extends AppCompatActivity implements View.OnClickListener, FeedAdapter.Listener, LiveUserAdapter.Listner, BaseListner, FeedsListner {
+public class FeedSingleActivity extends AppCompatActivity implements View.OnClickListener,
+        FeedAdapter.Listener, LiveUserAdapter.Listner, BaseListner, FeedsListner {
     private FeedAdapter adapter;
     private Feeds feed;
     private List<Feeds> list = new ArrayList<>();

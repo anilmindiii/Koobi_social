@@ -49,6 +49,7 @@ import com.google.gson.Gson;
 import com.mualab.org.user.R;
 import com.mualab.org.user.activity.artist_profile.model.UserProfileData;
 import com.mualab.org.user.activity.base.BaseActivity;
+import com.mualab.org.user.activity.explore.ExploreFragment;
 import com.mualab.org.user.activity.feeds.activity.FeedSingleActivity;
 import com.mualab.org.user.activity.feeds.fragment.FeedsFragment;
 import com.mualab.org.user.activity.gellery.GalleryActivity;
@@ -582,8 +583,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     session.saveFilter(null);
                     locationData = null;
                     item = null;
-                    // replaceFragment(ExploreFragment.newInstance(), false);
-                    replaceFragment(NotificationFragment.newInstance("", ""), false);
+                     replaceFragment(ExploreFragment.newInstance(), false);
 
                 }
                 break;

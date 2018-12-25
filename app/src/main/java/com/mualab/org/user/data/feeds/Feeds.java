@@ -67,6 +67,7 @@ public class Feeds  implements Serializable{
         public String lastName;
         public String userName;
         public String profileImage;
+        public String userType;
 
     }
 }

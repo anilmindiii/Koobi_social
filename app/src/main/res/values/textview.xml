@@ -119,6 +119,11 @@
         <item name="android:fontFamily" tools:ignore="NewApi">@font/nunito_regular</item>
     </style>
 
+    <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/MyCustomTextAppearance</item>
+    </style>
+
+
     <style name="My_Button_Edit">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/colorPrimary</item>
