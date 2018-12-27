@@ -1,6 +1,8 @@
 package com.mualab.org.user.activity.story;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
@@ -62,7 +64,8 @@ import java.util.Map;
 
 
 
-public class StoriesActivity extends SwipeBackActivity implements StoryStatusView.UserInteractionListener, SimpleGestureFilter.SimpleGestureListener {
+public class StoriesActivity extends SwipeBackActivity implements StoryStatusView.UserInteractionListener,
+        SimpleGestureFilter.SimpleGestureListener {
     private StoryStatusView storyStatusView;
     private ImageView ivPhoto, ivUserImg;
     private ProgressBar progress_bar;
@@ -96,13 +99,13 @@ public class StoriesActivity extends SwipeBackActivity implements StoryStatusVie
                     pressTime = System.currentTimeMillis();
                     // storyStatusView.pause();
 
-                    if (isStoryTypeVideo && mediaPlayer != null) {
+                   /* if (isStoryTypeVideo && mediaPlayer != null) {
                         try {
                             videoView.pause();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    }
+                    }*/
 
                     return false;
                 case MotionEvent.ACTION_UP:
@@ -203,11 +206,14 @@ public class StoriesActivity extends SwipeBackActivity implements StoryStatusVie
             @Override
             public boolean onLongClick(View v) {
                 storyStatusView.pause();
+                videoView.pause();
                 return false;
             }
         });
 
         reverse.setOnTouchListener(onTouchListener);
+
+
 
         // bind skip view
         View skip = findViewById(R.id.skip);
@@ -222,6 +228,7 @@ public class StoriesActivity extends SwipeBackActivity implements StoryStatusVie
             @Override
             public boolean onLongClick(View v) {
                 storyStatusView.pause();
+                videoView.pause();
                 return false;
             }
         });
@@ -630,17 +637,18 @@ public class StoriesActivity extends SwipeBackActivity implements StoryStatusVie
         String str = "";
         int size = liveUserList.size();
         boolean isUpdate = false;
-//Todo check
+
         switch (direction) {
             case SimpleGestureFilter.SWIPE_RIGHT:
-                currentIndex -= 1;
+
                 if (0 < currentIndex) {
+                    currentIndex -= 1;
                     Log.e("what is data = ", "" + size + " = " + currentIndex);
                     updateUI();
                     getPermissionAndPicImage();
 
                     parent.startAnimation(AnimationUtils.loadAnimation(
-                            StoriesActivity.this, R.anim.slide_in_from_right
+                            StoriesActivity.this, R.anim.slide_in_from_left
                     ));
 
                     setDragEdge(SwipeBackLayout.DragEdge.RIGHT);
@@ -661,16 +669,20 @@ public class StoriesActivity extends SwipeBackActivity implements StoryStatusVie
                     Log.e("what is data = ", "" + size + " = " + currentIndex);
                     updateUI();
                     getPermissionAndPicImage();
-                 /*   Animator anim =  AnimatorInflater.loadAnimator(this, R.animator.cube_left_out);
+
+                    /* Animator anim =  AnimatorInflater.loadAnimator(this, R.anim.fade_in);
                     anim.setTarget(parent);
                     anim.setDuration(1000);
                     anim.start();*/
+
                     parent.startAnimation(AnimationUtils.loadAnimation(
-                            StoriesActivity.this, R.anim.slide_in_from_left
+                            StoriesActivity.this, R.anim.slide_in_from_right
                     ));
                     setDragEdge(SwipeBackLayout.DragEdge.LEFT);
                     videoView.setVisibility(View.GONE);
                     ivPhoto.setVisibility(View.GONE);
+
+
                     resetViews();
 
 
@@ -680,6 +692,8 @@ public class StoriesActivity extends SwipeBackActivity implements StoryStatusVie
 
                 break;
             case SimpleGestureFilter.SWIPE_DOWN:
+                storyStatusView.resume();
+                videoView.resume();
 
 
                 break;

@@ -127,6 +127,9 @@ public class ReportActivity extends AppCompatActivity {
                 if(tv_reason.getText().toString().trim().equals("")){
                     MyToast.getInstance(ReportActivity.this).showDasuAlert("Please select reason");
                     return;
+                }else if(ed_description.getText().toString().trim().equals("")){
+                    MyToast.getInstance(ReportActivity.this).showDasuAlert("Please enter description");
+                    return;
                 }
 
                 SubmitReportInfo submitReportInfo = new SubmitReportInfo();

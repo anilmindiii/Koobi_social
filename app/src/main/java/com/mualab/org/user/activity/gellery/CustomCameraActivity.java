@@ -39,6 +39,7 @@ import com.mualab.org.user.R;
 import com.mualab.org.user.Views.scaleview.ImageSource;
 import com.mualab.org.user.Views.scaleview.ScaleImageView;
 import com.mualab.org.user.activity.feeds.activity.FeedPostActivity;
+import com.mualab.org.user.activity.video_trim.VideoTrimmerActivity;
 import com.mualab.org.user.data.model.MediaUri;
 import com.mualab.org.user.dialogs.MyToast;
 import com.mualab.org.user.dialogs.Progress;
@@ -164,6 +165,26 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
                 videoView.setVideoURI(captureMediaUri);
                 isVideoUri = true;
                 isStartRecord = false;
+
+
+                mediaUri.addUri(String.valueOf(captureMediaUri));
+                mediaUri.mediaType = Constant.VIDEO_STATE;
+
+                thumbImage = ThumbnailUtils.createVideoThumbnail(mediaUri.videoFile.getPath(),
+                        MediaStore.Images.Thumbnails.MINI_KIND);
+
+                if (mediaUri != null && mediaUri.uriList.size() > 0) {
+                    Intent intent = new Intent(CustomCameraActivity.this,
+                            VideoTrimmerActivity.class);
+                    intent.putExtra("caption", "");
+                    intent.putExtra("mediaUri", mediaUri);
+                    intent.putExtra("thumbImage", thumbImage);
+                    intent.putExtra("feedType",mediaUri.mediaType);
+                    startActivity(intent);
+                    finish();
+                }
+
+
             }
 
             @Override
@@ -298,7 +319,11 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
                 if(isVideoUri){
                     mediaUri.addUri(String.valueOf(captureMediaUri));
                     mediaUri.mediaType = Constant.VIDEO_STATE;
-                    ivTakenPhoto.setDrawingCacheEnabled(true);
+
+                    thumbImage = ThumbnailUtils.createVideoThumbnail(mediaUri.videoFile.getPath(),
+                            MediaStore.Images.Thumbnails.MINI_KIND);
+
+                   /* ivTakenPhoto.setDrawingCacheEnabled(true);
 
                     thumbImage = ivTakenPhoto.getDrawingCache();
                     String path = MediaStore.Images.Media.insertImage(CustomCameraActivity.this.
@@ -311,16 +336,7 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
                   thumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(
                             generatePath(Uri.parse(filePath), CustomCameraActivity.this)),
                             150, 150);
-
-
-                    //thumbImage =  getVidioThumbnail(filePath, MediaStore.Images.Thumbnails.MICRO_KIND);
-
-
-                    /* thumbImage = ThumbnailUtils.createVideoThumbnail(captureMediaUri.getPath(),
-                            MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);*/
-                    //imageView.setImageBitmap(bitmap);
-
-                    //  thumbImage = ImageVideoUtil.getVideoToThumbnil(captureMediaUri, CustomCameraActivity.this);
+*/
 
 
 
@@ -337,7 +353,7 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
 
                 if (mediaUri != null && mediaUri.uriList.size() > 0) {
                     Intent intent = new Intent(CustomCameraActivity.this,
-                            FeedPostActivity.class);
+                            VideoTrimmerActivity.class);
                     intent.putExtra("caption", "");
                     intent.putExtra("mediaUri", mediaUri);
                     intent.putExtra("thumbImage", thumbImage);

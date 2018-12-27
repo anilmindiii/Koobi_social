@@ -13,7 +13,7 @@
         app:cardBackgroundColor="@color/white"
         android:elevation="3dp"
         app:cardCornerRadius="1dp"
-        app:cardElevation="2dp">
+        app:cardElevation="3dp">
 
         <ImageView
             android:id="@+id/iv_back"
@@ -40,6 +40,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="?actionBarSize"
         android:scrollbars="none">
 
         <LinearLayout
@@ -47,7 +48,8 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
-            android:layout_marginTop="75dp"
+            android:layout_marginTop="35dp"
+            android:layout_marginBottom="50dp"
             android:orientation="vertical">
 
             <ImageView
@@ -170,7 +172,6 @@
                         android:padding="5dp"
                         android:background="@drawable/rectangular_border"
                         android:textColor="@color/dark_gray"
-                        android:hint="@string/write_a_description_here"
                         android:fontFamily="@font/nunito_regular"
                         android:textSize="@dimen/evp_text_size_medium"/>
 

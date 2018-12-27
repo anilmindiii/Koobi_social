@@ -63,6 +63,7 @@ public class FeedSingleActivity extends AppCompatActivity implements View.OnClic
     private Feeds feed;
     private List<Feeds> list = new ArrayList<>();
     private Feeds feeds;
+    String userType  = "";
 
     private BaseListner feedsListner;
     private TextView tvHeaderTitle;
@@ -102,6 +103,7 @@ public class FeedSingleActivity extends AppCompatActivity implements View.OnClic
         Intent intent = getIntent();
         if (intent != null) {
             String feedId = intent.getStringExtra("feedId");
+            userType = intent.getStringExtra("userType");
             feed = new Feeds();
             feed._id = Integer.parseInt(feedId);
         }
@@ -123,7 +125,7 @@ public class FeedSingleActivity extends AppCompatActivity implements View.OnClic
         rvFeed.setItemAnimator(null);
         rvFeed.setLayoutManager(lm);
         rvFeed.setHasFixedSize(true);
-        adapter = new FeedAdapter(FeedSingleActivity.this, list, this);
+        adapter = new FeedAdapter(FeedSingleActivity.this, userType,list, this);
         rvFeed.setAdapter(adapter);
         rvFeed.scrollToPosition(0);
         if (feeds != null) {

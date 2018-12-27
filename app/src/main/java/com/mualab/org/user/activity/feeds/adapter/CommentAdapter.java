@@ -2,6 +2,7 @@ package com.mualab.org.user.activity.feeds.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,13 +12,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.mualab.org.user.R;
+import com.mualab.org.user.activity.artist_profile.activity.ArtistProfileActivity;
 import com.mualab.org.user.activity.feeds.model.Comment;
+import com.mualab.org.user.activity.myprofile.activity.activity.UserProfileActivity;
 import com.mualab.org.user.application.Mualab;
 import com.mualab.org.user.data.feeds.Feeds;
 import com.mualab.org.user.data.remote.HttpResponceListner;
 import com.mualab.org.user.data.remote.HttpTask;
+import com.mualab.org.user.dialogs.MyToast;
 import com.squareup.picasso.Picasso;
 
 
@@ -80,6 +85,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                     .into(holder.iv_profileImage);
         }else Picasso.with(mContext).load(R.drawable.default_placeholder).into(holder.iv_profileImage);
 
+
+        holder.iv_profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                apiForgetUserIdFromUserName(commentListInfo.userName);
+            }
+        });
 
         if(commentListInfo.type.equals("image")){
             holder.ivImg.setVisibility(View.VISIBLE);
@@ -178,5 +190,55 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 holder.iv_like.setEnabled(true);
             }
         }).setParam(map).setProgress(true)).execute("commentLike");
+    }
+
+    private void apiForgetUserIdFromUserName(String userName) {
+        final Map<String, String> params = new HashMap<>();
+        if(userName.toString().contains("@")){
+            userName = userName.toString().replace("@","");
+        }
+        params.put("userName", userName+"");
+        new HttpTask(new HttpTask.Builder(mContext, "profileByUserName", new HttpResponceListner.Listener() {
+            @Override
+            public void onResponse(String response, String apiName) {
+                Log.d("hfjas", response);
+                try {
+                    JSONObject js = new JSONObject(response);
+                    String status = js.getString("status");
+                    String message = js.getString("message");
+                    if (status.equalsIgnoreCase("success")) {
+
+                        JSONObject userDetail = js.getJSONObject("userDetail");
+                        String userType = userDetail.getString("userType");
+                        int userId = userDetail.getInt("_id");
+
+                        if (userType.equals("user")) {
+                            Intent intent = new Intent(mContext, UserProfileActivity.class);
+                            intent.putExtra("userId", userId+"");
+                            mContext.startActivity(intent);
+                        }
+                        else {
+                            Intent intent = new Intent(mContext, ArtistProfileActivity.class);
+                            intent.putExtra("artistId", userId+"");
+                            mContext.startActivity(intent);
+                        }
+
+                    } else {
+                        MyToast.getInstance(mContext).showDasuAlert(message);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void ErrorListener(VolleyError error) {
+            }
+        }).setBody(params,HttpTask.ContentType.APPLICATION_JSON)
+                .setMethod(Request.Method.POST)
+                .setProgress(true))
+                .execute("FeedAdapter");
+
+
     }
 }

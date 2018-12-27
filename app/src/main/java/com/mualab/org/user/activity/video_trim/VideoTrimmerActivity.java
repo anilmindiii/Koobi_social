@@ -43,7 +43,12 @@ public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVid
             thumbImage = intent.getParcelableExtra("thumbImage");
             mediaUri = (MediaUri) intent.getSerializableExtra("mediaUri");
             feedType = intent.getIntExtra("feedType", Constant.IMAGE_STATE);
-            path = mediaUri.uri;
+
+
+            if(!mediaUri.isFromGallery){
+                path = mediaUri.videoFile.toString();
+            }else path = mediaUri.uri;
+
             /*file:///storage/emulated/0/Android/data/com.mualab.org.user/cache/tmp.mp4*/
         }
 
@@ -55,7 +60,8 @@ public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVid
         tvCroppingMessage = (TextView) findViewById(R.id.tvCroppingMessage);
 
         if (mVideoTrimmer != null && path != null) {
-            mVideoTrimmer.setMaxDuration(100);
+            mVideoTrimmer.setMaxDuration(60);
+            mVideoTrimmer.setMaxFileSize(100);
             mVideoTrimmer.setOnTrimVideoListener(this);
             mVideoTrimmer.setVideoURI(Uri.parse(path));
         } else {

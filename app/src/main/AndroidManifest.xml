@@ -233,11 +233,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/StatusBarBlack"/>
 
-        <activity
-            android:name=".VideoTrim.videoActivity.TrimmerActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/StatusBarBlack"
-            android:noHistory="true"/>
 
         <activity
             android:name=".activity.explore.SearchFeedActivity"

@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/dilog_background"
-                android:text="@string/cancel"
+                android:text="Cancel"
 
                 android:textColor="@android:color/white" />
 

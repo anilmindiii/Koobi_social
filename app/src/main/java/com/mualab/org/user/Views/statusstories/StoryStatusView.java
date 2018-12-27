@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.VideoView;
 
 import com.mualab.org.user.R;
 

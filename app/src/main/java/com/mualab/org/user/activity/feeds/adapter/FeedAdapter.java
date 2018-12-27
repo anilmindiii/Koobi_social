@@ -78,6 +78,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Feeds> feedItems;
     private Listener listener;
     private boolean loading;
+    String userType;
 
 
     public void showHideLoading(boolean b) {
@@ -100,10 +101,11 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         notifyItemRangeRemoved(0, size);
     }
 
-    public FeedAdapter(Context mContext, List<Feeds> feedItems, Listener listener) {
+    public FeedAdapter(Context mContext,String userType, List<Feeds> feedItems, Listener listener) {
         this.mContext = mContext;
         this.feedItems = feedItems;
         this.listener = listener;
+        this.userType = userType;
     }
 
     @Override
@@ -172,7 +174,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (holder instanceof Holder) {
             Holder h = (Holder) holder;
             if (!TextUtils.isEmpty(feeds.profileImage)) {
-                Picasso.with(mContext).load(feeds.profileImage).fit().into(h.ivProfile);
+                Picasso.with(mContext).load(feeds.profileImage).placeholder(R.drawable.default_placeholder).fit().into(h.ivProfile);
             } else Picasso.with(mContext).load(R.drawable.default_placeholder).into(h.ivProfile);
 
             if (feeds.userId == Mualab.currentUser.id) {
@@ -403,9 +405,24 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             @Override
             public void onClick(View v) {
                 Feeds feed = feedItems.get(holder.getAdapterPosition());
-                Intent intent3 = new Intent(mContext, ArtistProfileActivity.class);
-                intent3.putExtra("artistId", feed.userId+"");
-                mContext.startActivity(intent3);
+
+                userType = feed.userInfo.get(0).userType;
+
+                if (userType.equals("user")) {
+                    Intent intent = new Intent(mContext, UserProfileActivity.class);
+                    intent.putExtra("userId", String.valueOf(feed.userId));
+                    mContext.startActivity(intent);
+                }else if (userType.equals("artist") && feed.userId== Mualab.currentUser.id){
+                    Intent intent = new Intent(mContext, UserProfileActivity.class);
+                    intent.putExtra("userId", String.valueOf(feed.userId));
+                    mContext.startActivity(intent);
+                }
+                else {
+                    Intent intent = new Intent(mContext, ArtistProfileActivity.class);
+                    intent.putExtra("artistId", String.valueOf(feed.userId));
+                    mContext.startActivity(intent);
+                }
+
             }
         });
     }
@@ -657,9 +674,29 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             @Override
             public void onClick(View v) {
                 Feeds feed = feedItems.get(cellFeedViewHolder.getAdapterPosition());
-                Intent intent3 = new Intent(mContext, ArtistProfileActivity.class);
-                intent3.putExtra("artistId", feed.userId+"");
-                mContext.startActivity(intent3);
+
+                if (userType.equals("user")) {
+                    Intent intent = new Intent(mContext, UserProfileActivity.class);
+                    intent.putExtra("userId", String.valueOf(feed.userId));
+                    mContext.startActivity(intent);
+                }else if (userType.equals("artist") && feed.userId== Mualab.currentUser.id){
+                    Intent intent = new Intent(mContext, UserProfileActivity.class);
+                    intent.putExtra("userId", String.valueOf(feed.userId));
+                    mContext.startActivity(intent);
+                }
+                else {
+                    Intent intent = new Intent(mContext, ArtistProfileActivity.class);
+                    intent.putExtra("artistId", String.valueOf(feed.userId));
+                    mContext.startActivity(intent);
+                }
+
+
+
+
+
+
+
+
             }
         });
     }

@@ -30,8 +30,6 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.mualab.org.user.R;
-import com.mualab.org.user.VideoTrim.videoActivity.TrimmerActivity;
-import com.mualab.org.user.VideoTrim.videoUtil.FileUtils;
 import com.mualab.org.user.activity.feeds.activity.FeedPostActivity;
 import com.mualab.org.user.activity.gellery.GalleryActivity;
 import com.mualab.org.user.activity.gellery.adapter.VideoGridViewAdapter;
@@ -171,7 +169,7 @@ public class VideoGalleryFragment extends Fragment implements View.OnClickListen
                // MyToast.getInstance(context).showDasuAlert(getResources().getString(R.string.under_development));
                 if (mediaUri!=null){
                     videoView.stopPlayback();
-                    //Intent  intent = new Intent(context, VideoTrimmerActivity.class);
+                    Intent  intent = new Intent(context, VideoTrimmerActivity.class);
 
                     File file = new File(mediaUri.uri);
                     long length = file.length();
@@ -179,11 +177,6 @@ public class VideoGalleryFragment extends Fragment implements View.OnClickListen
 
                     length = length/1034;
                     //Toast.makeText(getActivity(), "Video size:"+length+"KB",Toast.LENGTH_SHORT).show();
-
-                    Intent intent = new Intent(context, TrimmerActivity.class);
-                    intent.putExtra(EXTRA_VIDEO_PATH, mediaUri.uri);
-                    intent.putExtra(VIDEO_TOTAL_DURATION, getMediaDuration(Uri.parse(mediaUri.uri)));
-                    intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 59);
 
                     intent.putExtra("caption", "");
                     intent.putExtra("mediaUri", mediaUri);
