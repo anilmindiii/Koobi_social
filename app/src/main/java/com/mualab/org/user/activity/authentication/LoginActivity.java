@@ -57,6 +57,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.mualab.org.user.data.local.prefs.Session.isLogout;
+
 public class LoginActivity extends AppCompatActivity {
     private TextView ed_username, ed_password;
     private SharedPreferanceUtils sp;

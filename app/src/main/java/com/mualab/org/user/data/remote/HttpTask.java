@@ -430,6 +430,9 @@ public class HttpTask {
             if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
                 // HTTP Status Code: 401 Unauthorized
                 MyToast.getInstance(context).showDasuAlert("Session Expired", "please login again.");
+                Mualab mualab = new Mualab();
+                mualab.cancelAllPendingRequests();
+
                 Mualab.getInstance().getSessionManager().logout();
 
             } else if (error.networkResponse != null && error.networkResponse.statusCode == 301) {

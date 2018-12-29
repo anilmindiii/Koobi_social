@@ -14,6 +14,7 @@ import com.deep.videotrimmer.DeepVideoTrimmer;
 import com.deep.videotrimmer.interfaces.OnTrimVideoListener;
 import com.deep.videotrimmer.view.RangeSeekBarView;
 import com.mualab.org.user.R;
+import com.mualab.org.user.activity.camera.CameraActivity;
 import com.mualab.org.user.activity.feeds.activity.FeedPostActivity;
 import com.mualab.org.user.data.model.MediaUri;
 import com.mualab.org.user.databinding.ActivityVideoTrimmerBinding;
@@ -79,12 +80,19 @@ public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVid
         });
         Constant.croppedVideoURI = uri.toString();
 
-
-        if (mediaUri!=null){
+        if(feedType == 90){
+            Intent  intent = new Intent(VideoTrimmerActivity.this, CameraActivity.class);
+            intent.putExtra("new_uri",uri.toString());
+            setResult(RESULT_OK,intent);
+            finish();
+        }
+        else if (mediaUri!=null){
 
             Intent  intent = new Intent(this, FeedPostActivity.class);
 
             mediaUri.uri = uri.toString();
+            mediaUri.uriList.set(0,uri.toString());
+
             intent.putExtra("caption", "");
             intent.putExtra("mediaUri", mediaUri);
             intent.putExtra("thumbImage", thumbImage);

@@ -47,13 +47,15 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.mualab.org.user.activity.people_tag.models.TagDetail;
+
 import com.mualab.org.user.R;
 import com.mualab.org.user.activity.people_tag.listeners.RemoveDuplicateTagListener;
+import com.mualab.org.user.activity.people_tag.models.TagDetail;
 
-
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 
 public class InstaTag extends RelativeLayout   {
 
@@ -104,6 +106,7 @@ public class InstaTag extends RelativeLayout   {
     private Listener listener;
     private RemoveDuplicateTagListener removeDuplicateTagListener;
 
+    private int image = R.drawable.gallery_placeholder;
     public interface Listener{
         void onTagCliked(TagDetail tagDetail);
         void onTagRemoved(TagDetail tagDetail);
@@ -120,10 +123,12 @@ public class InstaTag extends RelativeLayout   {
     private final Runnable mSetRootHeightWidth = new Runnable() {
         @Override
         public void run() {
-            mRootWidth = mRoot.getWidth();
-            mRootHeight = mRoot.getHeight();
+            mRootWidth = mTagImageView.getWidth();
+            mRootHeight = mTagImageView.getHeight();
         }
     };
+
+
 
     private final OnTouchListener mTagOnTouchListener = new OnTouchListener() {
         @Override
@@ -260,7 +265,6 @@ public class InstaTag extends RelativeLayout   {
         mRoot = findViewById(R.id.tag_root);
         mTagImageView = findViewById(R.id.tag_image_view);
         mLikeImage = new ImageView(context);
-
         int likeColor, likeSrc, likeSize;
         if (obtainStyledAttributes != null) {
             likeColor = obtainStyledAttributes.getColor(R.styleable.InstaTag_likeColor,
@@ -285,7 +289,7 @@ public class InstaTag extends RelativeLayout   {
 
         setLayoutParamsToBeSetForRootLayout(mContext);
         mRoot.post(mSetRootHeightWidth);
-        mRoot.setOnTouchListener(mTagOnTouchListener);
+        mTagImageView.setOnTouchListener(mTagOnTouchListener);
         mGestureDetector = new GestureDetector(mRoot.getContext(), mTagGestureListener);
     }
 
@@ -708,7 +712,7 @@ public class InstaTag extends RelativeLayout   {
         }*/
     }
 
-    public void addTagViewFromTagsToBeTagged(ArrayList<TagToBeTagged> tagsToBeTagged, boolean isAddingTag) {
+    public void addTagViewFromTagsToBeTagged(ArrayList<TagToBeTagged> tagsToBeTagged,boolean isAddingTag) {
         this.isAddingTag = isAddingTag;
         if (!tagsAreAdded) {
             for (TagToBeTagged tagToBeTagged : tagsToBeTagged) {
@@ -747,7 +751,7 @@ public class InstaTag extends RelativeLayout   {
                 HashMap<String, TagDetail> map = new HashMap();
                 map.put(txt, tagMap.get(txt));
 
-                tagsToBeTagged.add(new TagToBeTagged(txt, x, y,map));
+                tagsToBeTagged.add(new TagToBeTagged(txt, x, y,map ));
             }
         }
         return tagsToBeTagged;

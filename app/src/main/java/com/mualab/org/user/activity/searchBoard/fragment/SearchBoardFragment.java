@@ -496,7 +496,7 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
         params.put("userId", String.valueOf(Mualab.currentUser.id));
         // params.put("appType", "user");
 
-        HttpTask task = new HttpTask(new HttpTask.Builder(getActivity(), "artistSearch", new HttpResponceListner.Listener() {
+        HttpTask task = new HttpTask(new HttpTask.Builder(mContext, "artistSearch", new HttpResponceListner.Listener() {
             @Override
             public void onResponse(String response, String apiName) {
                 try {
@@ -622,14 +622,20 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
             @Override
             public void ErrorListener(VolleyError error) {
                 progress_bar.setVisibility(View.GONE);
-                if (tv_msg != null)
-                    tv_msg.setText(getString(R.string.msg_some_thing_went_wrong) + "");
-                if (isPulltoRefrash) {
-                    isPulltoRefrash = false;
-                    mRefreshLayout.stopRefresh(false, 500);
-                    int prevSize = artistsList.size();
-                    artistsList.clear();
-                    listAdapter.notifyItemRangeRemoved(0, prevSize);
+
+                if(mContext != null && getActivity() != null){
+                    if(isAdded()){
+                        if (tv_msg != null)
+                            tv_msg.setText(getString(R.string.msg_some_thing_went_wrong) + "");
+                        if (isPulltoRefrash) {
+                            isPulltoRefrash = false;
+                            mRefreshLayout.stopRefresh(false, 500);
+                            int prevSize = artistsList.size();
+                            artistsList.clear();
+                            listAdapter.notifyItemRangeRemoved(0, prevSize);
+                        }
+                    }
+
                 }
             }
         })
@@ -638,6 +644,7 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
                 .setBody(params, HttpTask.ContentType.APPLICATION_JSON));
         task.execute(TAG);
     }
+
 
     private synchronized void apiForGetFavArtist(final int page, final boolean isLoadMore) {
 

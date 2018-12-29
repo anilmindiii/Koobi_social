@@ -220,10 +220,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/StatusBarBlack" />
 
+
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="f584c59e1354706f33ae4e5508ac9cb630282533" />
-
+            android:value="f584c59e1354706f33ae4e5508ac9cb630282533"
+            />
         <activity
             android:name=".activity.feeds.activity.ReportActivity"
             android:screenOrientation="portrait"

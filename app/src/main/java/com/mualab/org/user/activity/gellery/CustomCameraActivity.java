@@ -167,7 +167,7 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
                 isStartRecord = false;
 
 
-                mediaUri.addUri(String.valueOf(captureMediaUri));
+                mediaUri.addUri(String.valueOf(mediaUri.videoFile));
                 mediaUri.mediaType = Constant.VIDEO_STATE;
 
                 thumbImage = ThumbnailUtils.createVideoThumbnail(mediaUri.videoFile.getPath(),
@@ -323,44 +323,47 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
                     thumbImage = ThumbnailUtils.createVideoThumbnail(mediaUri.videoFile.getPath(),
                             MediaStore.Images.Thumbnails.MINI_KIND);
 
-                   /* ivTakenPhoto.setDrawingCacheEnabled(true);
+                    if (mediaUri != null && mediaUri.uriList.size() > 0) {
 
-                    thumbImage = ivTakenPhoto.getDrawingCache();
-                    String path = MediaStore.Images.Media.insertImage(CustomCameraActivity.this.
-                            getContentResolver(), thumbImage, "Title", null);
+                        Intent intent = new Intent(CustomCameraActivity.this,
+                                VideoTrimmerActivity.class);
 
-
-
-                    String filePath = generatePath(Uri.parse(path), CustomCameraActivity.this);
-
-                  thumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(
-                            generatePath(Uri.parse(filePath), CustomCameraActivity.this)),
-                            150, 150);
-*/
-
+                        intent.putExtra("caption", "");
+                        intent.putExtra("mediaUri", mediaUri);
+                        intent.putExtra("thumbImage", thumbImage);
+                        intent.putExtra("feedType",mediaUri.mediaType);
+                        startActivity(intent);
+                        finish();
+                    }
 
 
                 }else {
                     thumbImage = ivTakenPhoto.getBitmap();
                     mediaUri.mediaType = Constant.IMAGE_STATE;
+
                     String path = MediaStore.Images.Media.insertImage(CustomCameraActivity.this.
                             getContentResolver(), thumbImage, "Title", null);
                     thumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(
                             generatePath(Uri.parse(path), CustomCameraActivity.this)),
                             150, 150);
                     mediaUri.addUri(path);
+
+                    if (mediaUri != null && mediaUri.uriList.size() > 0) {
+
+                        Intent intent = new Intent(CustomCameraActivity.this,
+                                FeedPostActivity.class);
+
+
+                        intent.putExtra("caption", "");
+                        intent.putExtra("mediaUri", mediaUri);
+                        intent.putExtra("thumbImage", thumbImage);
+                        intent.putExtra("feedType",mediaUri.mediaType);
+                        startActivity(intent);
+                        finish();
+                    }
                 }
 
-                if (mediaUri != null && mediaUri.uriList.size() > 0) {
-                    Intent intent = new Intent(CustomCameraActivity.this,
-                            VideoTrimmerActivity.class);
-                    intent.putExtra("caption", "");
-                    intent.putExtra("mediaUri", mediaUri);
-                    intent.putExtra("thumbImage", thumbImage);
-                    intent.putExtra("feedType",mediaUri.mediaType);
-                    startActivity(intent);
-                    finish();
-                }
+
                 //  addMyStory();
                 break;
 

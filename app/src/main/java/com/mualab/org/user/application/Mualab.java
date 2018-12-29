@@ -127,7 +127,7 @@ public class Mualab extends Application {
         }
     }
 
-    public void cancelAllPendingRequests() {
+    public  void cancelAllPendingRequests() {
         if (mRequestQueue != null) {
             mRequestQueue.cancelAll(TAG);
         }

@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,9 +18,9 @@
 
             <com.otaliastudios.cameraview.CameraView
                 android:id="@+id/camera"
-                android:keepScreenOn="true"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:keepScreenOn="true" />
 
             <com.mualab.org.user.Views.scaleview.ScaleImageView
                 android:id="@+id/ivTakenPhoto"
@@ -33,6 +34,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:visibility="gone" />
+
             <View
                 android:id="@+id/vShutter"
                 android:layout_width="match_parent"
@@ -43,8 +45,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <ViewSwitcher
                 android:id="@+id/vUpperPanel"
@@ -58,20 +60,19 @@
 
 
                     <RelativeLayout
+                        android:id="@+id/btnBack"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="12dp"
-                        android:id="@+id/btnBack"
                         android:layout_marginLeft="2dp"
-                        android:layout_marginTop="2dp">
+                        android:layout_marginTop="2dp"
+                        android:padding="12dp">
 
                         <ImageView
-                            android:layout_width="27dp"
                             android:id="@+id/img_cancle"
-                            android:layout_marginRight="20dp"
+                            android:layout_width="27dp"
                             android:layout_height="27dp"
-                            android:src="@drawable/white_back_ico"
-                            />
+                            android:layout_marginRight="20dp"
+                            android:src="@drawable/white_back_ico" />
 
                     </RelativeLayout>
 
@@ -98,8 +99,7 @@
                         android:layout_width="27dp"
                         android:layout_height="27dp"
                         android:layout_marginRight="10dp"
-                        android:src="@drawable/switch_camera"/>
-
+                        android:src="@drawable/switch_camera" />
 
 
                 </LinearLayout>
@@ -110,18 +110,18 @@
                     android:gravity="center_vertical">
 
                     <RelativeLayout
+                        android:id="@+id/retry"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="12dp"
-                        android:id="@+id/retry"
                         android:layout_marginLeft="2dp"
-                        android:layout_marginTop="2dp">
+                        android:layout_marginTop="2dp"
+                        android:padding="12dp">
 
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:src="@drawable/ic_white_x"
-                            android:layout_centerInParent="true"/>
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/ic_white_x" />
 
                     </RelativeLayout>
 
@@ -136,13 +136,73 @@
 
         </LinearLayout>
 
+        <RelativeLayout
+            android:id="@+id/ly_report"
+            android:layout_width="120dp"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="82dp"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="120dp"
+                android:layout_height="80dp"
+                android:scaleType="center"
+                app:cardCornerRadius="10dp"
+                app:cardBackgroundColor="@color/white" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:elevation="10dp"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/tv_images_pick"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/nunito_regular"
+                    android:gravity="center"
+                    android:scaleType="center"
+                    android:text="Images"
+                    android:textColor="@color/dark_gray"
+                    android:textSize="18dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/gray" />
+
+
+                <TextView
+                    android:id="@+id/tv_videos_pick"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_regular"
+                    android:gravity="center"
+                    android:scaleType="center"
+                    android:text="Videos"
+                    android:textColor="@color/dark_gray"
+                    android:textSize="18dp" />
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
 
         <ViewSwitcher
             android:id="@+id/vLowerPanel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -173,11 +233,10 @@
                         android:layout_width="64dp"
                         android:layout_height="64dp"
                         android:layout_gravity="center"
-                        android:textSize="14sp"
+                        android:background="@drawable/btn_capture"
                         android:textColor="@color/white"
-                        android:background="@drawable/btn_capture" />
+                        android:textSize="14sp" />
                 </FrameLayout>
-
 
 
                 <FrameLayout
@@ -196,9 +255,8 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center"
-                        android:tint="@color/white"
                         android:src="@drawable/video_player_ico"
-                        />
+                        android:tint="@color/white" />
 
                 </FrameLayout>
             </LinearLayout>
@@ -212,26 +270,26 @@
                     android:id="@+id/add_to_story"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="15dp">
+                    android:layout_marginLeft="15dp"
+                    android:padding="5dp">
 
                     <ImageView
+                        android:id="@+id/ic_add_to_story"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:src="@drawable/ic_add_to_story"
                         android:layout_centerHorizontal="true"
-                        android:id="@+id/ic_add_to_story"/>
+                        android:src="@drawable/ic_add_to_story" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="11sp"
-                        android:text="Add To Story"
-                        android:layout_centerHorizontal="true"
                         android:layout_below="@+id/ic_add_to_story"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="7dp"
-                        android:textColor="#fff"/>
+                        android:text="Add To Story"
+                        android:textColor="#fff"
+                        android:textSize="11sp" />
 
                 </RelativeLayout>
 

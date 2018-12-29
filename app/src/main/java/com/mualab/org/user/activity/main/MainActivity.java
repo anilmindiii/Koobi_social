@@ -83,6 +83,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.mualab.org.user.data.local.prefs.Session.isLogout;
+
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -128,6 +130,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if(getIntent().getStringExtra("FeedPostActivity") != null){
             isFromFeedPost = getIntent().getStringExtra("FeedPostActivity");
         }
+
+        isLogout = false;
 
         if (user != null) {
             Mualab.currentUser = Mualab.getInstance().getSessionManager().getUser();

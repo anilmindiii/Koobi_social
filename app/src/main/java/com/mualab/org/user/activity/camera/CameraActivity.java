@@ -28,6 +28,8 @@ import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 import android.widget.ViewSwitcher;
@@ -36,7 +38,9 @@ import com.android.volley.VolleyError;
 import com.mualab.org.user.R;
 import com.mualab.org.user.Views.scaleview.ImageSource;
 import com.mualab.org.user.Views.scaleview.ScaleImageView;
+import com.mualab.org.user.activity.video_trim.VideoTrimmerActivity;
 import com.mualab.org.user.application.Mualab;
+import com.mualab.org.user.data.model.MediaUri;
 import com.mualab.org.user.data.remote.HttpResponceListner;
 import com.mualab.org.user.data.remote.HttpTask;
 import com.mualab.org.user.dialogs.MyToast;
@@ -69,6 +73,8 @@ import java.util.Map;
 
 import com.mualab.org.user.Views.*;
 
+import static com.mualab.org.user.utils.media.ImageVideoUtil.generatePath;
+
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final Interpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
@@ -99,6 +105,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     private Uri captureMediaUri;
     private ImageView img_gallery;
     private boolean isVideoUri;
+    private RelativeLayout ly_report;
+    private TextView tv_videos_pick,tv_images_pick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -240,6 +248,9 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         vUpperPanel = findViewById(R.id.vUpperPanel);
         vLowerPanel = findViewById(R.id.vLowerPanel);
         ImageView img_cancle = findViewById(R.id.img_cancle);
+        ly_report = findViewById(R.id.ly_report);
+        tv_images_pick = findViewById(R.id.tv_images_pick);
+        tv_videos_pick = findViewById(R.id.tv_videos_pick);
 
         //rvFilters = findViewById(R.id.rvFilters);
         btnTakePhoto = findViewById(R.id.btnTakePhoto);
@@ -262,6 +273,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.switchCamera).setOnClickListener(this);
         findViewById(R.id.btnCameraMode).setOnClickListener(this);
         findViewById(R.id.add_to_story).setOnClickListener(this);
+        findViewById(R.id.tv_videos_pick).setOnClickListener(this);
+        findViewById(R.id.tv_images_pick).setOnClickListener(this);
         isCameraSession = true;
     }
 
@@ -295,6 +308,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         switch (v.getId()){
 
             case R.id.btnTakePhoto:
+                ly_report.setVisibility(View.GONE);
 
                 if(currentState == STATE_TAKE_PHOTO){
                     btnTakePhoto.setEnabled(false);
@@ -317,10 +331,33 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
 
             case R.id.img_gallery:
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
+                if( ly_report.getVisibility() == View.VISIBLE){
+                    ly_report.setVisibility(View.GONE);
+                }else ly_report.setVisibility(View.VISIBLE);
+
+
+                break;
+
+
+            case R.id.tv_images_pick:
+                ly_report.setVisibility(View.GONE);
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.setType("image/* ");
                 startActivityForResult(intent, 234);
                 break;
+
+            case R.id.tv_videos_pick:
+                ly_report.setVisibility(View.GONE);
+
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+
+                startActivityForResult(galleryIntent, Constant.REQUEST_CODE_PICK);
+
+                break;
+
+
+
 
            /* case R.id.btnAccept:
                 //PublishActivity.openWithPhotoUri(this, Uri.fromFile(photoPath));
@@ -350,7 +387,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 */
 
             case R.id.add_to_story:
-
+                ly_report.setVisibility(View.GONE);
                 addMyStory();
                 break;
 
@@ -358,10 +395,12 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.retry:
             case R.id.btnBack:
                 onBackPressed();
+                ly_report.setVisibility(View.GONE);
                 img_gallery.setVisibility(View.VISIBLE);
                 break;
 
             case R.id.switchCamera:
+                ly_report.setVisibility(View.GONE);
                 if(cameraView.getFacing()== Facing.BACK){
                     cameraView.setFacing(Facing.FRONT);
                 }else {
@@ -370,6 +409,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case R.id.btnFlashLight:
+                ly_report.setVisibility(View.GONE);
 
                 Flash flashMode = cameraView.getFlash();
                 if(flashMode ==null){
@@ -409,11 +449,13 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case R.id.btnCameraMode:
+                ly_report.setVisibility(View.GONE);
                 changeCameraSessionMode();
                 break;
 
 
             case R.id.img_cancle:
+                ly_report.setVisibility(View.GONE);
                 finish();
                 break;
         }
@@ -453,28 +495,51 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             img_gallery.setVisibility(View.VISIBLE);
         } else if (resultCode == RESULT_OK) {
 
-            if (requestCode == 234) {
+            if(requestCode == Constant.GETVIDEOS){
+                photoPath = new File(data.getStringExtra("new_uri"));
+                isVideoUri = true;
+                addMyStory();
+            }
+
+            if(requestCode == Constant.REQUEST_CODE_PICK){
+                Intent intent = new Intent(CameraActivity.this, VideoTrimmerActivity.class);
+                MediaUri mediaUri = new MediaUri();
+                mediaUri.uri = String.valueOf(data.getData());
+                Uri selectedMediaUri = data.getData();
+
+
+                mediaUri.uri = generatePath(selectedMediaUri,CameraActivity.this);
+
+                mediaUri.isFromGallery = true;
+
+                intent.putExtra("caption", "");
+                intent.putExtra("mediaUri", mediaUri);
+                intent.putExtra("feedType",90);
+
+                startActivityForResult(intent,Constant.GETVIDEOS);
+
+            }else if (requestCode == 234) {
                 //Bitmap bitmap = ImagePicker.getImageFromResult(this, requestCode, resultCode, data);
                 Uri imageUri = ImagePicker.getImageURIFromResult(this, requestCode, resultCode, data);
+
                 if (imageUri != null) {
-                    CropImage.activity(imageUri).setCropShape(CropImageView.CropShape.RECTANGLE).setAspectRatio(400, 400).start(this);
+
+                    try {
+                        if (imageUri != null)
+                            profileImageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+
+                        if (profileImageBitmap != null) {
+                            showTakenPicture(profileImageBitmap);
+
+                            img_gallery.setVisibility(View.GONE);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
                 } else {
                     showToast(getString(R.string.msg_some_thing_went_wrong));
-                }
-
-            } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-                CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                try {
-                    if (result != null)
-                        profileImageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), result.getUri());
-
-                    if (profileImageBitmap != null) {
-                        showTakenPicture(profileImageBitmap);
-
-                        img_gallery.setVisibility(View.GONE);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
 
             }

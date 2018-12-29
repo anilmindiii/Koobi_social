@@ -72,13 +72,14 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
     private AppBarLayout appbar;
     private CoordinatorLayout rootLayout;
     private boolean isSupportMultipal;
-    private boolean isSnappedToCenter;
+    private boolean isSnappedToCenter = true;
 
     private int lastindex;
     private Uri lastSelectedUri;
     private LinkedHashMap<String, Uri> mSelected;
     private List<Media> albumList;
     private ProgressBar ll_progress;
+    private boolean isFullImage ;
 
     public GalleryFragment() {
         // Required empty public constructor
@@ -249,6 +250,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                     .into(ivImage);
 
         } else {
+            isSnappedToCenter  = false;
             showImage.setVisibility(View.VISIBLE);
             ivImage.setVisibility(View.GONE);
             try{
@@ -312,7 +314,38 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
 
             case R.id.tvNext:
                 if (!isSupportMultipal) {
-                     cropImageAsync();
+
+                    if(isFullImage){
+                        Intent intent = new Intent(context, FeedPostActivity.class);
+                        if (mSelected != null && mSelected.size() > 0) {
+                            MediaUri mediaUri = new MediaUri();
+                            mediaUri.mediaType = Constant.IMAGE_STATE;
+                            mediaUri.isFromGallery = true;
+                            mediaUri.addAll(mSelected);
+
+                            thumbImage = ThumbnailUtils
+                                    .extractThumbnail(BitmapFactory.decodeFile(
+                                            ImageVideoUtil.generatePath(Uri.parse(mediaUri.uriList.get(0)), context)), 100, 100);
+
+                            intent.putExtra("caption", "");
+                            intent.putExtra("mediaUri", mediaUri);
+                            intent.putExtra("thumbImage", thumbImage);
+                            intent.putExtra("feedType", Constant.IMAGE_STATE);
+                            intent.putExtra("requestCode", Constant.POST_FEED_DATA);
+                        } else {
+                            intent = new Intent(context, FeedPostActivity.class);
+                            intent.putExtra("caption", "");
+                            intent.putExtra("feedType", Constant.TEXT_STATE);
+                            intent.putExtra("requestCode", Constant.POST_FEED_DATA);
+                        }
+
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        startActivityForResult(intent, Constant.POST_FEED_DATA);
+                    }
+                    else{
+                        cropImageAsync();
+                    }
 
 
                    /* Intent intent = new Intent(context, FeedPostActivity.class);
@@ -460,11 +493,16 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
 
     private void snapImage() {
         if (isSnappedToCenter) {
+            isFullImage  =false;
             showImage.cropToCenter();
+            isSnappedToCenter = false;
         } else {
+            isFullImage  =true;
             showImage.fitToCenter();
+            isSnappedToCenter = true;
+
         }
-        isSnappedToCenter = !isSnappedToCenter;
+
     }
 
     public ArrayList<Media> getAlbums() {

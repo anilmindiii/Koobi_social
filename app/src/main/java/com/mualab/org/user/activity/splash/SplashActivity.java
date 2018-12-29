@@ -30,7 +30,7 @@ public class SplashActivity extends AppCompatActivity {
         if (session != null) {
             if (session.isLoggedIn()) {
                 startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                updateLocation();
+                //updateLocation();
             } else {
                 startActivity(new Intent(SplashActivity.this, LoginActivity.class));
             }

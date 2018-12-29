@@ -9,8 +9,8 @@
         android:id="@+id/tag_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:adjustViewBounds="true"
-        />
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true" />
 
     <!--  <views.cv.AspectRatioImageView
           android:id="@+id/tag_image_view"

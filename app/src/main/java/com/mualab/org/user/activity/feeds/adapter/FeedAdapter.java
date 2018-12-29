@@ -1,5 +1,6 @@
 package com.mualab.org.user.activity.feeds.adapter;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -79,6 +80,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Listener listener;
     private boolean loading;
     String userType;
+    Activity activity;
 
 
     public void showHideLoading(boolean b) {
@@ -106,6 +108,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.feedItems = feedItems;
         this.listener = listener;
         this.userType = userType;
+        activity = (Activity) mContext;
     }
 
     @Override
@@ -195,16 +198,28 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 h.tv_text.setText(feeds.caption);
             } else h.tv_text.setVisibility(View.GONE);
 
-            if (feeds.userId == Mualab.currentUser.id) {
-                h.btnFollow.setVisibility(View.GONE);
-            } else {
-                h.btnFollow.setVisibility(View.GONE);
-                if (feeds.followingStatus == 1) {
-                    h.btnFollow.setText(R.string.following);
-                } else {
-                    h.btnFollow.setText(R.string.follow);
-                }
-            }
+
+            if(activity != null){
+                String activityName = activity.getClass().toString();
+                if(activityName.equals("class com.mualab.org.user.activity.feeds.activity.FeedSingleActivity")){
+                    if (feeds.userId == Mualab.currentUser.id) {
+                        h.btnFollow.setVisibility(View.GONE);
+                    } else {
+                        h.btnFollow.setVisibility(View.VISIBLE);
+                        if (feeds.followingStatus == 1) {
+                            h.btnFollow.setBackgroundResource(R.drawable.btn_bg_blue_broder);
+                            h.btnFollow.setTextColor(ContextCompat.getColor(mContext, R.color.black));
+                            h.btnFollow.setText(R.string.following);
+                        } else {
+                            h.btnFollow.setBackgroundResource(R.drawable.button_effect_invert);
+                            h.btnFollow.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                            h.btnFollow.setText(R.string.follow);
+                        }
+                    }
+                }else h.btnFollow.setVisibility(View.GONE);
+            }else h.btnFollow.setVisibility(View.GONE);
+
+
         }
 
 
@@ -543,9 +558,24 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             @Override
             public void onClick(View v) {
                 Feeds feed = feedItems.get(videoHolder.getAdapterPosition());
-                Intent intent3 = new Intent(mContext, ArtistProfileActivity.class);
-                intent3.putExtra("artistId", feed.userId+"");
-                mContext.startActivity(intent3);
+
+                if (userType.equals("user")) {
+                    Intent intent = new Intent(mContext, UserProfileActivity.class);
+                    intent.putExtra("userId", String.valueOf(feed.userId));
+                    mContext.startActivity(intent);
+                }else if (userType.equals("artist") && feed.userId== Mualab.currentUser.id){
+                    Intent intent = new Intent(mContext, UserProfileActivity.class);
+                    intent.putExtra("userId", String.valueOf(feed.userId));
+                    mContext.startActivity(intent);
+                }
+                else {
+                    Intent intent = new Intent(mContext, ArtistProfileActivity.class);
+                    intent.putExtra("artistId", String.valueOf(feed.userId));
+                    mContext.startActivity(intent);
+                }
+
+
+
             }
         });
 
@@ -675,7 +705,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             public void onClick(View v) {
                 Feeds feed = feedItems.get(cellFeedViewHolder.getAdapterPosition());
 
-                if (userType.equals("user")) {
+                apiForgetUserIdFromUserName(feed.userName);
+
+                /*if (userType.equals("user")) {
                     Intent intent = new Intent(mContext, UserProfileActivity.class);
                     intent.putExtra("userId", String.valueOf(feed.userId));
                     mContext.startActivity(intent);
@@ -688,7 +720,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     Intent intent = new Intent(mContext, ArtistProfileActivity.class);
                     intent.putExtra("artistId", String.valueOf(feed.userId));
                     mContext.startActivity(intent);
-                }
+                }*/
 
 
 
@@ -909,8 +941,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         final Map<String, String> params = new HashMap<>();
         if(userName.toString().contains("@")){
              user_name = userName.toString().replace("@","");
-        }
-        params.put("userName", user_name+"");
+            params.put("userName", user_name+"");
+        }else params.put("userName", userName+"");
         new HttpTask(new HttpTask.Builder(mContext, "profileByUserName", new HttpResponceListner.Listener() {
             @Override
             public void onResponse(String response, String apiName) {

@@ -26,6 +26,7 @@ public class Session {
     private Context _context;
     private SharedPreferences mypref, mypref2;
     private SharedPreferences.Editor editor, editor2;
+    public static boolean isLogout = false;
 
     public Session(Context context) {
         this._context = context;
@@ -150,18 +151,22 @@ public class Session {
 
 
     public void logout() {
-
-        editor.clear();
-        editor.apply();
-        try {
-            FirebaseInstanceId.getInstance().deleteInstanceId();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(!isLogout){
+            isLogout = true;
+            editor.clear();
+            editor.apply();
+            try {
+                FirebaseInstanceId.getInstance().deleteInstanceId();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Intent showLogin = new Intent(_context, LoginActivity.class);
+            showLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            showLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            _context.startActivity(showLogin);
         }
-        Intent showLogin = new Intent(_context, LoginActivity.class);
-        showLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        showLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        _context.startActivity(showLogin);
+
+
     }
 
     public boolean isLoggedIn() {

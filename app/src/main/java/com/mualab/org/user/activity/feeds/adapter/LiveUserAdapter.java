@@ -48,6 +48,7 @@ public class LiveUserAdapter extends RecyclerView.Adapter<LiveUserAdapter.ViewHo
 
         LiveUserInfo userInfo = liveUserList.get(position);
         holder.tvUserName.setText(String.format("%s", userInfo.userName));
+
         if(Objects.equals(userInfo.fullName, null)&&position==0){
             holder.ivAddLive.setVisibility(View.VISIBLE);
         }else {

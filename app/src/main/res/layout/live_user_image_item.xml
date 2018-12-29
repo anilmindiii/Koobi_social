@@ -39,7 +39,7 @@
             android:textSize="8sp"
             android:visibility="gone"/>
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_add_icon"
             android:layout_width="15dp"
             android:layout_height="15dp"
@@ -47,7 +47,8 @@
             android:layout_alignParentRight="true"
             android:layout_marginLeft="15dp"
             android:layout_marginBottom="5dp"
-            android:src="@drawable/add_ico"
+            android:src="@drawable/ic_add"
+            app:civ_circle_background_color="@color/white"
             android:visibility="visible" />
 
     </RelativeLayout>

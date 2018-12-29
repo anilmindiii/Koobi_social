@@ -126,6 +126,7 @@ public class FeedSingleActivity extends AppCompatActivity implements View.OnClic
         rvFeed.setLayoutManager(lm);
         rvFeed.setHasFixedSize(true);
         adapter = new FeedAdapter(FeedSingleActivity.this, userType,list, this);
+
         rvFeed.setAdapter(adapter);
         rvFeed.scrollToPosition(0);
         if (feeds != null) {

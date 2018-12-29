@@ -22,6 +22,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -69,7 +70,7 @@ public class StoriesActivity extends SwipeBackActivity implements StoryStatusVie
     private StoryStatusView storyStatusView;
     private ImageView ivPhoto, ivUserImg;
     private ProgressBar progress_bar;
-    private RelativeLayout addMoreStory;
+    private LinearLayout addMoreStory;
     private TextView tvUserName;
     private VideoView videoView;
     private RelativeLayout lyVideoView;
@@ -80,7 +81,7 @@ public class StoriesActivity extends SwipeBackActivity implements StoryStatusVie
     private List<LiveUserInfo> liveUserList;
     private List<Story> storyList = new ArrayList<>();
     private int currentIndex;
-    private long statusDuration = 3000L;
+    private long statusDuration = 5000L;
     private int counter = 0;
     private boolean isRunningStory;
     private ImageButton img_btn;
@@ -311,8 +312,6 @@ public class StoriesActivity extends SwipeBackActivity implements StoryStatusVie
             storyStatusView.setDynamicStoryDuration(statusDuration);
             Picasso.with(ivPhoto.getContext())
                     .load(story.myStory)
-                    .centerCrop()
-                    .fit()
                     .error(R.drawable.bg_splash)
                     .into(ivPhoto, new Callback() {
                         @Override
@@ -362,7 +361,12 @@ public class StoriesActivity extends SwipeBackActivity implements StoryStatusVie
                 public void onPrepared(final MediaPlayer mediaPlayer) {
                     StoriesActivity.this.mediaPlayer = mediaPlayer;
                     progress_bar.setVisibility(View.GONE);
-                    storyStatusView.setDynamicStoryDuration(mediaPlayer.getDuration());
+                    try {
+                        storyStatusView.setDynamicStoryDuration(mediaPlayer.getDuration());
+                    }catch (Exception e){
+                        storyStatusView.setDynamicStoryDuration(30);
+                    }
+
                     mediaPlayer.start();
                     if (isFirstTime) {
                         isFirstTime = false;
@@ -415,7 +419,7 @@ public class StoriesActivity extends SwipeBackActivity implements StoryStatusVie
         if (liveUserList.size() > 0) {
             userInfo = liveUserList.get(currentIndex);
             addMoreStory.setVisibility(userInfo.id == Mualab.currentUser.id ? View.VISIBLE : View.GONE);
-            img_btn.setVisibility(userInfo.id == Mualab.currentUser.id ? View.GONE : View.VISIBLE);
+           // img_btn.setVisibility(userInfo.id == Mualab.currentUser.id ? View.GONE : View.VISIBLE);
 
             tvUserName.setText(String.format("%s", userInfo.userName));
             if (TextUtils.isEmpty(userInfo.profileImage)) {

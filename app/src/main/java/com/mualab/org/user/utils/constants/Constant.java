@@ -32,6 +32,7 @@ public class Constant {
     public static final int TextTagREQCODE = 1431;
     public static final int CAMERA_REQUEST = 234;
     public static final int REQUEST_CODE_PICK = 235;
+    public static final int GETVIDEOS = 652;
     public static final int SELECT_FILE = 1;
     public final static int REQUEST_CHECK_SETTINGS_GPS = 96;
     public static String croppedVideoURI;

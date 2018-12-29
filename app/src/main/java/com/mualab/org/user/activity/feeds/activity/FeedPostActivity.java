@@ -1000,7 +1000,8 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
         String uri = mediaUri.uri;
 
         if (mediaUri.videoFile != null)
-            tempFile = mediaUri.videoFile;
+           // tempFile = mediaUri.videoFile;
+            tempFile = new File(mediaUri.uri);
         else {
             String path = ImageVideoUtil.generatePath(Uri.parse(uri), this);
             tempFile = new File(path);
