@@ -17,6 +17,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -26,6 +27,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -108,6 +110,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     private RelativeLayout ly_report;
     private TextView tv_videos_pick,tv_images_pick;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,6 +134,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         cameraView.setPictureSize(result);
 
         cameraView.addCameraListener(new CameraListener() {
+
             @Override
             public void onCameraOpened(CameraOptions options) {
                 super.onCameraOpened(options);
@@ -204,6 +208,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         });
 
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
             @Override
             public void onPrepared(MediaPlayer mp) {
                 ViewGroup.LayoutParams lp = videoView.getLayoutParams();
@@ -251,6 +256,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         ly_report = findViewById(R.id.ly_report);
         tv_images_pick = findViewById(R.id.tv_images_pick);
         tv_videos_pick = findViewById(R.id.tv_videos_pick);
+
 
         //rvFilters = findViewById(R.id.rvFilters);
         btnTakePhoto = findViewById(R.id.btnTakePhoto);
@@ -496,9 +502,11 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         } else if (resultCode == RESULT_OK) {
 
             if(requestCode == Constant.GETVIDEOS){
-                photoPath = new File(data.getStringExtra("new_uri"));
+                /*photoPath = new File(data.getStringExtra("new_uri"));
                 isVideoUri = true;
-                addMyStory();
+
+                addMyStory();*/
+                finish();
             }
 
             if(requestCode == Constant.REQUEST_CODE_PICK){
@@ -521,9 +529,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             }else if (requestCode == 234) {
                 //Bitmap bitmap = ImagePicker.getImageFromResult(this, requestCode, resultCode, data);
                 Uri imageUri = ImagePicker.getImageURIFromResult(this, requestCode, resultCode, data);
-
                 if (imageUri != null) {
-
                     try {
                         if (imageUri != null)
                             profileImageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
@@ -536,7 +542,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
 
                 } else {
                     showToast(getString(R.string.msg_some_thing_went_wrong));
@@ -736,8 +741,9 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                         .setAuthToken(Mualab.currentUser.authToken)
                         .setProgress(true));
                 task.postFile("myStory", photoPath, bitmap);
+            }
 
-            }else {
+            else {
                 Bitmap bitmap = ivTakenPhoto.getBitmap();
                 HttpTask task = new HttpTask(new HttpTask.Builder(this, "addMyStory", new HttpResponceListner.Listener() {
                     @Override
@@ -778,7 +784,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             public void onTick(long millisUntilFinished) {
                 btnTakePhoto.setText(String.valueOf(millisUntilFinished / 1000));
                 Log.e("Count", "count" + millisUntilFinished);
-                if (57962 > millisUntilFinished)
+                if (57962 >= millisUntilFinished)
                     btnTakePhoto.setEnabled(true);
             }
 
@@ -794,7 +800,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-
             case Constant.MY_PERMISSIONS_REQUEST_CEMERA_OR_GALLERY: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     ImagePicker.pickImage(CameraActivity.this);

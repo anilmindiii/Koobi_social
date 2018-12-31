@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -23,23 +24,27 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_splash);
+        // setContentView(R.layout.activity_splash);
+        // Session session = Mualab.getInstance().getSessionManager();
+        // startActivity(new Intent(SplashActivity.this, LoginActivity.class));
 
-        Session session = Mualab.getInstance().getSessionManager();
-        //  startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-        if (session != null) {
-            if (session.isLoggedIn()) {
+        if (Mualab.getInstance().getSessionManager() != null) {
+
+            if (Mualab.getInstance().getSessionManager().isLoggedIn()) {
                 startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 //updateLocation();
+                Log.d("checkEnterstatus","MainActivity");
             } else {
                 startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                Log.d("checkEnterstatus","LoginActivity111");
             }
-            finish();
 
+            finish();
 
         } else {
             startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-
+            Log.d("checkEnterstatus","LoginActivity222");
+            finish();
         }
 
     }

@@ -631,13 +631,13 @@ public class CustomCameraActivity extends AppCompatActivity implements View.OnCl
 
         startRecording();
 
-        countDownTimer = new CountDownTimer(60000, 1000) {
+        countDownTimer = new CountDownTimer(60400, 1000) {
             public void onTick(long millisUntilFinished) {
                 btnTakePhoto.setText(String.valueOf(millisUntilFinished / 1000));
 
                 tempMillisUntilFinished = millisUntilFinished;
 
-                if(millisUntilFinished<50000) {
+                if(millisUntilFinished < 51000) {
                     btnTakePhoto.setEnabled(true);
                 }
                 else {

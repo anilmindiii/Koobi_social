@@ -236,6 +236,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 int pos = imageHolder.weakRefViewPager.get().getCurrentItem();
                                 if (feeds.feedType.equalsIgnoreCase("image")) {
                                     listener.onFeedClick(feeds, pos, imageHolder.rl_imageView);
+
+
                                 }
                             }
 

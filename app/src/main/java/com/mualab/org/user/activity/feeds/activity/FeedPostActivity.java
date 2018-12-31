@@ -145,12 +145,23 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed_post);
         //setStatusbarColor();
+        tvMediaSize = findViewById(R.id.tvMediaSize);
         Intent intent = getIntent();
         if (intent != null) {
             caption = intent.getStringExtra("caption");
             thumbImage = intent.getParcelableExtra("thumbImage");
             mediaUri = (MediaUri) intent.getSerializableExtra("mediaUri");
             feedType = intent.getIntExtra("feedType", Constant.IMAGE_STATE);
+
+
+            if (mediaUri != null)
+                if (mediaUri.uriList.size() > 1) {
+                    tvMediaSize.setVisibility(View.VISIBLE);
+                    tvMediaSize.setText(mediaUri.uriList.size() + "");
+                } else {
+                    tvMediaSize.setVisibility(View.GONE);
+                }
+
 
             /*file:///storage/emulated/0/Android/data/com.mualab.org.user/cache/tmp.mp4*/
         }
@@ -330,7 +341,6 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
 
         edCaption = findViewById(R.id.edCaption);
         btn_post = findViewById(R.id.btn_post);
-        tvMediaSize = findViewById(R.id.tvMediaSize);
         tvTagCount = findViewById(R.id.tvTagCount);
         // progressBar = findViewById(R.id.progress_bar);
 
@@ -1000,7 +1010,7 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
         String uri = mediaUri.uri;
 
         if (mediaUri.videoFile != null)
-           // tempFile = mediaUri.videoFile;
+            // tempFile = mediaUri.videoFile;
             tempFile = new File(mediaUri.uri);
         else {
             String path = ImageVideoUtil.generatePath(Uri.parse(uri), this);

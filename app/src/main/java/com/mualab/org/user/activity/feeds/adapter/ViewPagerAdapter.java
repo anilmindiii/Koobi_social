@@ -7,12 +7,15 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.mualab.org.user.R;
 import com.mualab.org.user.activity.artist_profile.activity.ArtistProfileActivity;
@@ -23,12 +26,18 @@ import com.mualab.org.user.activity.people_tag.instatag.TagDetail;
 import com.mualab.org.user.activity.people_tag.instatag.TagToBeTagged;
 import com.mualab.org.user.data.feeds.Feeds;
 import com.mualab.org.user.data.model.SearchBoard.ArtistsSearchBoard;
+import com.mualab.org.user.data.remote.HttpResponceListner;
+import com.mualab.org.user.data.remote.HttpTask;
+import com.mualab.org.user.dialogs.MyToast;
 import com.mualab.org.user.listener.OnDoubleTapListener;
 import com.mualab.org.user.utils.ScreenUtils;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ViewPagerAdapter extends PagerAdapter implements OnImageSwipeListener {
 
@@ -137,7 +146,8 @@ public class ViewPagerAdapter extends PagerAdapter implements OnImageSwipeListen
             public void onTagCliked(final com.mualab.org.user.activity.people_tag.models.TagDetail tagDetail) {
                 if (isFromFeed){
                     if(tagDetail!=null){
-                        if (tagDetail.userType!=null && !tagDetail.userType.equals("")){
+                        apiForgetUserIdFromUserName(tagDetail.title);
+                        /*if (tagDetail.userType!=null && !tagDetail.userType.equals("")){
                             if (tagDetail.tagId!=null && !tagDetail.tagId.equals("")){
                                 if (tagDetail.userType.equals("user")){
                                     Intent intent = new Intent(context, UserProfileActivity.class);
@@ -151,7 +161,7 @@ public class ViewPagerAdapter extends PagerAdapter implements OnImageSwipeListen
                                     context.startActivity(intent2);
                                 }
                             }
-                        }
+                        }*/
                     }
                 }
             }
@@ -183,6 +193,60 @@ public class ViewPagerAdapter extends PagerAdapter implements OnImageSwipeListen
         itemView.setTag("myview" + position);
         container.addView(itemView);
         return itemView;
+    }
+
+    private void apiForgetUserIdFromUserName(final CharSequence userName) {
+        String user_name="";
+
+        final Map<String, String> params = new HashMap<>();
+        if(userName.toString().contains("@")){
+            user_name = userName.toString().replace("@","");
+            params.put("userName", user_name+"");
+        }else params.put("userName", userName+"");
+        new HttpTask(new HttpTask.Builder(context, "profileByUserName", new HttpResponceListner.Listener() {
+            @Override
+            public void onResponse(String response, String apiName) {
+                Log.d("hfjas", response);
+                try {
+                    JSONObject js = new JSONObject(response);
+                    String status = js.getString("status");
+                    String message = js.getString("message");
+                    if (status.equalsIgnoreCase("success")) {
+
+                        JSONObject userDetail = js.getJSONObject("userDetail");
+                        String userType = userDetail.getString("userType");
+                        int userId = userDetail.getInt("_id");
+
+
+
+                        if (userType.equals("user")) {
+                            Intent intent = new Intent(context, UserProfileActivity.class);
+                            intent.putExtra("userId", userId+"");
+                            context.startActivity(intent);
+                        }
+                        else {
+                            Intent intent = new Intent(context, ArtistProfileActivity.class);
+                            intent.putExtra("artistId", userId+"");
+                            context.startActivity(intent);
+                        }
+
+                    } else {
+                        MyToast.getInstance(context).showDasuAlert(message);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void ErrorListener(VolleyError error) {
+            }
+        }).setBody(params,HttpTask.ContentType.APPLICATION_JSON)
+                .setMethod(Request.Method.POST)
+                .setProgress(true))
+                .execute("FeedAdapter");
+
+
     }
 
     @Override

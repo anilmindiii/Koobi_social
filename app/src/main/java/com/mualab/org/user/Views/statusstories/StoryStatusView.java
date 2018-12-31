@@ -194,6 +194,7 @@ public class StoryStatusView extends LinearLayout {
         animation.setInterpolator(new LinearInterpolator());
         animation.setDuration(duration);
         animation.addListener(new Animator.AnimatorListener() {
+
             @Override
             public void onAnimationStart(Animator animation) {
                 current = index;
@@ -224,6 +225,7 @@ public class StoryStatusView extends LinearLayout {
             public void onAnimationRepeat(Animator animation) {
 
             }
+
         });
         return animation;
     }

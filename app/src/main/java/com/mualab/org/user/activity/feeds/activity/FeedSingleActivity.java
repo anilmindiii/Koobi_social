@@ -18,9 +18,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -37,7 +35,6 @@ import com.mualab.org.user.activity.people_tag.instatag.TagToBeTagged;
 import com.mualab.org.user.activity.people_tag.models.TagDetail;
 import com.mualab.org.user.application.Mualab;
 import com.mualab.org.user.data.feeds.Feeds;
-
 import com.mualab.org.user.data.feeds.LiveUserInfo;
 import com.mualab.org.user.data.remote.HttpResponceListner;
 import com.mualab.org.user.data.remote.HttpTask;
@@ -47,11 +44,9 @@ import com.mualab.org.user.listener.FeedsListner;
 import com.mualab.org.user.utils.ConnectionDetector;
 import com.mualab.org.user.utils.WrapContentLinearLayoutManager;
 import com.mualab.org.user.utils.constants.Constant;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -386,7 +381,17 @@ public class FeedSingleActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onFeedClick(Feeds feed, int index, View v) {
-        showLargeImage(feed, index);
+      //  showLargeImage(feed, index);
+
+        ArrayList<String> tempList = new ArrayList<>();
+        for(int i=0; i<feed.feedData.size(); i++){
+            tempList.add(feed.feedData.get(i).feedPost);
+        }
+
+        Intent intent = new Intent(FeedSingleActivity.this, PreviewImageActivity.class);
+        intent.putExtra("imageArray", tempList);
+        intent.putExtra("startIndex", index);
+        startActivity(intent);
     }
 
     @Override
