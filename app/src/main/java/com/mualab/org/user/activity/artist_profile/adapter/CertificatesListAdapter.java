@@ -48,7 +48,8 @@ public class CertificatesListAdapter extends RecyclerView.Adapter<CertificatesLi
     public void onBindViewHolder(final ViewHolder holder, final int listPosition) {
 
         Certificate certificate =  certificateList.get(listPosition);
-        if (certificate.status==0) {
+
+      /*  if (certificate.status==0) {
             holder.tvStatus.setText("Under Review");
             holder.tvStatus.setTextColor(context.getResources().getColor(R.color.yellow));
         }
@@ -56,7 +57,7 @@ public class CertificatesListAdapter extends RecyclerView.Adapter<CertificatesLi
             holder.tvStatus.setText("Verified");
             holder.tvStatus.setTextColor(context.getResources().getColor(R.color.primary_green));
 
-        }
+        }*/
 
         if (!certificate.certificateImage.equals("")){
             Picasso.with(context).load(certificate.certificateImage).placeholder(R.drawable.gallery_placeholder).fit().into(holder.ivCertificate);
@@ -69,12 +70,10 @@ public class CertificatesListAdapter extends RecyclerView.Adapter<CertificatesLi
     // Static inner class to initialize the views of rows
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView ivCertificate;
-        private TextView tvStatus;
         private ViewHolder(View itemView)
         {
             super(itemView);
             itemView.setOnClickListener(this);
-            tvStatus =  itemView.findViewById(R.id.tvStatus);
             ivCertificate =  itemView.findViewById(R.id.ivCertificate);
             itemView.setOnClickListener(this);
         }

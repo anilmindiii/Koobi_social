@@ -35,13 +35,13 @@
     <application
         android:name=".application.Mualab"
         android:allowBackup="true"
+        android:fullBackupContent="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:noHistory="true"
         android:roundIcon="@drawable/ic_launcher_round"
         android:supportsRtl="true"
-        android:fullBackupContent="false"
         android:theme="@style/AppTheme.FullScreen"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
@@ -95,7 +95,6 @@
             android:name=".image.cropper.CropImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Base.Theme.AppCompat" />
-
         <activity
             android:name=".activity.artist_profile.activity.ArtistProfileActivity"
             android:screenOrientation="portrait"
@@ -221,31 +220,42 @@
             android:screenOrientation="portrait"
             android:theme="@style/StatusBarBlack" />
 
-
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="f584c59e1354706f33ae4e5508ac9cb630282533"
-            />
+            android:value="f584c59e1354706f33ae4e5508ac9cb630282533" />
+
         <activity
             android:name=".activity.feeds.activity.ReportActivity"
             android:screenOrientation="portrait"
             android:theme="@style/StatusBarBlack" />
-
-        <activity android:name=".activity.feeds.activity.TextTagActivity"
+        <activity
+            android:name=".activity.feeds.activity.TextTagActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/StatusBarBlack"/>
-
-
+            android:theme="@style/StatusBarBlack" />
         <activity
             android:name=".activity.explore.SearchFeedActivity"
             android:screenOrientation="portrait"
             android:theme="@style/StatusBarBlack" />
-
         <activity
             android:name=".activity.explore.ExplorSearchActivity"
             android:screenOrientation="portrait"
             android:theme="@style/StatusBarBlack" />
+        <activity
+            android:name=".activity.account_merge.MergeAccountActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
+        <activity
+            android:name=".activity.artist_profile.activity.CertificateActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
+        <activity
+            android:name=".activity.artist_profile.activity.CertificateDescriptionActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
 
+        <activity android:name=".activity.artist_profile.activity.AboutUsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
     </application>
 
 </manifest>

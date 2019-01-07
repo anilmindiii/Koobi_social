@@ -412,6 +412,9 @@
     <string name="select_reason">Select Reason</string>
     <string name="description">Description</string>
     <string name="add">Add</string>
+    <string name="merge">Merge</string>
+    <string name="create_new">Create New</string>
+    <string name="about_us_title">About Us</string>
 
 
 </resources>

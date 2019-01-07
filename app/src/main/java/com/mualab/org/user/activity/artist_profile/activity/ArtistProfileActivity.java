@@ -371,7 +371,12 @@ public class ArtistProfileActivity extends AppCompatActivity implements View.OnC
                 break;
 
             case R.id.llAboutUs:
-                MyToast.getInstance(ArtistProfileActivity.this).showDasuAlert("Under development");
+                if(!profileData.bio.equals("")){
+                    Intent intent =  new Intent(this,AboutUsActivity.class);
+                    intent.putExtra("bio",profileData.bio);
+                    startActivity(intent);
+                }else MyToast.getInstance(this).showDasuAlert("No About Us Added");
+
                 break;
 
             case R.id.ivChat:
@@ -383,9 +388,13 @@ public class ArtistProfileActivity extends AppCompatActivity implements View.OnC
                 break;
 
             case R.id.llCertificate:
-               /* Intent intent3 = new Intent(ArtistProfileActivity.this, CertificateActivity.class);
-                intent3.putExtra("artistId",artistId);
-                startActivityForResult(intent3, 10);*/
+                if(!profileData.certificateCount.equals("0") && !profileData.certificateCount.equals("")){
+                    Intent intent3 = new Intent(ArtistProfileActivity.this, CertificateActivity.class);
+                    intent3.putExtra("artistId",artistId);
+                    startActivityForResult(intent3, 10);
+                }else MyToast.getInstance(this).showDasuAlert("No Certificates Added");
+
+
                 break;
 
             case R.id.llFollowing:

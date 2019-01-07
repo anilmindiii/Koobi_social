@@ -24,7 +24,9 @@ import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.mualab.org.user.R;
+import com.mualab.org.user.activity.account_merge.MergeAccountActivity;
 import com.mualab.org.user.broadcast.OnSmsCatchListener;
 import com.mualab.org.user.broadcast.SmsVerifyCatcher;
 import com.mualab.org.user.data.local.prefs.SharedPreferanceUtils;
@@ -234,14 +236,10 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                         user.otpVerified = true;
                         nextScreen();
 
-
                     }else {
                         showToast(getString(R.string.error_otp_invalid));
                         resetOTP();
-
                     }
-
-
 
                 } else {
                     showToast(getString(R.string.error_otp_invalid));
@@ -318,6 +316,12 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                     countryCode = "+"+country.phone_code;
                     break;
                 }
+            }
+        }
+
+        if(resultCode == RESULT_OK){
+            if(requestCode == Constant.REQUEST_CODE_PICK){
+
             }
         }
 
@@ -555,6 +559,19 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
             String message = object.getString("message");
 
             if (status.equalsIgnoreCase("success")) {
+
+                if(message.equals("Email already exist by social app")){
+                    Gson gson = new Gson();
+                    JSONObject userObj = object.getJSONObject("users");
+                    User user = gson.fromJson(String.valueOf(userObj), User.class);
+
+                    Intent intent = new Intent(RegistrationActivity.this, MergeAccountActivity.class);
+                    intent.putExtra("user", user);
+                    startActivityForResult(intent,Constant.REQUEST_CODE_PICK);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+                    return;
+                }
 
                 if (isResendOTP){
                     showToast(getString(R.string.otp));

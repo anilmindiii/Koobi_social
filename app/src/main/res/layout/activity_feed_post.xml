@@ -134,15 +134,14 @@
 
                     <TextView
                         android:id="@+id/tvTagCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="35dp"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_gravity="center|right"
+                        android:gravity="center"
+                        android:minWidth="45dp"
                         android:padding="5dp"
                         android:textColor="@color/text_color"
-                        android:gravity="center"
-                        android:textSize="14sp"
-                        android:layout_gravity="center|right"
-                        android:layout_marginRight="4dp"
-                        />
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
@@ -343,6 +342,8 @@
             </LinearLayout>
 
         </LinearLayout>
+
+
 
     </ScrollView>
 

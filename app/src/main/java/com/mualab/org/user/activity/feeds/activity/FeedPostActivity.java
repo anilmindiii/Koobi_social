@@ -153,7 +153,6 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
             mediaUri = (MediaUri) intent.getSerializableExtra("mediaUri");
             feedType = intent.getIntExtra("feedType", Constant.IMAGE_STATE);
 
-
             if (mediaUri != null)
                 if (mediaUri.uriList.size() > 1) {
                     tvMediaSize.setVisibility(View.VISIBLE);
@@ -161,7 +160,6 @@ public class FeedPostActivity extends AppCompatActivity implements View.OnClickL
                 } else {
                     tvMediaSize.setVisibility(View.GONE);
                 }
-
 
             /*file:///storage/emulated/0/Android/data/com.mualab.org.user/cache/tmp.mp4*/
         }

@@ -76,14 +76,14 @@
                 android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:tint="@color/black"
-                android:background="@drawable/slider_about_us_ico"
+                android:src="@drawable/slider_about_us_ico"
                 />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="@string/about_me"
+                android:text="@string/about_us_title"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:fontFamily="@font/nunito_regular"
