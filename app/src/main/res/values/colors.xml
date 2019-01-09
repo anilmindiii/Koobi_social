@@ -30,6 +30,7 @@
     <color name="btn_active">#C65E97</color>
     <color name="bg_chat">#ECECEC</color>
     <color name="colorPrimaryTransprent1">#30860309</color>
+    <item name="red" type="color">#FFFF4444</item>
 
     <color name="btn_default_light_normal">#00000000</color>
     <color name="btn_default_light_pressed">#40ffffff</color>

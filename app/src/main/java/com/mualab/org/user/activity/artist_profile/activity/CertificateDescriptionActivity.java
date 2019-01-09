@@ -1,5 +1,6 @@
 package com.mualab.org.user.activity.artist_profile.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,7 +9,11 @@ import android.widget.TextView;
 
 import com.mualab.org.user.R;
 import com.mualab.org.user.activity.artist_profile.model.Certificate;
+import com.mualab.org.user.activity.feeds.activity.FeedSingleActivity;
+import com.mualab.org.user.activity.feeds.activity.PreviewImageActivity;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 public class CertificateDescriptionActivity extends AppCompatActivity {
     private ImageView iv_certificate;
@@ -32,6 +37,19 @@ public class CertificateDescriptionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 onBackPressed();
+            }
+        });
+
+        iv_certificate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<String> tempList = new ArrayList<>();
+                tempList.add(certificate.certificateImage);
+
+                Intent intent = new Intent(CertificateDescriptionActivity.this, PreviewImageActivity.class);
+                intent.putExtra("imageArray", tempList);
+                intent.putExtra("startIndex", 0);
+                startActivity(intent);
             }
         });
 

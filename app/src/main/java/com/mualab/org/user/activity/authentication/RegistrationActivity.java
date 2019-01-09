@@ -82,7 +82,8 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     private boolean isResendOTP;
     private CountDownTimer countDownTimer;
     private boolean timerIsRunning;
-    private String otp;
+    private String otp, message = "";
+    private User newUser;
 
 
 
@@ -173,18 +174,6 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                 break;
 
             case R.id.btnVerifyOtp:
-                /*String userOtp = "";
-                for (Integer s : inputList) userOtp += s;
-                if(TextUtils.isEmpty(otp1.getText())&&TextUtils.isEmpty(otp2.getText())&&TextUtils.isEmpty(otp3.getText())&&TextUtils.isEmpty(otp4.getText())) {
-                    showToast(getString(R.string.error_otp_reuired));
-                } else if(apiOTP.equals(userOtp)) {
-                    user.otp = userOtp;
-                    user.otpVerified = true;
-                    nextScreen();
-                } else {
-                    resetOTP();
-                    showToast(getString(R.string.error_otp_invalid));
-                }*/
 
                 boolean cancel = false;
                 String firstNumber = otp1.getText().toString();
@@ -234,6 +223,16 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                     if (number.equals(apiOTP)){
                         user.otp = apiOTP;
                         user.otpVerified = true;
+
+                        if (message.equals("Email already exist by social app")) {
+                            Intent intent = new Intent(RegistrationActivity.this, MergeAccountActivity.class);
+                            intent.putExtra("user", newUser);
+                            startActivityForResult(intent, Constant.REQUEST_CODE_PICK);
+                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+                            return;
+                        }
+
                         nextScreen();
 
                     }else {
@@ -262,6 +261,12 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                 startActivityForResult(intent,1003);
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        message = "";
     }
 
     private boolean validateEmail() {
@@ -321,7 +326,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
         if(resultCode == RESULT_OK){
             if(requestCode == Constant.REQUEST_CODE_PICK){
-
+                onBackPressed();
             }
         }
 
@@ -556,21 +561,14 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         try {
             JSONObject object = new JSONObject(response);
             String status = object.getString("status");
-            String message = object.getString("message");
+            message = object.getString("message");
 
             if (status.equalsIgnoreCase("success")) {
 
-                if(message.equals("Email already exist by social app")){
+                if (message.equals("Email already exist by social app")) {
                     Gson gson = new Gson();
                     JSONObject userObj = object.getJSONObject("users");
-                    User user = gson.fromJson(String.valueOf(userObj), User.class);
-
-                    Intent intent = new Intent(RegistrationActivity.this, MergeAccountActivity.class);
-                    intent.putExtra("user", user);
-                    startActivityForResult(intent,Constant.REQUEST_CODE_PICK);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
-                    return;
+                    newUser = gson.fromJson(String.valueOf(userObj), User.class);
                 }
 
                 if (isResendOTP){

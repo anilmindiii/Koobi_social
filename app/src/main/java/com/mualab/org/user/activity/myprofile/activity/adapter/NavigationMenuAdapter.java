@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mualab.org.user.R;
+import com.mualab.org.user.activity.businessInvitaion.activity.InvitationActivity;
 import com.mualab.org.user.activity.myprofile.activity.activity.EditProfileActivity;
 import com.mualab.org.user.activity.myprofile.activity.model.NavigationItem;
 import com.mualab.org.user.activity.searchBoard.fragment.SearchBoardFragment;
@@ -130,7 +131,8 @@ class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
 
             case 4:
                 sSelect = item.itemName;
-                MyToast.getInstance(context).showDasuAlert("Under development");
+                Intent intent = new Intent(context,InvitationActivity.class);
+                context.startActivity(intent);
                 break;
 
             case 5:

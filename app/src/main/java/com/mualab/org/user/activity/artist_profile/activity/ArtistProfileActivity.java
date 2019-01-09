@@ -365,9 +365,9 @@ public class ArtistProfileActivity extends AppCompatActivity implements View.OnC
                 break;
 
             case R.id.llServices:
-                /*Intent intent4 = new Intent(ArtistProfileActivity.this, ArtistServicesActivity.class);
+                Intent intent4 = new Intent(ArtistProfileActivity.this, ArtistServicesActivity.class);
                 intent4.putExtra("artistId",artistId);
-                startActivity(intent4);*/
+                startActivity(intent4);
                 break;
 
             case R.id.llAboutUs:
@@ -375,7 +375,7 @@ public class ArtistProfileActivity extends AppCompatActivity implements View.OnC
                     Intent intent =  new Intent(this,AboutUsActivity.class);
                     intent.putExtra("bio",profileData.bio);
                     startActivity(intent);
-                }else MyToast.getInstance(this).showDasuAlert("No About Us Added");
+                }else MyToast.getInstance(this).showDasuAlert("No about us added");
 
                 break;
 
@@ -392,7 +392,7 @@ public class ArtistProfileActivity extends AppCompatActivity implements View.OnC
                     Intent intent3 = new Intent(ArtistProfileActivity.this, CertificateActivity.class);
                     intent3.putExtra("artistId",artistId);
                     startActivityForResult(intent3, 10);
-                }else MyToast.getInstance(this).showDasuAlert("No Certificates Added");
+                }else MyToast.getInstance(this).showDasuAlert("No certificate added");
 
 
                 break;

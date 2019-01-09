@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.mualab.org.user.activity.artist_profile.activity.ArtistServiceDetailsActivity">
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/new_header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?actionBarSize"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Service Description"
+            android:fontFamily="@font/nunito_regular"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="16dp"
+            android:textColor="@color/text_color"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sjdbsdjbskdsdksdknsdknsdksndksdnksdnksdksdnksdnskdnskdnskdnskdnksndksndksndksndksdnskdnskdnskdnskdnskdnskdnskdnsdknsdknskdnskdnskdnskdnskdnskdnskdnskdnsdknsdknsdksndksndksndksdnskdnsk"
+            android:fontFamily="@font/nunito_regular"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:textColor="@color/gray"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height=".7dp"
+            android:layout_margin="16dp"
+            android:background="@color/gray3"/>
+
+        <ScrollView
+            android:id="@+id/main_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:overScrollMode="never">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Staff"
+                    android:fontFamily="@font/nunito_regular"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="16dp"
+                    android:textColor="@color/text_color"/>
+
+                <LinearLayout
+                    android:id="@+id/ly_incall"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="In Call"
+                        android:fontFamily="@font/nunito_regular"
+                        android:textSize="16sp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="16dp"
+                        android:textColor="@color/text_color"/>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rcv_incall"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_marginLeft="16dp"
+                        android:nestedScrollingEnabled="false"
+                        android:layout_marginRight="16dp">
+
+                    </android.support.v7.widget.RecyclerView>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/ly_outcall"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Out Call"
+                        android:fontFamily="@font/nunito_regular"
+                        android:textSize="16sp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="16dp"
+                        android:textColor="@color/text_color"/>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rcv_outcall"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:nestedScrollingEnabled="false"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp">
+
+                    </android.support.v7.widget.RecyclerView>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

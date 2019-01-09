@@ -7,22 +7,15 @@ import android.widget.TextView;
 
 import com.mualab.org.user.R;
 
-public class AboutUsActivity extends AppCompatActivity {
-    private String bio;
-    private TextView tv_about_us;
+public class ArtistServiceDetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about_us);
-
-        bio = getIntent().getStringExtra("bio");
-
-        tv_about_us = findViewById(R.id.tv_about_us);
+        setContentView(R.layout.activity_artist_service_details);
 
         TextView tvHeaderTitle = findViewById(R.id.tvHeaderTitle);
-        tvHeaderTitle.setText(R.string.about_us_title);
-        tv_about_us.setText(bio+"");
+        tvHeaderTitle.setText(getString(R.string.details));
 
         findViewById(R.id.btnBack).setOnClickListener(new View.OnClickListener() {
             @Override

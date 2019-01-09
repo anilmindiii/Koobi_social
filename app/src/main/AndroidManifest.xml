@@ -252,10 +252,28 @@
             android:name=".activity.artist_profile.activity.CertificateDescriptionActivity"
             android:screenOrientation="portrait"
             android:theme="@style/StatusBarBlack" />
-
-        <activity android:name=".activity.artist_profile.activity.AboutUsActivity"
+        <activity
+            android:name=".activity.artist_profile.activity.AboutUsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/StatusBarBlack" />
+        <activity
+            android:name=".activity.businessInvitaion.activity.InvitationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
+        <activity
+            android:name=".activity.businessInvitaion.activity.InvitationDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
+        <activity
+            android:name=".activity.artist_profile.activity.ArtistServicesActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
+
+        <activity
+            android:name=".activity.artist_profile.activity.ArtistServiceDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
+
     </application>
 
 </manifest>
