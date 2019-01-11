@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -49,6 +48,9 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
     private ScrollView main_scroll_view;
     private TextView tv_msg;
     private LinearLayout ly_incall, ly_outcall;
+    IncallOutCallAdapter inCallAdapter, outCallAdapter;
+    IncallOutCallAdapter.childItemClick click;
+    private boolean isOpenCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +91,17 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
         ly_category.setOnClickListener(this);
         main_scroll_view.setOnClickListener(this);
 
+        click = new IncallOutCallAdapter.childItemClick() {
+            @Override
+            public void childClick(Services.ArtistServicesBean.SubServiesBean.ArtistservicesBean artistservicesBean, String callType) {
+                Intent intent = new Intent(ArtistServicesActivity.this, ArtistServiceDetailsActivity.class);
+                intent.putExtra("artistId", artistId);
+                intent.putExtra("_id", artistservicesBean._id);
+                intent.putExtra("callType", callType);
+                startActivity(intent);
+            }
+        };
+
 
         inCallList = new ArrayList<>();
         outCallList = new ArrayList<>();
@@ -100,6 +113,11 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ly_biz_type:
+                if (services != null)
+                    if (services.artistServices.size() == 1) {
+                        return;
+                    }
+
                 if (cv_ly_biz_type.getVisibility() == View.VISIBLE) {
                     cv_ly_biz_type.setVisibility(View.GONE);
                 } else {
@@ -108,16 +126,21 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
 
                 cv_ly_category.setVisibility(View.GONE);
 
+
                 break;
 
             case R.id.ly_category:
-                if (cv_ly_category.getVisibility() == View.VISIBLE) {
-                    cv_ly_category.setVisibility(View.GONE);
-                } else {
-                    cv_ly_category.setVisibility(View.VISIBLE);
+                if (isOpenCategory) {
+                    if (cv_ly_category.getVisibility() == View.VISIBLE) {
+                        cv_ly_category.setVisibility(View.GONE);
+                    } else {
+                        cv_ly_category.setVisibility(View.VISIBLE);
+                    }
+
+                    cv_ly_biz_type.setVisibility(View.GONE);
                 }
 
-                cv_ly_biz_type.setVisibility(View.GONE);
+
                 break;
 
             case R.id.main_scroll_view:
@@ -131,6 +154,7 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
     }
 
     private void apiForGetAllServices() {
+        Progress.show(ArtistServicesActivity.this);
         Session session = Mualab.getInstance().getSessionManager();
         User user = session.getUser();
 
@@ -152,6 +176,7 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
         HttpTask task = new HttpTask(new HttpTask.Builder(ArtistServicesActivity.this, "artistService", new HttpResponceListner.Listener() {
             @Override
             public void onResponse(String response, String apiName) {
+                Progress.hide(ArtistServicesActivity.this);
                 try {
                     JSONObject js = new JSONObject(response);
                     String status = js.getString("status");
@@ -168,7 +193,11 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
                                 tv_bizType.setText(artistServicesBean.serviceName + "");
                                 cv_ly_biz_type.setVisibility(View.GONE);
 
-                                if (artistServicesBean.subServies.size() > 0){
+                                if (artistServicesBean.subServies.size() == 1) {
+                                    isOpenCategory = false;
+                                } else isOpenCategory = true;
+
+                                if (artistServicesBean.subServies.size() > 0) {
                                     if (artistServicesBean.subServies.get(0) != null) {
                                         tv_category.setText(artistServicesBean.subServies.get(0).subServiceName + "");
                                         inCallList.clear();
@@ -203,20 +232,23 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
                                             main_scroll_view.setVisibility(View.VISIBLE);
                                         }
 
-                                        IncallOutCallAdapter inCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, inCallList);
+                                        inCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, inCallList, "In Call");
+                                        inCallAdapter.setClickListner(click);
                                         rcv_incall.setAdapter(inCallAdapter);
 
-                                        IncallOutCallAdapter outCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, outCallList);
+                                        outCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, outCallList, "Out Call");
+                                        outCallAdapter.setClickListner(click);
                                         rcv_outcall.setAdapter(outCallAdapter);
                                     }
-                                }else {
+                                } else {
                                     tv_category.setText("No category found");
                                     iv_down_arrow_category.setVisibility(View.GONE);
+                                    main_scroll_view.setVisibility(View.GONE);
+                                    tv_msg.setVisibility(View.VISIBLE);
                                 }
 
 
-
-                                if (artistServicesBean.subServies.size() > 0) {
+                                if (artistServicesBean.subServies.size() > 1) {
                                     iv_down_arrow_category.setVisibility(View.VISIBLE);
                                 } else iv_down_arrow_category.setVisibility(View.GONE);
 
@@ -251,10 +283,12 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
 
 
                                           /*......................................................................*/
-                                        IncallOutCallAdapter inCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, inCallList);
+                                        inCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, inCallList, "In Call");
+                                        inCallAdapter.setClickListner(click);
                                         rcv_incall.setAdapter(inCallAdapter);
 
-                                        IncallOutCallAdapter outCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, outCallList);
+                                        outCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, outCallList, "Out Call");
+                                        outCallAdapter.setClickListner(click);
                                         rcv_outcall.setAdapter(outCallAdapter);
 
 
@@ -298,6 +332,7 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
 
             @Override
             public void ErrorListener(VolleyError error) {
+                Progress.hide(ArtistServicesActivity.this);
                 try {
                     Helper helper = new Helper();
                     if (helper.error_Messages(error).contains("Session")) {

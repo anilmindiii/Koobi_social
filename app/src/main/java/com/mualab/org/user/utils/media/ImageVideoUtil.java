@@ -49,7 +49,9 @@ public class ImageVideoUtil {
         FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
         Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
         parcelFileDescriptor.close();
-        return image;
+
+
+        return getbitmap(image);
     }
 
     public static Bitmap getCompressBitmap(Bitmap original) {
@@ -235,6 +237,31 @@ public class ImageVideoUtil {
             path.mkdir();
         }
         return new File(path, fileName);
+    }
+
+    public static byte[] getFileDataFromDrawable(Bitmap bitmap) {
+        //todo can't compress bitmap
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
+        return byteArrayOutputStream.toByteArray();
+    }
+
+    public static Bitmap getbitmap(Bitmap bitmap) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+
+        options.inSampleSize = 4;
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        if (bitmap != null) {
+            /*Matrix matrix = new Matrix();
+            if(degrees != 0){
+                matrix.postRotate(degrees);
+            }*/
+            byte [] imageaaray = getFileDataFromDrawable(bitmap);
+            bitmap =  BitmapFactory.decodeByteArray(imageaaray, 0, imageaaray.length, options);
+        }
+        return bitmap;
     }
 
 }

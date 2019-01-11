@@ -3,18 +3,23 @@ package com.mualab.org.user.activity.artist_profile.adapter;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.mualab.org.user.R;
+import com.mualab.org.user.activity.artist_profile.activity.ArtistProfileActivity;
 import com.mualab.org.user.activity.artist_profile.model.Followers;
 import com.mualab.org.user.activity.feeds.adapter.LoadingViewHolder;
+import com.mualab.org.user.activity.myprofile.activity.activity.UserProfileActivity;
 import com.mualab.org.user.application.Mualab;
 import com.mualab.org.user.data.local.prefs.Session;
 import com.mualab.org.user.data.model.User;
@@ -137,6 +142,13 @@ public class FollowersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }else {
             holder.ivProfile.setImageDrawable(context.getResources().getDrawable(R.drawable.default_placeholder));
         }
+
+        holder.ivProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                apiForgetUserIdFromUserName(item.userName);
+            }
+        });
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
@@ -241,6 +253,63 @@ public class FollowersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         //.setBody(params, "application/x-www-form-urlencoded"));
 
         task.execute(this.getClass().getName());
+    }
+
+
+    private void apiForgetUserIdFromUserName(final CharSequence userName) {
+        String user_name="";
+
+        final Map<String, String> params = new HashMap<>();
+        if(userName.toString().contains("@")){
+            user_name = userName.toString().replace("@","");
+            params.put("userName", user_name+"");
+        }else params.put("userName", userName+"");
+        new HttpTask(new HttpTask.Builder(context, "profileByUserName", new HttpResponceListner.Listener() {
+            @Override
+            public void onResponse(String response, String apiName) {
+                Log.d("hfjas", response);
+                try {
+                    JSONObject js = new JSONObject(response);
+                    String status = js.getString("status");
+                    String message = js.getString("message");
+                    if (status.equalsIgnoreCase("success")) {
+
+                        JSONObject userDetail = js.getJSONObject("userDetail");
+                        String userType = userDetail.getString("userType");
+                        int userId = userDetail.getInt("_id");
+
+                        if (userType.equals("user")) {
+                            Intent intent = new Intent(context, UserProfileActivity.class);
+                            intent.putExtra("userId", String.valueOf(userId));
+                            context.startActivity(intent);
+                        }else if (userType.equals("artist") && userId== Mualab.currentUser.id){
+                            Intent intent = new Intent(context, UserProfileActivity.class);
+                            intent.putExtra("userId", String.valueOf(userId));
+                            context.startActivity(intent);
+                        }
+                        else {
+                            Intent intent = new Intent(context, ArtistProfileActivity.class);
+                            intent.putExtra("artistId", String.valueOf(userId));
+                            context.startActivity(intent);
+                        }
+
+                    } else {
+                        MyToast.getInstance(context).showDasuAlert(message);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void ErrorListener(VolleyError error) {
+            }
+        }).setBody(params,HttpTask.ContentType.APPLICATION_JSON)
+                .setMethod(Request.Method.POST)
+                .setProgress(true))
+                .execute("FeedAdapter");
+
+
     }
 
 }

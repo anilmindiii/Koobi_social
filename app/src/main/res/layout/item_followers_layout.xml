@@ -23,8 +23,6 @@
             android:src="@drawable/default_placeholder"
             android:background="@drawable/gradient_circle_img"
             app:civ_border_color="@color/transparent"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
             android:layout_alignParentLeft="true"/>
 
         <TextView

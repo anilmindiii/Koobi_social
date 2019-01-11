@@ -167,7 +167,8 @@
                     <EditText
                         android:id="@+id/ed_description"
                         android:layout_width="match_parent"
-                        android:layout_height="100dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="100dp"
                         android:gravity="left"
                         android:padding="5dp"
                         android:background="@drawable/rectangular_border"

@@ -561,7 +561,10 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             public void onClick(View v) {
                 Feeds feed = feedItems.get(videoHolder.getAdapterPosition());
 
-                if (userType.equals("user")) {
+
+                if(userType == null){
+                    apiForgetUserIdFromUserName(feed.userInfo.get(0).userName);
+                } else  if (userType.equals("user")) {
                     Intent intent = new Intent(mContext, UserProfileActivity.class);
                     intent.putExtra("userId", String.valueOf(feed.userId));
                     mContext.startActivity(intent);
@@ -575,9 +578,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     intent.putExtra("artistId", String.valueOf(feed.userId));
                     mContext.startActivity(intent);
                 }
-
-
-
             }
         });
 
@@ -959,18 +959,22 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         String userType = userDetail.getString("userType");
                         int userId = userDetail.getInt("_id");
 
-
-
                         if (userType.equals("user")) {
                             Intent intent = new Intent(mContext, UserProfileActivity.class);
-                            intent.putExtra("userId", userId+"");
+                            intent.putExtra("userId", String.valueOf(userId));
+                            mContext.startActivity(intent);
+                        }else if (userType.equals("artist") && userId== Mualab.currentUser.id){
+                            Intent intent = new Intent(mContext, UserProfileActivity.class);
+                            intent.putExtra("userId", String.valueOf(userId));
                             mContext.startActivity(intent);
                         }
                         else {
                             Intent intent = new Intent(mContext, ArtistProfileActivity.class);
-                            intent.putExtra("artistId", userId+"");
+                            intent.putExtra("artistId", String.valueOf(userId));
                             mContext.startActivity(intent);
                         }
+
+
 
                     } else {
                         MyToast.getInstance(mContext).showDasuAlert(message);

@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mualab.org.user.R;
-import com.mualab.org.user.activity.artist_profile.activity.ArtistServicesActivity;
 import com.mualab.org.user.activity.artist_profile.model.Services;
 
 import java.util.ArrayList;
@@ -20,11 +19,16 @@ import java.util.ArrayList;
 
 public class IncallOutCallAdapter extends RecyclerView.Adapter<IncallOutCallAdapter.ViewHolder> {
     Context  mContext;
+    childItemClick clickListner;
     ArrayList<Services.ArtistServicesBean.SubServiesBean.ArtistservicesBean> inCallList;
+    String callType;
 
-    public IncallOutCallAdapter(Context mContext, ArrayList<Services.ArtistServicesBean.SubServiesBean.ArtistservicesBean> inCallList) {
+    public IncallOutCallAdapter(Context mContext,
+                                ArrayList<Services.ArtistServicesBean.SubServiesBean.ArtistservicesBean> inCallList,
+                                String callType) {
         this.mContext = mContext;
         this.inCallList = inCallList;
+        this.callType = callType;
     }
 
     @NonNull
@@ -40,18 +44,33 @@ public class IncallOutCallAdapter extends RecyclerView.Adapter<IncallOutCallAdap
         holder.tv_inoutcall_service.setText(inCallList.get(position).title+"");
     }
 
+    public interface childItemClick{
+        void childClick(Services.ArtistServicesBean.SubServiesBean.ArtistservicesBean artistservicesBean, String callType);
+    }
+
+    public void setClickListner(childItemClick click){
+        this.clickListner = click;
+
+    }
+
     @Override
     public int getItemCount() {
         return inCallList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView tv_inoutcall_service;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             tv_inoutcall_service = itemView.findViewById(R.id.tv_inoutcall_service);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            clickListner.childClick(inCallList.get(getAdapterPosition()),callType);
         }
     }
 }

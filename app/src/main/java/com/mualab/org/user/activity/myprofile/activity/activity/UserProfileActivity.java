@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -19,16 +20,21 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -47,10 +53,14 @@ import com.mualab.org.user.R;
 import com.mualab.org.user.Views.refreshviews.CircleHeaderView;
 import com.mualab.org.user.Views.refreshviews.OnRefreshListener;
 import com.mualab.org.user.Views.refreshviews.RjRefreshLayout;
+import com.mualab.org.user.activity.artist_profile.activity.ArtistProfileActivity;
 import com.mualab.org.user.activity.artist_profile.activity.FollowersActivity;
 import com.mualab.org.user.activity.artist_profile.adapter.ArtistFeedAdapter;
 import com.mualab.org.user.activity.artist_profile.model.UserProfileData;
+import com.mualab.org.user.activity.feeds.activity.CommentsActivity;
+import com.mualab.org.user.activity.feeds.activity.FeedSingleActivity;
 import com.mualab.org.user.activity.feeds.activity.LikeFeedActivity;
+import com.mualab.org.user.activity.feeds.activity.PreviewImageActivity;
 import com.mualab.org.user.activity.feeds.adapter.ViewPagerAdapter;
 import com.mualab.org.user.activity.myprofile.activity.adapter.NavigationMenuAdapter;
 import com.mualab.org.user.activity.myprofile.activity.model.NavigationItem;
@@ -102,13 +112,16 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     private  long mLastClickTime = 0;
     private UserProfileData profileData = null;
     private List<NavigationItem> navigationItems;
-    private AppCompatButton btnFollow;
+    private AppCompatButton btnFollow,btnMsg;
     private ViewPagerAdapter.LongPressListner longPressListner;
     private TextView tvFilter;
     private ImageView ivFilter;
     private PopupWindow popupWindow;
     private ArrayList<String>arrayList=new ArrayList<>();
     private boolean isMenuOpen;
+    private ImageView iv_gride_view,iv_list_view;
+    private EditText ed_search;
+    private ImageView iv_search_icon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +132,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             userId = i.getStringExtra("userId");
 
         }
+
         init();
     }
 
@@ -135,10 +149,14 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
         tvImages = toolbar.findViewById(R.id.tv_image);
         tvFilter = toolbar.findViewById(R.id.tvFilter);
-        LinearLayout ll_filter = toolbar.findViewById(R.id.ll_filter);
+        LinearLayout ll_filter;
         tvVideos = findViewById(R.id.tv_videos);
         tvFeeds =  findViewById(R.id.tv_feed);
         ivFilter =  findViewById(R.id.ivFilter);
+        ed_search =  findViewById(R.id.ed_search);
+        iv_search_icon =  findViewById(R.id.iv_search_icon);
+        iv_gride_view =  toolbar.findViewById(R.id.iv_gride_view);
+        iv_list_view =  toolbar.findViewById(R.id.iv_list_view);
         /*tv_dot1 =  findViewById(R.id.tv_dot1);
         tv_dot2 =  findViewById(R.id.tv_dot2);
 */
@@ -150,14 +168,17 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         ivUserProfile.setVisibility(View.GONE);
 
         btnFollow = findViewById(R.id.btnFollow);
+        btnMsg = findViewById(R.id.btnMsg);
         //   final AppBarLayout mainView = findViewById(R.id.appbar);
         if (userId.equals(String.valueOf(user.id))) {
             ivDrawer.setVisibility(View.VISIBLE);
             btnFollow.setVisibility(View.GONE);
+            btnMsg.setVisibility(View.GONE);
         }
         else {
             ivDrawer.setVisibility(View.GONE);
             btnFollow.setVisibility(View.VISIBLE);
+            btnMsg.setVisibility(View.VISIBLE);
         }
 
         NavigationView navigationView =  findViewById(R.id.nav_view);
@@ -192,12 +213,27 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         });
         TextView user_name = findViewById(R.id.user_name);
         CircleImageView user_image = findViewById(R.id.user_image);
-        User user = Mualab.getInstance().getSessionManager().getUser();
+        final User user = Mualab.getInstance().getSessionManager().getUser();
 
         if (!user.profileImage.isEmpty()) {
             Picasso.with(this).load(user.profileImage).placeholder(R.drawable.default_placeholder).
                     fit().into(user_image);
         }
+
+        user_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(user.profileImage !=null && !user.profileImage.equals("") ){
+                    ArrayList<String> tempList = new ArrayList<>();
+                    tempList.add(user.profileImage);
+
+                    Intent intent = new Intent(UserProfileActivity.this, PreviewImageActivity.class);
+                    intent.putExtra("imageArray", tempList);
+                    intent.putExtra("startIndex", 0);
+                    startActivity(intent);
+                }
+            }
+        });
 
         user_name.setText(user.userName);
 
@@ -221,12 +257,13 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         rvFeed.setHasFixedSize(true);
 
         feedAdapter = new ArtistFeedAdapter(UserProfileActivity.this, feeds,  this);
+
         endlesScrollListener = new RecyclerViewScrollListener(lm) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if(feedAdapter!=null){
                     feedAdapter.showHideLoading(true);
-                    apiForGetAllFeeds(page, 10, false);
+                    apiForGetAllFeeds(page, 10, false,"");
                 }
             }
 
@@ -247,7 +284,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             public void onRefresh() {
                 endlesScrollListener.resetState();
                 isPulltoRefrash = true;
-                apiForGetAllFeeds(0, 10, false);
+                apiForGetAllFeeds(0, 10, false,"");
 
             }
 
@@ -277,6 +314,34 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         });
 
 
+        ed_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                feeds.clear();
+                endlesScrollListener.resetState();
+                apiForGetAllFeeds(0, 10, false,s.toString().trim());
+            }
+        });
+
+        iv_search_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ed_search.getVisibility() == View.VISIBLE){
+                    ed_search.setVisibility(View.GONE);
+                }else ed_search.setVisibility(View.VISIBLE);
+
+            }
+        });
 
 
         lyImage.setOnClickListener(this);
@@ -290,6 +355,50 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         ivChat.setOnClickListener(this);
         ivDrawer.setOnClickListener(this);
         btnFollow.setOnClickListener(this);
+
+
+        iv_gride_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 List<Feeds> tempfeeds = new ArrayList<>();
+
+                 for(Feeds feeds : feeds){
+                     if(!feeds.feedType.equals("text")){
+                         tempfeeds.add(feeds);
+                     }
+                 }
+
+
+                feedAdapter = new ArtistFeedAdapter(UserProfileActivity.this, tempfeeds,  UserProfileActivity.this );
+
+                rvFeed.setLayoutManager(new GridLayoutManager(UserProfileActivity.this, 3));
+
+                feedAdapter.isGrideView(true);
+
+                rvFeed.setAdapter(feedAdapter);
+
+
+
+                iv_gride_view.setImageResource(R.drawable.active_grid_icon);
+                iv_list_view.setImageResource(R.drawable.inactive_list);
+                endlesScrollListener.resetState();
+            }
+        });
+
+        iv_list_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rvFeed.setLayoutManager(new LinearLayoutManager(UserProfileActivity.this));
+                feedAdapter.isGrideView(false);
+                rvFeed.setAdapter(feedAdapter);
+                feedAdapter.notifyDataSetChanged();
+
+                iv_gride_view.setImageResource(R.drawable.inactive_grid_icon);
+                iv_list_view.setImageResource(R.drawable.active_list);
+                endlesScrollListener.resetState();
+            }
+        });
+
 
         apiForGetProfile();
     }
@@ -376,13 +485,13 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         TextView  tv_ProfileName =  findViewById(R.id.tv_ProfileName);
         TextView   tv_username =  findViewById(R.id.tv_username);
         TextView   tvRatingCount =  findViewById(R.id.tvRatingCount);
-        CircleImageView user_image = findViewById(R.id.user_image);
+        final CircleImageView user_image = findViewById(R.id.user_image);
 
         TextView   tv_distance =  findViewById(R.id.tv_distance);
         TextView   tv_profile_post =  findViewById(R.id.tv_profile_post);
         TextView  tv_profile_following =  findViewById(R.id.tv_profile_following);
         tv_profile_followers =  findViewById(R.id.tv_profile_followers);
-        CircleImageView iv_Profile =  findViewById(R.id.iv_Profile);
+        final CircleImageView iv_Profile =  findViewById(R.id.iv_Profile);
         ImageView ivActive =  findViewById(R.id.ivActive);
         RatingBar rating =  findViewById(R.id.rating);
 
@@ -412,6 +521,13 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             }
         }
 
+        iv_Profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                user_image.callOnClick();
+            }
+        });
+
     }
 
     private void updateViewType(int id) {
@@ -427,10 +543,11 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
                 if (lastFeedTypeId != R.id.ly_feeds){
                     feeds.clear();
+                    endlesScrollListener.resetState();
                     feedType = "";
                     CURRENT_FEED_STATE = Constant.FEED_STATE;
                     feedAdapter.notifyItemRangeRemoved(0, prevSize);
-                    apiForGetAllFeeds(0, 10, true);
+                    apiForGetAllFeeds(0, 10, true,"");
                 }
                 break;
 
@@ -439,10 +556,11 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 // addRemoveHeader(false);
                 if (lastFeedTypeId != R.id.ly_images){
                     feeds.clear();
+                    endlesScrollListener.resetState();
                     feedType = "image";
                     CURRENT_FEED_STATE = Constant.IMAGE_STATE;
                     feedAdapter.notifyItemRangeRemoved(0, prevSize);
-                    apiForGetAllFeeds( 0, 10, true);
+                    apiForGetAllFeeds( 0, 10, true,"");
                 }
 
                 break;
@@ -452,18 +570,23 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 // addRemoveHeader(false);
                 if (lastFeedTypeId != R.id.ly_videos){
                     feeds.clear();
+                    endlesScrollListener.resetState();
                     feedType = "video";
                     CURRENT_FEED_STATE = Constant.VIDEO_STATE;
                     feedAdapter.notifyItemRangeRemoved(0, prevSize);
-                    apiForGetAllFeeds( 0, 10, true);
+                    apiForGetAllFeeds( 0, 10, true,"");
                 }
                 break;
+
+
+
         }
 
         lastFeedTypeId = id;
     }
 
-    private void apiForGetAllFeeds(final int page, final int feedLimit, final boolean isEnableProgress){
+    private void apiForGetAllFeeds(final int page, final int feedLimit, final boolean isEnableProgress, final String searchText){
+        ll_progress.setVisibility(View.VISIBLE);
         tv_no_data_msg.setVisibility(View.GONE);
 
         if (!ConnectionDetector.isConnected()) {
@@ -472,7 +595,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 public void onNetworkChange(Dialog dialog, boolean isConnected) {
                     if(isConnected){
                         dialog.dismiss();
-                        apiForGetAllFeeds(page, feedLimit, isEnableProgress);
+                        apiForGetAllFeeds(page, feedLimit, isEnableProgress,searchText);
                     }
 
                 }
@@ -489,6 +612,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         params.put("userId", userId);
         params.put("loginUserId", String.valueOf(user.id));
         params.put("viewBy", "");
+        params.put("search",searchText);
         // params.put("appType", "user");
         Mualab.getInstance().cancelPendingRequests(this.getClass().getName());
         new HttpTask(new HttpTask.Builder(UserProfileActivity.this, "profileFeed", new HttpResponceListner.Listener() {
@@ -681,12 +805,12 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onCommentBtnClick(Feeds feed, int pos) {
-     /*   Intent intent = new Intent(UserProfileActivity.this, CommentsActivity.class);
+        Intent intent = new Intent(UserProfileActivity.this, CommentsActivity.class);
         intent.putExtra("feed_id", feed._id);
         intent.putExtra("feedPosition", pos);
         intent.putExtra("feed", feed);
         intent.putExtra("commentCount", feed.commentCount);
-        startActivityForResult(intent, Constant.ACTIVITY_COMMENT);*/
+        startActivityForResult(intent, Constant.ACTIVITY_COMMENT);
     }
 
     @Override
@@ -929,10 +1053,11 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
 
                                 feeds.clear();
+                            endlesScrollListener.resetState();
                                 feedType = "";
                                 CURRENT_FEED_STATE = Constant.FEED_STATE;
                                 feedAdapter.notifyItemRangeRemoved(0, prevSize);
-                                apiForGetAllFeeds(0, 10, true);
+                                apiForGetAllFeeds(0, 10, true,"");
 
                             popupWindow.dismiss();
                             break;
@@ -940,10 +1065,11 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                         case "Photo":
                             tvFilter.setText(R.string.photo);
                             feeds.clear();
+                            endlesScrollListener.resetState();
                             feedType = "image";
                             CURRENT_FEED_STATE = Constant.IMAGE_STATE;
                             feedAdapter.notifyItemRangeRemoved(0, prevSize);
-                            apiForGetAllFeeds( 0, 10, true);
+                            apiForGetAllFeeds( 0, 10, true,"");
                             popupWindow.dismiss();
                             break;
 
@@ -951,10 +1077,11 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                             tvFilter.setText(R.string.video);
                             popupWindow.dismiss();
                             feeds.clear();
+                            endlesScrollListener.resetState();
                             feedType = "video";
                             CURRENT_FEED_STATE = Constant.VIDEO_STATE;
                             feedAdapter.notifyItemRangeRemoved(0, prevSize);
-                            apiForGetAllFeeds( 0, 10, true);
+                            apiForGetAllFeeds( 0, 10, true,"");
                             break;
 
                     }
@@ -1047,7 +1174,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
     private void addItems() {
         NavigationItem item;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 9; i++) {
             item = new NavigationItem();
             switch (i) {
                 case 0:
@@ -1076,28 +1203,22 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                     item.itemImg = R.drawable.id_card_ico;
                     break;
 
-
                 case 5:
-                    item.itemName = getString(R.string.my_foldera);
-                    item.itemImg = R.drawable.folder_ico;
-                    break;
-
-                case 6:
                     item.itemName = getString(R.string.rate_this_app);
                     item.itemImg = R.drawable.rating_star_ico;
                     break;
 
-                case 7:
+                case 6:
                     item.itemName = getString(R.string.setting);
                     item.itemImg = R.drawable.settings_ico;
                     break;
 
-                case 8:
+                case 7:
                     item.itemName = getString(R.string.about_us);
                     item.itemImg = R.drawable.slider_about_us_ico;
                     break;
 
-                case 9:
+                case 8:
                     item.itemName = getString(R.string.log_out);
                     item.itemImg = R.drawable.logout_ico;
                     break;
@@ -1271,6 +1392,10 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         public void onSinglePress(MotionEvent e) {
         }
     };
+
+
+
+
 
 
 

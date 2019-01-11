@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
@@ -22,9 +23,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
 import com.hendraanggrian.socialview.SocialView;
 import com.hendraanggrian.widget.SocialTextView;
 import com.mualab.org.user.R;
+import com.mualab.org.user.activity.feeds.activity.FeedSingleActivity;
 import com.mualab.org.user.activity.feeds.adapter.LoadingViewHolder;
 import com.mualab.org.user.activity.feeds.adapter.ViewPagerAdapter;
 import com.mualab.org.user.application.Mualab;
@@ -61,30 +64,41 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public List<Feeds> feedItems;
     private Listener listener;
     private boolean loading;
+    public boolean isGrideView;
 
     public void showHideLoading(boolean b) {
         loading = b;
     }
 
 
-    public interface Listener{
+    public interface Listener {
         void onCommentBtnClick(Feeds feed, int pos);
+
         void onLikeListClick(Feeds feed);
+
         void onFeedClick(Feeds feed, int index, View v);
+
         void onClickProfileImage(Feeds feed, ImageView v);
     }
 
-    public void clear(){
+    public void isGrideView(boolean isGrideView) {
+        this.isGrideView = isGrideView;
+    }
+
+    public void clear() {
         final int size = feedItems.size();
         feedItems.clear();
         notifyItemRangeRemoved(0, size);
     }
 
-
     public ArtistFeedAdapter(Context mContext, List<Feeds> feedItems, Listener listener) {
         this.mContext = mContext;
+
         this.feedItems = feedItems;
         this.listener = listener;
+
+
+
     }
 
     @Override
@@ -92,10 +106,13 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         View view;
         switch (viewType) {
             case TEXT_TYPE:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.profile_feed_text_item_layout, parent, false);
-                FeedTextHolder textHolder = new FeedTextHolder(view);
-                setupTextFeedClickableViews(textHolder);
-                return textHolder;
+                if (!isGrideView){
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.profile_feed_text_item_layout, parent, false);
+                    FeedTextHolder textHolder = new FeedTextHolder(view);
+                    setupTextFeedClickableViews(textHolder);
+                    return textHolder;
+                }
+
             case IMAGE_TYPE:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.profile_feed_image_item_layout, parent, false);
                 CellFeedViewHolder cellFeedViewHolder = new CellFeedViewHolder(view);
@@ -125,7 +142,9 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 */
         switch (feed.feedType) {
+
             case "text":
+                if (!isGrideView)
                 return TEXT_TYPE;
             case "image":
                 return IMAGE_TYPE;
@@ -137,7 +156,7 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof LoadingViewHolder) {
             LoadingViewHolder loaderViewHolder = (LoadingViewHolder) holder;
             if (showLoader) {
@@ -149,72 +168,93 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
         final Feeds feeds = feedItems.get(position);
 
-        if(holder instanceof Holder){
-            Holder h = (Holder) holder;
-            if (!TextUtils.isEmpty(feeds.profileImage)) {
-                Picasso.with(mContext).load(feeds.profileImage).fit().into(h.ivProfile);
-            }else  Picasso.with(mContext).load(R.drawable.celbackgroung).into(h.ivProfile);
+        if (!isGrideView)
+            if (holder instanceof Holder) {
+                Holder h = (Holder) holder;
+                if (!TextUtils.isEmpty(feeds.profileImage)) {
+                    Picasso.with(mContext).load(feeds.profileImage).fit().into(h.ivProfile);
+                } else Picasso.with(mContext).load(R.drawable.celbackgroung).into(h.ivProfile);
 
-            h.tvUserName.setText(feeds.userName);
-            h.tvPostTime.setText(feeds.crd);
-            h.tvUserLocation.setText(TextUtils.isEmpty(feeds.location)?"N/A":feeds.location);
-            h.tv_like_count.setText(String.valueOf(feeds.likeCount));
-            h.tv_comments_count.setText(String.valueOf(feeds.commentCount));
-            h.likeIcon.setChecked(feeds.isLike==1);
-            h.tv_text.setText(feeds.caption);
-
-            if(!TextUtils.isEmpty(feeds.caption)){
-                h.tv_text.setVisibility(View.VISIBLE);
+                h.tvUserName.setText(feeds.userName);
+                h.tvPostTime.setText(feeds.crd);
+                h.tvUserLocation.setText(TextUtils.isEmpty(feeds.location) ? "N/A" : feeds.location);
+                h.tv_like_count.setText(String.valueOf(feeds.likeCount));
+                h.tv_comments_count.setText(String.valueOf(feeds.commentCount));
+                h.likeIcon.setChecked(feeds.isLike == 1);
                 h.tv_text.setText(feeds.caption);
-            }else h.tv_text.setVisibility(View.GONE);
 
-            if(feeds.userId== Mualab.currentUser.id){
-                h.btnFollow.setVisibility(View.GONE);
-            }else {
-                h.btnFollow.setVisibility(View.GONE);
-                if (feeds.followingStatus == 1) {
-                    h.btnFollow.setBackgroundResource(R.drawable.btn_bg_blue_broder);
-                    h.btnFollow.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
-                    h.btnFollow.setText(R.string.following);
+                if (!TextUtils.isEmpty(feeds.caption)) {
+                    h.tv_text.setVisibility(View.VISIBLE);
+                    h.tv_text.setText(feeds.caption);
+                } else h.tv_text.setVisibility(View.GONE);
+
+                if (feeds.userId == Mualab.currentUser.id) {
+                    h.btnFollow.setVisibility(View.GONE);
                 } else {
-                    h.btnFollow.setBackgroundResource(R.drawable.button_effect_invert);
-                    h.btnFollow.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-                    h.btnFollow.setText(R.string.follow);
+                    h.btnFollow.setVisibility(View.GONE);
+                    if (feeds.followingStatus == 1) {
+                        h.btnFollow.setBackgroundResource(R.drawable.btn_bg_blue_broder);
+                        h.btnFollow.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
+                        h.btnFollow.setText(R.string.following);
+                    } else {
+                        h.btnFollow.setBackgroundResource(R.drawable.button_effect_invert);
+                        h.btnFollow.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                        h.btnFollow.setText(R.string.follow);
+                    }
                 }
             }
-        }
 
 
         switch (feeds.feedType) {
 
-            case "image":{
+            case "image": {
 
                 final CellFeedViewHolder imageHolder = ((CellFeedViewHolder) holder);
 
-                imageHolder.weakRefAdapter = new WeakReference<>(new ViewPagerAdapter(mContext, feeds,false,
-                        new ViewPagerAdapter.Listner() {
-                    @Override
-                    public void onSingleTap() {
-                        int pos = imageHolder.weakRefViewPager.get().getCurrentItem();
-                        if (feeds.feedType.equalsIgnoreCase("image")) {
-                            listener.onFeedClick(feeds, pos, imageHolder.rl_imageView);
+                if (isGrideView) {
+                    imageHolder.grid_view.setVisibility(View.VISIBLE);
+                    imageHolder.list_view.setVisibility(View.GONE);
+                    Glide.with(mContext).load(feeds.feed.get(0)).placeholder(R.drawable.gallery_placeholder).into(imageHolder.imageView);
 
-                        }
+                } else {
+                    imageHolder.grid_view.setVisibility(View.GONE);
+                    imageHolder.list_view.setVisibility(View.VISIBLE);
+                }
+
+                imageHolder.imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent1 = new Intent(mContext, FeedSingleActivity.class);
+                        intent1.putExtra("feedId", feeds._id + "");
+                        intent1.putExtra("userType", feedItems.get(position).userInfo.get(0).userType);
+                        mContext.startActivity(intent1);
                     }
+                });
 
-                    @Override
-                    public void onDoubleTap() {
-                        int pos = imageHolder.getAdapterPosition();
-                        Feeds feed = feedItems.get(pos);
+                imageHolder.weakRefAdapter = new WeakReference<>(new ViewPagerAdapter(mContext, feeds, false,
+                        new ViewPagerAdapter.Listner() {
+                            @Override
+                            public void onSingleTap() {
+                                int pos = imageHolder.weakRefViewPager.get().getCurrentItem();
+                                if (feeds.feedType.equalsIgnoreCase("image")) {
+                                    listener.onFeedClick(feeds, pos, imageHolder.rl_imageView);
+
+                                }
+                            }
+
+                            @Override
+                            public void onDoubleTap() {
+                                int pos = imageHolder.getAdapterPosition();
+                                Feeds feed = feedItems.get(pos);
                         /*if(feed.isLike==0){
                             feed.isLike = 1;
                             feed.likeCount = ++feed.likeCount;
                             apiForLikes(feeds);
                         }*/
-                        notifyItemChanged(pos);
-                    }
+                                notifyItemChanged(pos);
+                            }
 
-                }));
+                        }));
 
                 imageHolder.weakRefViewPager.get().setAdapter(imageHolder.weakRefAdapter.get());
 
@@ -246,15 +286,44 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
             case "video":
-
                 final FeedVideoHolder videoHolder = ((FeedVideoHolder) holder);
 
-                if(!TextUtils.isEmpty(feeds.videoThumbnail)){
+                if (isGrideView) {
+                    videoHolder.videoIcon.setVisibility(View.VISIBLE);
+                    videoHolder.grid_view.setVisibility(View.VISIBLE);
+                    videoHolder.list_view.setVisibility(View.GONE);
+
+                    if (!TextUtils.isEmpty(feeds.videoThumbnail)) {
+                        Picasso.with(mContext)
+                                .load(feeds.videoThumbnail)
+                                .placeholder(R.drawable.gallery_placeholder)
+                                .into(videoHolder.imageView);
+                    } else Picasso.with(mContext)
+                            .load(R.drawable.gallery_placeholder)
+                            .into(videoHolder.imageView);
+
+                } else {
+                    videoHolder.videoIcon.setVisibility(View.GONE);
+                    videoHolder.grid_view.setVisibility(View.GONE);
+                    videoHolder.list_view.setVisibility(View.VISIBLE);
+                }
+
+                videoHolder.imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent1 = new Intent(mContext, FeedSingleActivity.class);
+                        intent1.putExtra("feedId", feeds._id+"");
+                        intent1.putExtra("userType",feedItems.get(position).userInfo.get(0).userType);
+                        mContext.startActivity(intent1);
+                    }
+                });
+
+                if (!TextUtils.isEmpty(feeds.videoThumbnail)) {
                     Picasso.with(mContext)
                             .load(feeds.videoThumbnail)
                             .placeholder(R.drawable.gallery_placeholder)
                             .into(videoHolder.ivFeedCenter);
-                }else  Picasso.with(mContext)
+                } else Picasso.with(mContext)
                         .load(R.drawable.gallery_placeholder)
                         .into(videoHolder.ivFeedCenter);
 
@@ -306,7 +375,7 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             public void onClick(View v) {
                 int pos = holder.getAdapterPosition();
                 Feeds feed = feedItems.get(pos);
-                if(listener!=null){
+                if (listener != null) {
                     listener.onCommentBtnClick(feed, pos);
                 }
             }
@@ -317,7 +386,7 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             public void onClick(View v) {
                 int adapterPosition = holder.getAdapterPosition();
                 Feeds feed = feedItems.get(adapterPosition);
-                if(listener!=null){
+                if (listener != null) {
                     listener.onLikeListClick(feed);
                 }
             }
@@ -328,10 +397,10 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             public void onClick(View v) {
                 int adapterPosition = holder.getAdapterPosition();
                 Feeds feed = feedItems.get(adapterPosition);
-                feed.isLike = feed.isLike==1?0:1;
-                feed.likeCount = feed.isLike==1?++feed.likeCount:--feed.likeCount;
+                feed.isLike = feed.isLike == 1 ? 0 : 1;
+                feed.likeCount = feed.isLike == 1 ? ++feed.likeCount : --feed.likeCount;
                 notifyItemChanged(adapterPosition);
-               // apiForLikes(feed);
+                apiForLikes(feed);
             }
         });
 
@@ -357,7 +426,7 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         holder.ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(listener!=null){
+                if (listener != null) {
                     int adapterPosition = holder.getAdapterPosition();
                     Feeds feed = feedItems.get(adapterPosition);
                     listener.onClickProfileImage(feed, holder.ivProfile);
@@ -403,7 +472,7 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             public void onClick(View v) {
                 int pos = videoHolder.getAdapterPosition();
                 Feeds feed = feedItems.get(pos);
-                if(listener!=null){
+                if (listener != null) {
                     listener.onCommentBtnClick(feed, pos);
                 }
             }
@@ -414,7 +483,7 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             public void onClick(View v) {
                 int adapterPosition = videoHolder.getAdapterPosition();
                 Feeds feed = feedItems.get(adapterPosition);
-                if(listener!=null){
+                if (listener != null) {
                     listener.onLikeListClick(feed);
                 }
             }
@@ -425,10 +494,10 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             public void onClick(View v) {
                 int adapterPosition = videoHolder.getAdapterPosition();
                 Feeds feed = feedItems.get(adapterPosition);
-                feed.isLike = feed.isLike==1?0:1;
-                feed.likeCount = feed.isLike==1?++feed.likeCount:--feed.likeCount;
+                feed.isLike = feed.isLike == 1 ? 0 : 1;
+                feed.likeCount = feed.isLike == 1 ? ++feed.likeCount : --feed.likeCount;
                 notifyItemChanged(adapterPosition);
-               // apiForLikes(feed);
+                apiForLikes(feed);
             }
         });
 
@@ -456,7 +525,7 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         videoHolder.ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(listener!=null){
+                if (listener != null) {
                     int adapterPosition = videoHolder.getAdapterPosition();
                     Feeds feed = feedItems.get(adapterPosition);
                     listener.onClickProfileImage(feed, videoHolder.ivProfile);
@@ -503,7 +572,7 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             public void onClick(View v) {
                 int pos = cellFeedViewHolder.getAdapterPosition();
                 Feeds feed = feedItems.get(pos);
-                if(listener!=null){
+                if (listener != null) {
                     listener.onCommentBtnClick(feed, pos);
                 }
             }
@@ -517,7 +586,7 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             public void onClick(View v) {
                 int adapterPosition = cellFeedViewHolder.getAdapterPosition();
                 Feeds feed = feedItems.get(adapterPosition);
-                if(listener!=null){
+                if (listener != null) {
                     listener.onLikeListClick(feed);
                 }
             }
@@ -528,10 +597,10 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             public void onClick(View v) {
                 int adapterPosition = cellFeedViewHolder.getAdapterPosition();
                 Feeds feed = feedItems.get(adapterPosition);
-                feed.isLike = feed.isLike==1?0:1;
-                feed.likeCount = feed.isLike==1?++feed.likeCount:--feed.likeCount;
+                feed.isLike = feed.isLike == 1 ? 0 : 1;
+                feed.likeCount = feed.isLike == 1 ? ++feed.likeCount : --feed.likeCount;
                 notifyItemChanged(adapterPosition);
-               // apiForLikes(feed);
+                apiForLikes(feed);
             }
         });
 
@@ -555,7 +624,7 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         cellFeedViewHolder.ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(listener!=null){
+                if (listener != null) {
                     int adapterPosition = cellFeedViewHolder.getAdapterPosition();
                     Feeds feed = feedItems.get(adapterPosition);
                     listener.onClickProfileImage(feed, cellFeedViewHolder.ivProfile);
@@ -603,11 +672,11 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              "type":"feed"]  as [String : Any]*/
         Map<String, String> map = new HashMap<>();
         map.putAll(Mualab.feedBasicInfo);
-        map.put("feedId", ""+feed._id);
-        map.put("likeById", ""+ Mualab.currentUser.id);
-        map.put("userId", ""+feed.userId);
+        map.put("feedId", "" + feed._id);
+        map.put("likeById", "" + Mualab.currentUser.id);
+        map.put("userId", "" + feed.userId);
         map.put("type", "feed");// feed or comment
-        Mualab.getInstance().getRequestQueue().cancelAll("like"+feed._id);
+        Mualab.getInstance().getRequestQueue().cancelAll("like" + feed._id);
 
         new HttpTask(new HttpTask.Builder(mContext, "like",
                 new HttpResponceListner.Listener() {
@@ -622,7 +691,7 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 })
                 .setAuthToken(Mualab.currentUser.authToken)
-                .setParam(map)).execute("like"+feed._id);
+                .setParam(map)).execute("like" + feed._id);
 
     }
 
@@ -639,8 +708,8 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public Holder(View itemView) {
             super(itemView);
             /*Common ui*/
-            ivProfile =  itemView.findViewById(R.id.iv_user_image);
-            ivShare =  itemView.findViewById(R.id.iv_share);
+            ivProfile = itemView.findViewById(R.id.iv_user_image);
+            ivShare = itemView.findViewById(R.id.iv_share);
             ivComments = itemView.findViewById(R.id.iv_comments);
             tv_text = itemView.findViewById(R.id.tv_text);
             tvUserName = itemView.findViewById(R.id.tv_user_name);
@@ -663,26 +732,40 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public static class FeedVideoHolder extends Holder {
-        public ImageView  ivFeedCenter;
+        public ImageView ivFeedCenter, videoIcon;
+
+        private LinearLayout list_view;
+        private CardView grid_view;
+        private ImageView imageView;
 
         private FeedVideoHolder(View itemView) {
             super(itemView);
 
-            ivFeedCenter =  itemView.findViewById(R.id.ivFeedCenter);
+            ivFeedCenter = itemView.findViewById(R.id.ivFeedCenter);
+            grid_view = itemView.findViewById(R.id.grid_view);
+            list_view = itemView.findViewById(R.id.list_view);
+            imageView = itemView.findViewById(R.id.imageView);
+            videoIcon = itemView.findViewById(R.id.videoIcon);
         }
     }
 
     static class CellFeedViewHolder extends Holder {
-        private LinearLayout ll_Dot;
+        private LinearLayout ll_Dot, list_view;
+        private CardView grid_view;
         private RelativeLayout rl_imageView;
+        private ImageView imageView;
         private WeakReference<ViewPager> weakRefViewPager;
         private WeakReference<ViewPagerAdapter> weakRefAdapter;
+
 
         private CellFeedViewHolder(View itemView) {
             super(itemView);
 
-            ll_Dot =  itemView.findViewById(R.id.ll_Dot);
+            ll_Dot = itemView.findViewById(R.id.ll_Dot);
             rl_imageView = itemView.findViewById(R.id.rl_imageView);
+            grid_view = itemView.findViewById(R.id.grid_view);
+            list_view = itemView.findViewById(R.id.list_view);
+            imageView = itemView.findViewById(R.id.imageView);
             weakRefViewPager = new WeakReference<>((ViewPager) itemView.findViewById(R.id.viewpager));
         }
     }
@@ -708,7 +791,7 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (feed.feedType.equalsIgnoreCase("image")) {
 
             } else if (feed.feedType.equalsIgnoreCase("video")) {
-                if(feed.feedThumb!=null && feed.feedThumb.size()>0){
+                if (feed.feedThumb != null && feed.feedThumb.size() > 0) {
                     mContext.startActivity(new Intent(Intent.ACTION_VIEW)
                             .setDataAndType(Uri.parse(feed.feed.get(0)), "video/mp4")
                             .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION));
@@ -720,7 +803,7 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public void onDoubleTap(MotionEvent e) {
             int adapterPosition = getPosition();
             Feeds feed = feedItems.get(adapterPosition);
-            if(feed.isLike==0){
+            if (feed.isLike == 0) {
                 feed.isLike = 1;
                 feed.likeCount = ++feed.likeCount;
                 apiForLikes(feed);
@@ -728,20 +811,20 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             notifyItemChanged(adapterPosition);
         }
 
-        private int getPosition(){
-            if(holder!=null){
+        private int getPosition() {
+            if (holder != null) {
                 return holder.getAdapterPosition();
 
-            }else if(feedVieoHolder!=null){
+            } else if (feedVieoHolder != null) {
                 return feedVieoHolder.getAdapterPosition();
             }
             return 0;
         }
     }
 
-    private void followUnfollow(final Feeds feeds, final int position){
+    private void followUnfollow(final Feeds feeds, final int position) {
 
-        if(feeds.followingStatus==1){
+        if (feeds.followingStatus == 1) {
             apiForFollowUnFollow(feeds, position);
            /* new UnfollowDialog(mContext, feeds, new UnfollowDialog.UnfollowListner() {
                 @Override
@@ -750,14 +833,14 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 }
             });*/
-        }else apiForFollowUnFollow(feeds, position);
+        } else apiForFollowUnFollow(feeds, position);
 
     }
 
     private void apiForFollowUnFollow(final Feeds feeds, final int position) {
         Map<String, String> map = new HashMap<>();
-        map.put("userId", ""+ Mualab.currentUser.id);
-        map.put("followerId", ""+feeds.userId);
+        map.put("userId", "" + Mualab.currentUser.id);
+        map.put("followerId", "" + feeds.userId);
 
         new HttpTask(new HttpTask.Builder(mContext, "followFollowing", new HttpResponceListner.Listener() {
             @Override
@@ -768,9 +851,9 @@ public class ArtistFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     //String message = js.getString("message");
 
                     if (status.equalsIgnoreCase("success")) {
-                        if (feeds.followingStatus==0) {
+                        if (feeds.followingStatus == 0) {
                             feeds.followingStatus = 1;
-                        } else if (feeds.followingStatus==1) {
+                        } else if (feeds.followingStatus == 1) {
                             feeds.followingStatus = 0;
                         }
                     }

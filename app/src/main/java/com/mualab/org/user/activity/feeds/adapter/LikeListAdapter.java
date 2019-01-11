@@ -229,14 +229,19 @@ public class LikeListAdapter extends RecyclerView.Adapter<LikeListAdapter.ViewHo
 
                         if (userType.equals("user")) {
                             Intent intent = new Intent(mContext, UserProfileActivity.class);
-                            intent.putExtra("userId", userId+"");
+                            intent.putExtra("userId", String.valueOf(userId));
+                            mContext.startActivity(intent);
+                        }else if (userType.equals("artist") && userId== Mualab.currentUser.id){
+                            Intent intent = new Intent(mContext, UserProfileActivity.class);
+                            intent.putExtra("userId", String.valueOf(userId));
                             mContext.startActivity(intent);
                         }
                         else {
                             Intent intent = new Intent(mContext, ArtistProfileActivity.class);
-                            intent.putExtra("artistId", userId+"");
+                            intent.putExtra("artistId", String.valueOf(userId));
                             mContext.startActivity(intent);
                         }
+
 
                     } else {
                         MyToast.getInstance(mContext).showDasuAlert(message);

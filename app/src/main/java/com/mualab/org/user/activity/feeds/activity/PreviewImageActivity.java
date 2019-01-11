@@ -9,6 +9,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -164,27 +165,27 @@ public class PreviewImageActivity extends AppCompatActivity {
                         }
                     });*/
 
-            Glide.with(context)
-                    .load(url)
-                    .listener(new RequestListener<String, GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            Picasso.with(context).load(url)
-                                    .fit()
-                                    .placeholder(R.drawable.gallery_placeholder)
-                                    .error(R.drawable.gallery_placeholder).into(photoView);
-                            progress_bar.setVisibility(View.GONE);
-                            return false;
-                        }
+            if (!TextUtils.isEmpty(url))
+                Glide.with(context)
+                        .load(url)
+                        .listener(new RequestListener<String, GlideDrawable>() {
+                            @Override
+                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                Picasso.with(context).load(url)
+                                        .fit()
+                                        .placeholder(R.drawable.gallery_placeholder)
+                                        .error(R.drawable.gallery_placeholder).into(photoView);
+                                progress_bar.setVisibility(View.GONE);
+                                return false;
+                            }
 
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            progress_bar.setVisibility(View.GONE);
-                            return false;
-                        }
-                    })
-                    .into(photoView)
-            ;
+                            @Override
+                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                progress_bar.setVisibility(View.GONE);
+                                return false;
+                            }
+                        })
+                        .into(photoView);
 
             container.addView(itemView);
             return itemView;

@@ -272,7 +272,7 @@
     <string name="gps_network_not_enabled">Gps network not enabled</string>
     <string name="open_location_settings">Open setting and switch on the location</string>
     <string name="alert_something_wenjt_wrong">Something went wrong!</string>
-    <string name="text_no_data_found">No user found</string>
+    <string name="text_no_data_found">No Record found</string>
     <string name="text_opening_time">&#160;&#160;Opening Time</string>
     <string name="text_working_hours">Working hours</string>
     <string name="text_posts">Posts</string>
@@ -315,7 +315,7 @@
     <string name="text_feeds">Feeds</string>
     <string name="text_images">Images</string>
     <string name="text_videos">Videos</string>
-    <string name="no_data_available">No data available!</string>
+    <string name="no_data_available">No Record Found</string>
     <string name="text_follow">Follow</string>
     <string name="text_cancel">Cancel</string>
 
@@ -399,7 +399,7 @@
     <string name="email_id_edit">Email id</string>
     <string name="phone_number_edit">Phone number</string>
 
-    <string name="text_empty_data">No data found</string>
+    <string name="text_empty_data">No Record Found</string>
     <string name="enter_your_username_or_emai">Enter your username or email and we\'ll \nSend you a link to get back into your \naccount</string>
     <string name="no_category">No category available</string>
     <string name="please_select_business_type">Please select business type</string>

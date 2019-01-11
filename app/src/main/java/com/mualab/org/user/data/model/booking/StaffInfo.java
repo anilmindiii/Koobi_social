@@ -14,11 +14,9 @@ public class StaffInfo implements Serializable {
 
     public List<StaffServices> staffServices = new ArrayList<>();
 
-    private Map<Integer, StaffServices> serviceList = new HashMap<>();
+    public Map<Integer, StaffServices> serviceList = new HashMap<>();
 
-    public StaffInfo(){
 
-    }
 
     public StaffInfo (StaffInfo tmp){
         this.staffId = tmp.staffId;

@@ -6,7 +6,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -50,6 +54,7 @@ public class FollowersActivity extends AppCompatActivity {
     private boolean isPulltoRefrash = false;
     private TextView tv_no_data_msg;
     private ProgressBar progress_bar;
+    private EditText ed_search;
 
 
     @Override
@@ -57,6 +62,34 @@ public class FollowersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_followers);
         initView();
+
+
+        ed_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String quary = ed_search.getText().toString().trim();
+                followers.clear();
+                scrollListener.resetState();
+                followersAdapter.notifyDataSetChanged();
+
+                if (isFollowers)
+                    apiForGetFollowers(0,quary);
+                else
+                    apiForGetFollowing(0,quary);
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     private void initView(){
@@ -82,6 +115,7 @@ public class FollowersActivity extends AppCompatActivity {
             tvHeaderTitle.setText(getString(R.string.text_following));
         tvNoData = findViewById(R.id.tvNoData);
         progress_bar = findViewById(R.id.progress_bar);
+        ed_search = findViewById(R.id.ed_search);
 
         rycFollowers = findViewById(R.id.rycFollowers);
         LinearLayoutManager layoutManager = new LinearLayoutManager(FollowersActivity.this, LinearLayoutManager.VERTICAL, false);
@@ -99,9 +133,9 @@ public class FollowersActivity extends AppCompatActivity {
                 scrollListener.resetState();
                 isPulltoRefrash = true;
                 if (isFollowers)
-                    apiForGetFollowers(0);
+                    apiForGetFollowers(0,"");
                 else
-                    apiForGetFollowing(0);
+                    apiForGetFollowing(0,"");
             }
 
             @Override
@@ -125,9 +159,9 @@ public class FollowersActivity extends AppCompatActivity {
                     // if (totalItemsCount > 19){
                     followersAdapter.showLoading(true);
                     if (isFollowers)
-                        apiForGetFollowers(page);
+                        apiForGetFollowers(page,"");
                     else
-                        apiForGetFollowing(page);
+                        apiForGetFollowing(page,"");
                     //  }
                 }
             };
@@ -138,13 +172,13 @@ public class FollowersActivity extends AppCompatActivity {
         if(followers.size()==0) {
             progress_bar.setVisibility(View.VISIBLE);
             if (isFollowers)
-                apiForGetFollowers(0);
+                apiForGetFollowers(0,"");
             else
-                apiForGetFollowing(0);
+                apiForGetFollowing(0,"");
         }
     }
 
-    private void apiForGetFollowers(final int page){
+    private void apiForGetFollowers(final int page, final String search){
         progress_bar.setVisibility(View.VISIBLE);
         Session session = Mualab.getInstance().getSessionManager();
         User user = session.getUser();
@@ -155,7 +189,7 @@ public class FollowersActivity extends AppCompatActivity {
                 public void onNetworkChange(Dialog dialog, boolean isConnected) {
                     if(isConnected){
                         dialog.dismiss();
-                        apiForGetFollowers(page);
+                        apiForGetFollowers(page,search);
                     }
                 }
             }).show();
@@ -166,6 +200,7 @@ public class FollowersActivity extends AppCompatActivity {
         params.put("loginUserId", String.valueOf(user.id));
         params.put("page", String.valueOf(page));
         params.put("limit", "10");
+        params.put("userName", search);
 
         HttpTask task = new HttpTask(new HttpTask.Builder(FollowersActivity.this, "followerList", new HttpResponceListner.Listener() {
             @Override
@@ -207,7 +242,7 @@ public class FollowersActivity extends AppCompatActivity {
                         }else if (followers.size()==0){
                             rycFollowers.setVisibility(View.GONE);
                             tvNoData.setVisibility(View.VISIBLE);
-                        }
+                        }else   tv_no_data_msg.setVisibility(View.GONE);
                         followersAdapter.notifyDataSetChanged();
                     }else  if (page==0) {
                         rycFollowers.setVisibility(View.GONE);
@@ -258,7 +293,7 @@ public class FollowersActivity extends AppCompatActivity {
         task.execute(this.getClass().getName());
     }
 
-    private void apiForGetFollowing(final int page){
+    private void apiForGetFollowing(final int page, final String search){
         progress_bar.setVisibility(View.VISIBLE);
         Session session = Mualab.getInstance().getSessionManager();
         User user = session.getUser();
@@ -269,7 +304,7 @@ public class FollowersActivity extends AppCompatActivity {
                 public void onNetworkChange(Dialog dialog, boolean isConnected) {
                     if(isConnected){
                         dialog.dismiss();
-                        apiForGetFollowing(page);
+                        apiForGetFollowing(page,search);
                     }
                 }
             }).show();
@@ -280,6 +315,7 @@ public class FollowersActivity extends AppCompatActivity {
         params.put("loginUserId", String.valueOf(user.id));
         params.put("page", String.valueOf(page));
         params.put("limit", "10");
+        params.put("userName", search);
 
         HttpTask task = new HttpTask(new HttpTask.Builder(FollowersActivity.this, "followingList", new HttpResponceListner.Listener() {
             @Override
@@ -316,10 +352,13 @@ public class FollowersActivity extends AppCompatActivity {
                                 Followers item = gson.fromJson(String.valueOf(object), Followers.class);
                                 followers.add(item);
                             }
-                        }else if (followers.size()==0){
+                        }
+                        else if (followers.size()==0){
                             rycFollowers.setVisibility(View.GONE);
                             tv_no_data_msg.setVisibility(View.VISIBLE);
                         }
+                        else tv_no_data_msg.setVisibility(View.GONE);
+
                         followersAdapter.notifyDataSetChanged();
                     }else  if (page==0) {
                         rycFollowers.setVisibility(View.GONE);

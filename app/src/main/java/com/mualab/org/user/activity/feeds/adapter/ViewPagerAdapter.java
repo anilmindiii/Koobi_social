@@ -24,6 +24,7 @@ import com.mualab.org.user.activity.myprofile.activity.activity.UserProfileActiv
 import com.mualab.org.user.activity.people_tag.instatag.InstaTag;
 import com.mualab.org.user.activity.people_tag.instatag.TagDetail;
 import com.mualab.org.user.activity.people_tag.instatag.TagToBeTagged;
+import com.mualab.org.user.application.Mualab;
 import com.mualab.org.user.data.feeds.Feeds;
 import com.mualab.org.user.data.model.SearchBoard.ArtistsSearchBoard;
 import com.mualab.org.user.data.remote.HttpResponceListner;
@@ -217,18 +218,22 @@ public class ViewPagerAdapter extends PagerAdapter implements OnImageSwipeListen
                         String userType = userDetail.getString("userType");
                         int userId = userDetail.getInt("_id");
 
-
-
                         if (userType.equals("user")) {
                             Intent intent = new Intent(context, UserProfileActivity.class);
-                            intent.putExtra("userId", userId+"");
+                            intent.putExtra("userId", String.valueOf(userId));
+                            context.startActivity(intent);
+                        }else if (userType.equals("artist") && userId== Mualab.currentUser.id){
+                            Intent intent = new Intent(context, UserProfileActivity.class);
+                            intent.putExtra("userId", String.valueOf(userId));
                             context.startActivity(intent);
                         }
                         else {
                             Intent intent = new Intent(context, ArtistProfileActivity.class);
-                            intent.putExtra("artistId", userId+"");
+                            intent.putExtra("artistId", String.valueOf(userId));
                             context.startActivity(intent);
                         }
+
+
 
                     } else {
                         MyToast.getInstance(context).showDasuAlert(message);

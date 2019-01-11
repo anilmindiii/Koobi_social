@@ -3,12 +3,14 @@ package com.mualab.org.user.image.picker;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -134,12 +136,23 @@ public final class ImageRotator {
         }
     }
 
-    private static Bitmap rotateImage(Bitmap img, int degree) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degree);
-        Bitmap rotatedImg = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
-        img.recycle();
-        return rotatedImg;
+
+    private static Bitmap rotateImage(Bitmap bitmap, int degrees) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+
+        options.inSampleSize = 4;
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        if (bitmap != null) {
+            Matrix matrix = new Matrix();
+            if(degrees != 0){
+                matrix.postRotate(degrees);
+            }
+            byte [] imageaaray = getFileDataFromDrawable(bitmap);
+            bitmap =  BitmapFactory.decodeByteArray(imageaaray, 0, imageaaray.length, options);
+        }
+        return bitmap;
     }
 
     public static Bitmap getResizedBitmap(Bitmap image, int maxSize) {
@@ -158,4 +171,10 @@ public final class ImageRotator {
     }
 
 
+    public static byte[] getFileDataFromDrawable(Bitmap bitmap) {
+        //todo can't compress bitmap
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        return byteArrayOutputStream.toByteArray();
+    }
 }
