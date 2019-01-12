@@ -83,7 +83,7 @@ public class ImageVideoUtil {
     }
 
     public static Bitmap getVidioThumbnail(String path) {
-        return getVidioThumbnail(path, MediaStore.Images.Thumbnails.MINI_KIND);
+        return getVidioThumbnail(path, MediaStore.Images.Thumbnails.MICRO_KIND);
     }
 
     public static Bitmap getVidioThumbnail(String path, int thumbType) {

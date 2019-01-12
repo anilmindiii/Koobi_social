@@ -238,7 +238,7 @@ public class VideoGalleryFragment extends Fragment implements View.OnClickListen
                 Media media = new Media();
                 media.uri= Uri.parse(cursor.getString(0));
                 String filePath = ImageVideoUtil.generatePath(media.uri, context);
-                media.thumbImage = ImageVideoUtil.getVidioThumbnail(filePath, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
+                media.thumbImage = ImageVideoUtil.getVidioThumbnail(filePath, MediaStore.Video.Thumbnails.MICRO_KIND);
 
                 if (!filePath.contains(".3gp") && media.thumbImage!=null && !filePath.contains(".avi"))
                     albumList.add(media);

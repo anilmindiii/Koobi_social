@@ -78,9 +78,9 @@ public class FollowersActivity extends AppCompatActivity {
                 followersAdapter.notifyDataSetChanged();
 
                 if (isFollowers)
-                    apiForGetFollowers(0,quary);
+                    apiForGetFollowers(0, quary);
                 else
-                    apiForGetFollowing(0,quary);
+                    apiForGetFollowing(0, quary);
 
 
             }
@@ -92,15 +92,15 @@ public class FollowersActivity extends AppCompatActivity {
         });
     }
 
-    private void initView(){
+    private void initView() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            isFollowers = extras.getBoolean("isFollowers",isFollowers);
+            isFollowers = extras.getBoolean("isFollowers", isFollowers);
             userId = extras.getString("artistId");
         }
 
         followers = new ArrayList<>();
-        followersAdapter = new FollowersAdapter(FollowersActivity.this,followers,isFollowers);
+        followersAdapter = new FollowersAdapter(FollowersActivity.this, followers, isFollowers);
 
         setView();
     }
@@ -122,7 +122,7 @@ public class FollowersActivity extends AppCompatActivity {
         layoutManager.scrollToPositionWithOffset(0, 0);
         rycFollowers.setLayoutManager(layoutManager);
         rycFollowers.setAdapter(followersAdapter);
-        mRefreshLayout =  findViewById(R.id.mSwipeRefreshLayout);
+        mRefreshLayout = findViewById(R.id.mSwipeRefreshLayout);
         final CircleHeaderView header = new CircleHeaderView(FollowersActivity.this);
         mRefreshLayout.addHeader(header);
 
@@ -133,9 +133,9 @@ public class FollowersActivity extends AppCompatActivity {
                 scrollListener.resetState();
                 isPulltoRefrash = true;
                 if (isFollowers)
-                    apiForGetFollowers(0,"");
+                    apiForGetFollowers(0, "");
                 else
-                    apiForGetFollowing(0,"");
+                    apiForGetFollowing(0, "");
             }
 
             @Override
@@ -152,16 +152,16 @@ public class FollowersActivity extends AppCompatActivity {
             }
         });
 
-        if(scrollListener==null) {
+        if (scrollListener == null) {
             scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
                 @Override
                 public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                     // if (totalItemsCount > 19){
                     followersAdapter.showLoading(true);
                     if (isFollowers)
-                        apiForGetFollowers(page,"");
+                        apiForGetFollowers(page, "");
                     else
-                        apiForGetFollowing(page,"");
+                        apiForGetFollowing(page, "");
                     //  }
                 }
             };
@@ -169,16 +169,16 @@ public class FollowersActivity extends AppCompatActivity {
 
         rycFollowers.addOnScrollListener(scrollListener);
 
-        if(followers.size()==0) {
+        if (followers.size() == 0) {
             progress_bar.setVisibility(View.VISIBLE);
             if (isFollowers)
-                apiForGetFollowers(0,"");
+                apiForGetFollowers(0, "");
             else
-                apiForGetFollowing(0,"");
+                apiForGetFollowing(0, "");
         }
     }
 
-    private void apiForGetFollowers(final int page, final String search){
+    private void apiForGetFollowers(final int page, final String search) {
         progress_bar.setVisibility(View.VISIBLE);
         Session session = Mualab.getInstance().getSessionManager();
         User user = session.getUser();
@@ -187,9 +187,9 @@ public class FollowersActivity extends AppCompatActivity {
             new NoConnectionDialog(FollowersActivity.this, new NoConnectionDialog.Listner() {
                 @Override
                 public void onNetworkChange(Dialog dialog, boolean isConnected) {
-                    if(isConnected){
+                    if (isConnected) {
                         dialog.dismiss();
-                        apiForGetFollowers(page,search);
+                        apiForGetFollowers(page, search);
                     }
                 }
             }).show();
@@ -212,11 +212,10 @@ public class FollowersActivity extends AppCompatActivity {
                     String message = js.getString("message");
 
 
-
                     if (status.equalsIgnoreCase("success")) {
                         followersAdapter.showLoading(false);
 
-                        if (page==0) {
+                        if (page == 0) {
                             followers.clear();
                         }
 
@@ -224,7 +223,7 @@ public class FollowersActivity extends AppCompatActivity {
                         tvNoData.setVisibility(View.GONE);
 
                         JSONArray jsonArray = js.getJSONArray("followerList");
-                        if(isPulltoRefrash){
+                        if (isPulltoRefrash) {
                             isPulltoRefrash = false;
                             mRefreshLayout.stopRefresh(true, 500);
                             int prevSize = followers.size();
@@ -232,23 +231,33 @@ public class FollowersActivity extends AppCompatActivity {
                             followersAdapter.notifyItemRangeRemoved(0, prevSize);
                         }
 
-                        if (jsonArray!=null && jsonArray.length()!=0) {
-                            for (int i=0; i<jsonArray.length(); i++){
+                        if (jsonArray != null && jsonArray.length() != 0) {
+                            for (int i = 0; i < jsonArray.length(); i++) {
                                 Gson gson = new Gson();
                                 JSONObject object = jsonArray.getJSONObject(i);
                                 Followers item = gson.fromJson(String.valueOf(object), Followers.class);
                                 followers.add(item);
                             }
-                        }else if (followers.size()==0){
+                        }
+
+                        if (followers.size() == 0) {
                             rycFollowers.setVisibility(View.GONE);
-                            tvNoData.setVisibility(View.VISIBLE);
-                        }else   tv_no_data_msg.setVisibility(View.GONE);
+                            tv_no_data_msg.setVisibility(View.VISIBLE);
+                        } else tv_no_data_msg.setVisibility(View.GONE);
+
                         followersAdapter.notifyDataSetChanged();
-                    }else  if (page==0) {
+                    } else if (page == 0) {
+                        followers.clear();
+                        followersAdapter.notifyDataSetChanged();
                         rycFollowers.setVisibility(View.GONE);
-                        tv_no_data_msg.setVisibility(View.VISIBLE);
+
+                        if (followers.size() == 0) {
+                            tv_no_data_msg.setVisibility(View.VISIBLE);
+                        } else tv_no_data_msg.setVisibility(View.GONE);
+
+
                         tvNoData.setText(message);
-                        if(isPulltoRefrash){
+                        if (isPulltoRefrash) {
                             isPulltoRefrash = false;
                             mRefreshLayout.stopRefresh(false, 500);
                         }
@@ -262,9 +271,9 @@ public class FollowersActivity extends AppCompatActivity {
 
             @Override
             public void ErrorListener(VolleyError error) {
-                try{
+                try {
 
-                    if(isPulltoRefrash){
+                    if (isPulltoRefrash) {
                         isPulltoRefrash = false;
                         mRefreshLayout.stopRefresh(false, 500);
                         int prevSize = followers.size();
@@ -272,11 +281,11 @@ public class FollowersActivity extends AppCompatActivity {
                         followersAdapter.notifyItemRangeRemoved(0, prevSize);
                     }
                     Helper helper = new Helper();
-                    if (helper.error_Messages(error).contains("Session")){
+                    if (helper.error_Messages(error).contains("Session")) {
                         Mualab.getInstance().getSessionManager().logout();
                         // MyToast.getInstance(BookingActivity.this).showDasuAlert(helper.error_Messages(error));
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
 
                     tvNoData.setText("Something went wrong!");
                     progress_bar.setVisibility(View.GONE);
@@ -284,7 +293,8 @@ public class FollowersActivity extends AppCompatActivity {
                 }
 
 
-            }})
+            }
+        })
                 .setAuthToken(user.authToken)
                 .setProgress(true)
                 .setBody(params, HttpTask.ContentType.APPLICATION_JSON));
@@ -293,7 +303,7 @@ public class FollowersActivity extends AppCompatActivity {
         task.execute(this.getClass().getName());
     }
 
-    private void apiForGetFollowing(final int page, final String search){
+    private void apiForGetFollowing(final int page, final String search) {
         progress_bar.setVisibility(View.VISIBLE);
         Session session = Mualab.getInstance().getSessionManager();
         User user = session.getUser();
@@ -302,9 +312,9 @@ public class FollowersActivity extends AppCompatActivity {
             new NoConnectionDialog(FollowersActivity.this, new NoConnectionDialog.Listner() {
                 @Override
                 public void onNetworkChange(Dialog dialog, boolean isConnected) {
-                    if(isConnected){
+                    if (isConnected) {
                         dialog.dismiss();
-                        apiForGetFollowing(page,search);
+                        apiForGetFollowing(page, search);
                     }
                 }
             }).show();
@@ -329,7 +339,7 @@ public class FollowersActivity extends AppCompatActivity {
                     if (status.equalsIgnoreCase("success")) {
                         followersAdapter.showLoading(false);
 
-                        if (page==0) {
+                        if (page == 0) {
                             followers.clear();
                         }
 
@@ -337,7 +347,7 @@ public class FollowersActivity extends AppCompatActivity {
                         tv_no_data_msg.setVisibility(View.GONE);
 
                         JSONArray jsonArray = js.getJSONArray("followingList");
-                        if(isPulltoRefrash){
+                        if (isPulltoRefrash) {
                             isPulltoRefrash = false;
                             mRefreshLayout.stopRefresh(true, 500);
                             int prevSize = followers.size();
@@ -345,25 +355,32 @@ public class FollowersActivity extends AppCompatActivity {
                             followersAdapter.notifyItemRangeRemoved(0, prevSize);
                         }
 
-                        if (jsonArray!=null && jsonArray.length()!=0) {
-                            for (int i=0; i<jsonArray.length(); i++){
+                        if (jsonArray != null && jsonArray.length() != 0) {
+                            for (int i = 0; i < jsonArray.length(); i++) {
                                 Gson gson = new Gson();
                                 JSONObject object = jsonArray.getJSONObject(i);
                                 Followers item = gson.fromJson(String.valueOf(object), Followers.class);
                                 followers.add(item);
                             }
                         }
-                        else if (followers.size()==0){
+
+                        if (followers.size() == 0) {
                             rycFollowers.setVisibility(View.GONE);
                             tv_no_data_msg.setVisibility(View.VISIBLE);
-                        }
-                        else tv_no_data_msg.setVisibility(View.GONE);
+                        } else tv_no_data_msg.setVisibility(View.GONE);
 
                         followersAdapter.notifyDataSetChanged();
-                    }else  if (page==0) {
+                    } else if (page == 0) {
+                        followers.clear();
+                        followersAdapter.notifyDataSetChanged();
+
                         rycFollowers.setVisibility(View.GONE);
-                        tv_no_data_msg.setVisibility(View.VISIBLE);
-                        if(isPulltoRefrash){
+
+                        if (followers.size() == 0) {
+                            tv_no_data_msg.setVisibility(View.VISIBLE);
+                        } else tv_no_data_msg.setVisibility(View.GONE);
+
+                        if (isPulltoRefrash) {
                             isPulltoRefrash = false;
                             mRefreshLayout.stopRefresh(false, 500);
 
@@ -380,8 +397,8 @@ public class FollowersActivity extends AppCompatActivity {
 
             @Override
             public void ErrorListener(VolleyError error) {
-                try{
-                    if(isPulltoRefrash){
+                try {
+                    if (isPulltoRefrash) {
                         isPulltoRefrash = false;
                         mRefreshLayout.stopRefresh(false, 500);
                         int prevSize = followers.size();
@@ -389,16 +406,17 @@ public class FollowersActivity extends AppCompatActivity {
                         followersAdapter.notifyItemRangeRemoved(0, prevSize);
                     }
                     Helper helper = new Helper();
-                    if (helper.error_Messages(error).contains("Session")){
+                    if (helper.error_Messages(error).contains("Session")) {
                         Mualab.getInstance().getSessionManager().logout();
                         // MyToast.getInstance(BookingActivity.this).showDasuAlert(helper.error_Messages(error));
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
 
-            }})
+            }
+        })
                 .setAuthToken(user.authToken)
                 .setProgress(false)
                 .setBody(params, HttpTask.ContentType.APPLICATION_JSON));

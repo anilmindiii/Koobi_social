@@ -2,9 +2,12 @@ package com.mualab.org.user.activity.artist_profile.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
@@ -13,20 +16,26 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -61,6 +70,7 @@ import com.mualab.org.user.dialogs.MyToast;
 import com.mualab.org.user.dialogs.NoConnectionDialog;
 import com.mualab.org.user.dialogs.Progress;
 import com.mualab.org.user.listener.RecyclerViewScrollListener;
+import com.mualab.org.user.menu.MenuAdapter;
 import com.mualab.org.user.utils.ConnectionDetector;
 import com.mualab.org.user.utils.Helper;
 import com.mualab.org.user.utils.KeyboardUtil;
@@ -101,6 +111,16 @@ public class ArtistProfileActivity extends AppCompatActivity implements View.OnC
     private AppCompatButton btnFollow;
     private ViewPagerAdapter.LongPressListner longPressListner;
     private EditText ed_search;
+    LinearLayout ll_filter;
+    private ImageView ivFilter;
+    private boolean isMenuOpen;
+    private TextView tvFilter;
+    private ArrayList<String> arrayList = new ArrayList<>();
+    private PopupWindow popupWindow;
+    private ImageView iv_search_icon;
+    private ImageView iv_gride_view, iv_list_view;
+    private boolean isGrideView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +145,7 @@ public class ArtistProfileActivity extends AppCompatActivity implements View.OnC
         tv_dot1 = findViewById(R.id.tv_dot1);
         tv_dot2 = findViewById(R.id.tv_dot2);
         ed_search = findViewById(R.id.ed_search);
+        iv_search_icon = findViewById(R.id.iv_search_icon);
         tv_profile_following = findViewById(R.id.tv_profile_following);
         tv_profile_followers = findViewById(R.id.tv_profile_followers);
 
@@ -134,6 +155,7 @@ public class ArtistProfileActivity extends AppCompatActivity implements View.OnC
         ImageView ivChat = findViewById(R.id.ivChat);
         ivChat.setVisibility(View.VISIBLE);
         ivFav = findViewById(R.id.ivFav);
+        ivFilter = findViewById(R.id.ivFilter);
         ivFav.setVisibility(View.VISIBLE);
         ImageView ivUserProfile = findViewById(R.id.ivUserProfile);
 
@@ -148,9 +170,13 @@ public class ArtistProfileActivity extends AppCompatActivity implements View.OnC
         LinearLayout llFollowers = findViewById(R.id.llFollowers);
         LinearLayout llFollowing = findViewById(R.id.llFollowing);
         LinearLayout llPost = findViewById(R.id.llPost);
-
         lowerLayout2 = findViewById(R.id.lowerLayout2);
         lowerLayout1 = findViewById(R.id.lowerLayout);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        tvFilter = toolbar.findViewById(R.id.tvFilter);
+        iv_gride_view = toolbar.findViewById(R.id.iv_gride_view);
+        iv_list_view = toolbar.findViewById(R.id.iv_list_view);
 
         //  ImageView profile_btton_back = (ImageView) view.findViewById(R.id.profile_btton_back);
         iv_profile_back = findViewById(R.id.iv_profile_back);
@@ -218,8 +244,7 @@ public class ArtistProfileActivity extends AppCompatActivity implements View.OnC
             }
         });
 
-
-        /*ed_search.addTextChangedListener(new TextWatcher() {
+        ed_search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -235,7 +260,50 @@ public class ArtistProfileActivity extends AppCompatActivity implements View.OnC
                 feeds.clear();
                 apiForGetAllFeeds(0, 10, false,s.toString().trim());
             }
-        });*/
+        });
+
+
+        iv_search_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ed_search.getVisibility() == View.VISIBLE) {
+                    ed_search.setVisibility(View.GONE);
+                } else ed_search.setVisibility(View.VISIBLE);
+            }
+        });
+
+        iv_gride_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isGrideView = true;
+                endlesScrollListener.resetState();
+                apiForGetAllFeeds(0, 200, false, "");
+
+
+                iv_gride_view.setImageResource(R.drawable.active_grid_icon);
+                iv_list_view.setImageResource(R.drawable.inactive_list);
+            }
+        });
+
+        iv_list_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                endlesScrollListener.resetState();
+                apiForGetAllFeeds(0, 200, false, "");
+
+
+                isGrideView = false;
+
+                iv_gride_view.setImageResource(R.drawable.inactive_grid_icon);
+                iv_list_view.setImageResource(R.drawable.active_list);
+
+            }
+        });
+
+
+
+        ll_filter = findViewById(R.id.ll_filter);
+        ll_filter.setOnClickListener(this);
 
 
         lyImage.setOnClickListener(this);
@@ -475,6 +543,100 @@ public class ArtistProfileActivity extends AppCompatActivity implements View.OnC
                 tv_dot1.setBackgroundResource(R.drawable.bg_blank_black_circle);
                 tv_dot2.setBackgroundResource(R.drawable.black_circle);
                 break;
+
+            case R.id.ll_filter:
+                int[] location = new int[2];
+                // Get the x, y location and store it in the location[] array
+                // location[0] = x, location[1] = y.
+                ivFilter.getLocationOnScreen(location);
+                //Initialize the Point with x, and y positions
+                Point p = new Point();
+                p.x = location[0];
+                p.y = location[1];
+                arrayList.clear();
+                if (!isMenuOpen) {
+                    initiatePopupWindow(p);
+                } else {
+                    isMenuOpen = false;
+                    popupWindow.dismiss();
+                }
+
+
+                break;
+        }
+    }
+
+    private void initiatePopupWindow(Point p) {
+
+        try {
+            LayoutInflater inflater = (LayoutInflater) ArtistProfileActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            assert inflater != null;
+            View layout = inflater.inflate(R.layout.layout_popup_menu, (ViewGroup) findViewById(R.id.parent));
+            popupWindow = new PopupWindow(layout, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,
+                    true);
+            int OFFSET_X = 460;
+            int OFFSET_Y = 35;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                popupWindow.setElevation(5);
+            }
+            arrayList.add("All");
+            arrayList.add("Photo");
+            arrayList.add("Video");
+            popupWindow.showAtLocation(layout, Gravity.NO_GRAVITY, p.x + OFFSET_X, p.y + OFFSET_Y);
+            RecyclerView recycler_view = layout.findViewById(R.id.recycler_view);
+            MenuAdapter menuAdapter = new MenuAdapter(ArtistProfileActivity.this, arrayList, new MenuAdapter.Listener() {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onMenuClick(int pos) {
+                    String data = arrayList.get(pos);
+                    int prevSize = feeds.size();
+                    switch (data) {
+                        case "All":
+                            tvFilter.setText(R.string.all);
+
+
+                            feeds.clear();
+                            endlesScrollListener.resetState();
+                            feedType = "";
+                            CURRENT_FEED_STATE = Constant.FEED_STATE;
+                            feedAdapter.notifyItemRangeRemoved(0, prevSize);
+                            apiForGetAllFeeds(0, 200, true, "");
+
+                            popupWindow.dismiss();
+                            break;
+
+                        case "Photo":
+                            tvFilter.setText(R.string.photo);
+                            feeds.clear();
+                            endlesScrollListener.resetState();
+                            feedType = "image";
+                            CURRENT_FEED_STATE = Constant.IMAGE_STATE;
+                            feedAdapter.notifyItemRangeRemoved(0, prevSize);
+                            apiForGetAllFeeds(0, 200, true, "");
+                            popupWindow.dismiss();
+                            break;
+
+                        case "Video":
+                            tvFilter.setText(R.string.video);
+                            popupWindow.dismiss();
+                            feeds.clear();
+                            endlesScrollListener.resetState();
+                            feedType = "video";
+                            CURRENT_FEED_STATE = Constant.VIDEO_STATE;
+                            feedAdapter.notifyItemRangeRemoved(0, prevSize);
+                            apiForGetAllFeeds(0, 200, true, "");
+                            break;
+
+                    }
+                }
+            });
+
+            LinearLayoutManager layoutManager = new LinearLayoutManager(ArtistProfileActivity.this);
+            recycler_view.setLayoutManager(layoutManager);
+            recycler_view.setAdapter(menuAdapter);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -592,7 +754,7 @@ public class ArtistProfileActivity extends AppCompatActivity implements View.OnC
     }
 
     private void apiForGetAllFeeds(final int page, final int feedLimit, final boolean isEnableProgress, final String searchText) {
-
+        ll_progress.setVisibility(View.VISIBLE);
         if (!ConnectionDetector.isConnected()) {
             new NoConnectionDialog(ArtistProfileActivity.this, new NoConnectionDialog.Listner() {
                 @Override
@@ -661,7 +823,7 @@ public class ArtistProfileActivity extends AppCompatActivity implements View.OnC
                 .setProgress(false)
                 .setBodyContentType(HttpTask.ContentType.X_WWW_FORM_URLENCODED))
                 .execute(TAG);
-        ll_progress.setVisibility(isEnableProgress ? View.VISIBLE : View.GONE);
+        //ll_progress.setVisibility(isEnableProgress ? View.VISIBLE : View.GONE);
     }
 
     private void ParseAndUpdateUI(final String response) {
@@ -685,6 +847,9 @@ public class ArtistProfileActivity extends AppCompatActivity implements View.OnC
 
                 Gson gson = new Gson();
                 if (array.length() != 0) {
+                    if (isGrideView) {
+                        feeds.clear();
+                    }
                     tv_no_data_msg.setVisibility(View.GONE);
                     for (int i = 0; i < array.length(); i++) {
 
@@ -755,7 +920,13 @@ public class ArtistProfileActivity extends AppCompatActivity implements View.OnC
                                 }
                             }
 
-                            feeds.add(feed);
+                            if (isGrideView) {
+                                if (!feed.feedType.equals("text")) {
+                                    feeds.add(feed);
+                                }
+                            } else {
+                                feeds.add(feed);
+                            }
 
                         } catch (JsonParseException e) {
                             e.printStackTrace();
@@ -766,6 +937,17 @@ public class ArtistProfileActivity extends AppCompatActivity implements View.OnC
                     rvFeed.setVisibility(View.GONE);
                     tv_no_data_msg.setVisibility(View.VISIBLE);
                 }
+
+                if (isGrideView) {
+                    rvFeed.setLayoutManager(new GridLayoutManager(ArtistProfileActivity.this, 3));
+                    feedAdapter.isGrideView(true);
+                    endlesScrollListener.resetState();
+                } else {
+                    rvFeed.setLayoutManager(new LinearLayoutManager(ArtistProfileActivity.this));
+                    feedAdapter.isGrideView(false);
+                    endlesScrollListener.resetState();
+                }
+
 
                 feedAdapter.notifyDataSetChanged();
 

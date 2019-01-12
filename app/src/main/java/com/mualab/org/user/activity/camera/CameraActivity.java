@@ -100,6 +100,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     private Button btnTakePhoto;
     private ImageButton  btnFlashLight;
     ImageView btnCameraMode;
+    private RelativeLayout add_to_story;
     //private Chronometer mChronometer;
 
     private int currentState;
@@ -266,6 +267,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
         cameraView = findViewById(R.id.camera);
         videoView = findViewById(R.id.videoPreview);
+        add_to_story = findViewById(R.id.add_to_story);
         //mChronometer = findViewById(R.id.tvVideoTimer);
 
         btnTakePhoto.setOnClickListener(this);
@@ -278,7 +280,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.btnBack).setOnClickListener(this);
         findViewById(R.id.switchCamera).setOnClickListener(this);
         findViewById(R.id.btnCameraMode).setOnClickListener(this);
-        findViewById(R.id.add_to_story).setOnClickListener(this);
+        add_to_story.setOnClickListener(this);
         findViewById(R.id.tv_videos_pick).setOnClickListener(this);
         findViewById(R.id.tv_images_pick).setOnClickListener(this);
         isCameraSession = true;
@@ -394,6 +396,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
             case R.id.add_to_story:
                 ly_report.setVisibility(View.GONE);
+
                 addMyStory();
                 break;
 
@@ -707,6 +710,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     private void addMyStory(){
 
         if(ConnectionDetector.isConnected()){
+            Progress.show(CameraActivity.this);
+            add_to_story.setEnabled(false);
 
             Map<String,String> map = new HashMap<>();
             map.put("userId", ""+ Mualab.currentUser.id);
@@ -724,17 +729,22 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                             JSONObject js = new JSONObject(response);
                             String status = js.getString("status");
                             String message = js.getString("message");
+                            Progress.hide(CameraActivity.this);
                             if (status.equalsIgnoreCase("success")) {
                                 finish();
                             }
                             else showToast(message);
                         } catch (Exception e) {
+                            add_to_story.setEnabled(true);
                             e.printStackTrace();
+                            Progress.hide(CameraActivity.this);
                         }
                     }
 
                     @Override
                     public void ErrorListener(VolleyError error) {
+                        Progress.hide(CameraActivity.this);
+                        add_to_story.setEnabled(true);
                         Log.d("res:", ""+error.getLocalizedMessage());
                     }})
                         .setParam(map)
@@ -752,18 +762,23 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                             JSONObject js = new JSONObject(response);
                             String status = js.getString("status");
                             String message = js.getString("message");
+                            Progress.hide(CameraActivity.this);
                             if (status.equalsIgnoreCase("success")) {
                                 Mualab.isStoryUploaded = true;
                                 finish();
                             }
                             else showToast(message);
                         } catch (Exception e) {
+                            add_to_story.setEnabled(true);
+                            Progress.hide(CameraActivity.this);
                             e.printStackTrace();
                         }
                     }
 
                     @Override
                     public void ErrorListener(VolleyError error) {
+                        add_to_story.setEnabled(true);
+                        Progress.hide(CameraActivity.this);
                         Log.d("res:", ""+error.getLocalizedMessage());
                     }})
                         .setParam(map)

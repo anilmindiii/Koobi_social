@@ -95,54 +95,56 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener,ArtistFeedAdapter.Listener,NavigationMenuAdapter.Listener{
+public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener,
+        ArtistFeedAdapter.Listener, NavigationMenuAdapter.Listener {
     private DrawerLayout drawer;
-    private String TAG = this.getClass().getName();;
+    private String TAG = this.getClass().getName();
+    ;
     private User user;
-    private TextView tvImages,tvVideos,tvFeeds,tv_msg,tv_no_data_msg,tv_dot1,tv_dot2, tv_profile_followers;
+    private TextView tvImages, tvVideos, tvFeeds, tv_msg, tv_no_data_msg, tv_dot1, tv_dot2, tv_profile_followers;
     private LinearLayout ll_progress;
     private RecyclerView rvFeed;
     private RjRefreshLayout mRefreshLayout;
     private RecyclerViewScrollListener endlesScrollListener;
-    private int CURRENT_FEED_STATE = 0,lastFeedTypeId;
-    private String feedType = "",userId;
+    private int CURRENT_FEED_STATE = 0, lastFeedTypeId;
+    private String feedType = "", userId;
     private ArtistFeedAdapter feedAdapter;
     private List<Feeds> feeds;
     private boolean isPulltoRefrash = false;
-    private  long mLastClickTime = 0;
+    private long mLastClickTime = 0;
     private UserProfileData profileData = null;
     private List<NavigationItem> navigationItems;
-    private AppCompatButton btnFollow,btnMsg;
+    private AppCompatButton btnFollow, btnMsg;
     private ViewPagerAdapter.LongPressListner longPressListner;
     private TextView tvFilter;
     private ImageView ivFilter;
     private PopupWindow popupWindow;
-    private ArrayList<String>arrayList=new ArrayList<>();
+    private ArrayList<String> arrayList = new ArrayList<>();
     private boolean isMenuOpen;
-    private ImageView iv_gride_view,iv_list_view;
+    private ImageView iv_gride_view, iv_list_view;
+    private boolean isGrideView;
     private EditText ed_search;
     private ImageView iv_search_icon;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
         Intent i = getIntent();
-        if (i!=null){
+        if (i != null) {
             userId = i.getStringExtra("userId");
-
         }
-
         init();
     }
 
-    private void init(){
+    private void init() {
         Session session = Mualab.getInstance().getSessionManager();
         user = session.getUser();
         feeds = new ArrayList<>();
         navigationItems = new ArrayList<>();
 
-        Toolbar toolbar =  findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         LinearLayout lyImage = toolbar.findViewById(R.id.ly_images);
         LinearLayout lyVideos = toolbar.findViewById(R.id.ly_videos);
         LinearLayout lyFeed = toolbar.findViewById(R.id.ly_feeds);
@@ -151,12 +153,12 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         tvFilter = toolbar.findViewById(R.id.tvFilter);
         LinearLayout ll_filter;
         tvVideos = findViewById(R.id.tv_videos);
-        tvFeeds =  findViewById(R.id.tv_feed);
-        ivFilter =  findViewById(R.id.ivFilter);
-        ed_search =  findViewById(R.id.ed_search);
-        iv_search_icon =  findViewById(R.id.iv_search_icon);
-        iv_gride_view =  toolbar.findViewById(R.id.iv_gride_view);
-        iv_list_view =  toolbar.findViewById(R.id.iv_list_view);
+        tvFeeds = findViewById(R.id.tv_feed);
+        ivFilter = findViewById(R.id.ivFilter);
+        ed_search = findViewById(R.id.ed_search);
+        iv_search_icon = findViewById(R.id.iv_search_icon);
+        iv_gride_view = toolbar.findViewById(R.id.iv_gride_view);
+        iv_list_view = toolbar.findViewById(R.id.iv_list_view);
         /*tv_dot1 =  findViewById(R.id.tv_dot1);
         tv_dot2 =  findViewById(R.id.tv_dot2);
 */
@@ -174,20 +176,20 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             ivDrawer.setVisibility(View.VISIBLE);
             btnFollow.setVisibility(View.GONE);
             btnMsg.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             ivDrawer.setVisibility(View.GONE);
             btnFollow.setVisibility(View.VISIBLE);
             btnMsg.setVisibility(View.VISIBLE);
         }
 
-        NavigationView navigationView =  findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
 
-        drawer =  findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         // navigationView.setNavigationItemSelectedListener(this);
-        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);;
-      //  drawer.setScrimColor(getResources().getColor(android.R.color.transparent));
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        ;
+        //  drawer.setScrimColor(getResources().getColor(android.R.color.transparent));
         navigationView.setItemIconTintList(null);
 
         addItems();
@@ -195,7 +197,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         RecyclerView rycslidermenu = findViewById(R.id.rycslidermenu);
         LinearLayoutManager layoutManager = new LinearLayoutManager(UserProfileActivity.this);
         rycslidermenu.setLayoutManager(layoutManager);
-        NavigationMenuAdapter listAdapter = new NavigationMenuAdapter(UserProfileActivity.this, navigationItems,drawer,this);
+        NavigationMenuAdapter listAdapter = new NavigationMenuAdapter(UserProfileActivity.this, navigationItems, drawer, this);
 
         rycslidermenu.setAdapter(listAdapter);
 
@@ -223,7 +225,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         user_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(user.profileImage !=null && !user.profileImage.equals("") ){
+                if (user.profileImage != null && !user.profileImage.equals("")) {
                     ArrayList<String> tempList = new ArrayList<>();
                     tempList.add(user.profileImage);
 
@@ -256,14 +258,14 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         rvFeed.setLayoutManager(lm);
         rvFeed.setHasFixedSize(true);
 
-        feedAdapter = new ArtistFeedAdapter(UserProfileActivity.this, feeds,  this);
+        feedAdapter = new ArtistFeedAdapter(UserProfileActivity.this, feeds, this);
 
         endlesScrollListener = new RecyclerViewScrollListener(lm) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if(feedAdapter!=null){
+                if (feedAdapter != null) {
                     feedAdapter.showHideLoading(true);
-                    apiForGetAllFeeds(page, 10, false,"");
+                    apiForGetAllFeeds(page, 200, false, "");
                 }
             }
 
@@ -276,7 +278,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         rvFeed.setAdapter(feedAdapter);
         rvFeed.addOnScrollListener(endlesScrollListener);
 
-        mRefreshLayout =  findViewById(R.id.mSwipeRefreshLayout);
+        mRefreshLayout = findViewById(R.id.mSwipeRefreshLayout);
         final CircleHeaderView header = new CircleHeaderView(UserProfileActivity.this);
         mRefreshLayout.addHeader(header);
         mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -284,7 +286,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             public void onRefresh() {
                 endlesScrollListener.resetState();
                 isPulltoRefrash = true;
-                apiForGetAllFeeds(0, 10, false,"");
+                apiForGetAllFeeds(0, 200, false, "");
 
             }
 
@@ -297,7 +299,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         rvFeed.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                if(e.getAction() == MotionEvent.ACTION_UP)
+                if (e.getAction() == MotionEvent.ACTION_UP)
                     hideQuickView();
                 return false;
             }
@@ -329,16 +331,16 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             public void afterTextChanged(Editable s) {
                 feeds.clear();
                 endlesScrollListener.resetState();
-                apiForGetAllFeeds(0, 10, false,s.toString().trim());
+                apiForGetAllFeeds(0, 200, false, s.toString().trim());
             }
         });
 
         iv_search_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ed_search.getVisibility() == View.VISIBLE){
+                if (ed_search.getVisibility() == View.VISIBLE) {
                     ed_search.setVisibility(View.GONE);
-                }else ed_search.setVisibility(View.VISIBLE);
+                } else ed_search.setVisibility(View.VISIBLE);
 
             }
         });
@@ -360,42 +362,28 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         iv_gride_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 List<Feeds> tempfeeds = new ArrayList<>();
-
-                 for(Feeds feeds : feeds){
-                     if(!feeds.feedType.equals("text")){
-                         tempfeeds.add(feeds);
-                     }
-                 }
-
-
-                feedAdapter = new ArtistFeedAdapter(UserProfileActivity.this, tempfeeds,  UserProfileActivity.this );
-
-                rvFeed.setLayoutManager(new GridLayoutManager(UserProfileActivity.this, 3));
-
-                feedAdapter.isGrideView(true);
-
-                rvFeed.setAdapter(feedAdapter);
-
+                isGrideView = true;
+                endlesScrollListener.resetState();
+                apiForGetAllFeeds(0, 200, false, "");
 
 
                 iv_gride_view.setImageResource(R.drawable.active_grid_icon);
                 iv_list_view.setImageResource(R.drawable.inactive_list);
-                endlesScrollListener.resetState();
             }
         });
 
         iv_list_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                rvFeed.setLayoutManager(new LinearLayoutManager(UserProfileActivity.this));
-                feedAdapter.isGrideView(false);
-                rvFeed.setAdapter(feedAdapter);
-                feedAdapter.notifyDataSetChanged();
+                endlesScrollListener.resetState();
+                apiForGetAllFeeds(0, 200, false, "");
+
+
+                isGrideView = false;
 
                 iv_gride_view.setImageResource(R.drawable.inactive_grid_icon);
                 iv_list_view.setImageResource(R.drawable.active_list);
-                endlesScrollListener.resetState();
+
             }
         });
 
@@ -403,13 +391,13 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         apiForGetProfile();
     }
 
-    private void apiForGetProfile(){
+    private void apiForGetProfile() {
 
         if (!ConnectionDetector.isConnected()) {
             new NoConnectionDialog(UserProfileActivity.this, new NoConnectionDialog.Listner() {
                 @Override
                 public void onNetworkChange(Dialog dialog, boolean isConnected) {
-                    if(isConnected){
+                    if (isConnected) {
                         dialog.dismiss();
                         apiForGetProfile();
                     }
@@ -418,7 +406,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         }
 
         Map<String, String> params = new HashMap<>();
-        params.put("userId",userId);
+        params.put("userId", userId);
         params.put("viewBy", "");
         params.put("loginUserId", String.valueOf(user.id));
 
@@ -426,7 +414,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onResponse(String response, String apiName) {
                 try {
-                    if(feeds!=null && feeds.size()==0)
+                    if (feeds != null && feeds.size() == 0)
                         updateViewType(R.id.ly_feeds);
 
                     JSONObject js = new JSONObject(response);
@@ -440,11 +428,11 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
                         profileData = gson.fromJson(String.valueOf(object), UserProfileData.class);
 
-                        //   profileData = gson.fromJson(response, UserProfileData.class);
+                        // profileData = gson.fromJson(response, UserProfileData.class);
                         setProfileData(profileData);
                         // updateViewType(profileData,R.id.ly_videos);
 
-                    }else {
+                    } else {
                         MyToast.getInstance(UserProfileActivity.this).showDasuAlert(message);
                     }
                     updateViewType(R.id.ly_feeds);
@@ -457,20 +445,21 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
             @Override
             public void ErrorListener(VolleyError error) {
-                try{
+                try {
                     updateViewType(R.id.ly_feeds);
                     Helper helper = new Helper();
-                    if (helper.error_Messages(error).contains("Session")){
+                    if (helper.error_Messages(error).contains("Session")) {
                         Mualab.getInstance().getSessionManager().logout();
                         FirebaseInstanceId.getInstance().deleteInstanceId();
                         //      MyToast.getInstance(BookingActivity.this).showSmallCustomToast(helper.error_Messages(error));
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
 
-            }})
+            }
+        })
                 .setAuthToken(user.authToken)
                 .setProgress(false)
                 .setBody(params, HttpTask.ContentType.APPLICATION_JSON));
@@ -480,42 +469,40 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     @SuppressLint("SetTextI18n")
-    private void setProfileData(UserProfileData profileData){
+    private void setProfileData(UserProfileData profileData) {
 
-        TextView  tv_ProfileName =  findViewById(R.id.tv_ProfileName);
-        TextView   tv_username =  findViewById(R.id.tv_username);
-        TextView   tvRatingCount =  findViewById(R.id.tvRatingCount);
+        TextView tv_ProfileName = findViewById(R.id.tv_ProfileName);
+        TextView tv_username = findViewById(R.id.tv_username);
+        TextView tvRatingCount = findViewById(R.id.tvRatingCount);
         final CircleImageView user_image = findViewById(R.id.user_image);
 
-        TextView   tv_distance =  findViewById(R.id.tv_distance);
-        TextView   tv_profile_post =  findViewById(R.id.tv_profile_post);
-        TextView  tv_profile_following =  findViewById(R.id.tv_profile_following);
-        tv_profile_followers =  findViewById(R.id.tv_profile_followers);
-        final CircleImageView iv_Profile =  findViewById(R.id.iv_Profile);
-        ImageView ivActive =  findViewById(R.id.ivActive);
-        RatingBar rating =  findViewById(R.id.rating);
+        TextView tv_distance = findViewById(R.id.tv_distance);
+        TextView tv_profile_post = findViewById(R.id.tv_profile_post);
+        TextView tv_profile_following = findViewById(R.id.tv_profile_following);
+        tv_profile_followers = findViewById(R.id.tv_profile_followers);
+        final CircleImageView iv_Profile = findViewById(R.id.iv_Profile);
+        ImageView ivActive = findViewById(R.id.ivActive);
+        RatingBar rating = findViewById(R.id.rating);
 
         if (profileData.followerStatus.equals("1")) {
             btnFollow.setText("Unfollow");
-        }
-        else {
+        } else {
             btnFollow.setText("Follow");
         }
 
 
-
-        if (profileData!=null){
-            tv_ProfileName.setText(profileData.firstName+" "+profileData.lastName);
-            tv_distance.setText(profileData.radius+" Miles");
-            tv_username.setText("@"+profileData.userName);
+        if (profileData != null) {
+            tv_ProfileName.setText(profileData.firstName + " " + profileData.lastName);
+            tv_distance.setText(profileData.radius + " Miles");
+            tv_username.setText("@" + profileData.userName);
             tv_profile_followers.setText(profileData.followersCount);
             tv_profile_following.setText(profileData.followingCount);
             tv_profile_post.setText(profileData.postCount);
-            tvRatingCount.setText("("+profileData.reviewCount+")");
+            tvRatingCount.setText("(" + profileData.reviewCount + ")");
             float ratingCount = Float.parseFloat(profileData.ratingCount);
             rating.setRating(ratingCount);
 
-            if (!profileData.profileImage.isEmpty()){
+            if (!profileData.profileImage.isEmpty()) {
                 Picasso.with(this).load(profileData.profileImage).
                         placeholder(R.drawable.default_placeholder).fit().into(iv_Profile);
             }
@@ -541,26 +528,26 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 //addRemoveHeader(true);
                 tvFeeds.setTextColor(getResources().getColor(R.color.colorPrimary));
 
-                if (lastFeedTypeId != R.id.ly_feeds){
+                if (lastFeedTypeId != R.id.ly_feeds) {
                     feeds.clear();
                     endlesScrollListener.resetState();
                     feedType = "";
                     CURRENT_FEED_STATE = Constant.FEED_STATE;
                     feedAdapter.notifyItemRangeRemoved(0, prevSize);
-                    apiForGetAllFeeds(0, 10, true,"");
+                    apiForGetAllFeeds(0, 200, true, "");
                 }
                 break;
 
             case R.id.ly_images:
                 tvImages.setTextColor(getResources().getColor(R.color.colorPrimary));
                 // addRemoveHeader(false);
-                if (lastFeedTypeId != R.id.ly_images){
+                if (lastFeedTypeId != R.id.ly_images) {
                     feeds.clear();
                     endlesScrollListener.resetState();
                     feedType = "image";
                     CURRENT_FEED_STATE = Constant.IMAGE_STATE;
                     feedAdapter.notifyItemRangeRemoved(0, prevSize);
-                    apiForGetAllFeeds( 0, 10, true,"");
+                    apiForGetAllFeeds(0, 200, true, "");
                 }
 
                 break;
@@ -568,16 +555,15 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             case R.id.ly_videos:
                 tvVideos.setTextColor(getResources().getColor(R.color.colorPrimary));
                 // addRemoveHeader(false);
-                if (lastFeedTypeId != R.id.ly_videos){
+                if (lastFeedTypeId != R.id.ly_videos) {
                     feeds.clear();
                     endlesScrollListener.resetState();
                     feedType = "video";
                     CURRENT_FEED_STATE = Constant.VIDEO_STATE;
                     feedAdapter.notifyItemRangeRemoved(0, prevSize);
-                    apiForGetAllFeeds( 0, 10, true,"");
+                    apiForGetAllFeeds(0, 200, true, "");
                 }
                 break;
-
 
 
         }
@@ -585,7 +571,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         lastFeedTypeId = id;
     }
 
-    private void apiForGetAllFeeds(final int page, final int feedLimit, final boolean isEnableProgress, final String searchText){
+    private void apiForGetAllFeeds(final int page, final int feedLimit, final boolean isEnableProgress, final String searchText) {
         ll_progress.setVisibility(View.VISIBLE);
         tv_no_data_msg.setVisibility(View.GONE);
 
@@ -593,15 +579,14 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             new NoConnectionDialog(UserProfileActivity.this, new NoConnectionDialog.Listner() {
                 @Override
                 public void onNetworkChange(Dialog dialog, boolean isConnected) {
-                    if(isConnected){
+                    if (isConnected) {
                         dialog.dismiss();
-                        apiForGetAllFeeds(page, feedLimit, isEnableProgress,searchText);
+                        apiForGetAllFeeds(page, feedLimit, isEnableProgress, searchText);
                     }
 
                 }
             }).show();
         }
-
 
         Map<String, String> params = new HashMap<>();
         params.put("feedType", feedType);
@@ -612,7 +597,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         params.put("userId", userId);
         params.put("loginUserId", String.valueOf(user.id));
         params.put("viewBy", "");
-        params.put("search",searchText);
+        params.put("search", searchText);
         // params.put("appType", "user");
         Mualab.getInstance().cancelPendingRequests(this.getClass().getName());
         new HttpTask(new HttpTask.Builder(UserProfileActivity.this, "profileFeed", new HttpResponceListner.Listener() {
@@ -629,7 +614,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                         //removeProgress();
                         ParseAndUpdateUI(response);
 
-                    }else if (page==0){
+                    } else if (page == 0) {
                         rvFeed.setVisibility(View.GONE);
                         tv_no_data_msg.setVisibility(View.VISIBLE);
                     }
@@ -645,7 +630,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void ErrorListener(VolleyError error) {
                 ll_progress.setVisibility(View.GONE);
-                if(isPulltoRefrash){
+                if (isPulltoRefrash) {
                     isPulltoRefrash = false;
                     mRefreshLayout.stopRefresh(false, 500);
                     int prevSize = feeds.size();
@@ -653,14 +638,15 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                     feedAdapter.notifyItemRangeRemoved(0, prevSize);
                 }
                 //MyToast.getInstance(mContext).showSmallMessage(getString(R.string.msg_some_thing_went_wrong));
-            }})
+            }
+        })
                 .setAuthToken(Mualab.currentUser.authToken)
                 .setParam(params)
                 .setMethod(Request.Method.POST)
                 .setProgress(false)
                 .setBodyContentType(HttpTask.ContentType.X_WWW_FORM_URLENCODED))
                 .execute(TAG);
-        ll_progress.setVisibility(isEnableProgress?View.VISIBLE:View.GONE);
+        //ll_progress.setVisibility(isEnableProgress ? View.VISIBLE : View.GONE);
     }
 
     private void ParseAndUpdateUI(final String response) {
@@ -673,7 +659,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             if (status.equalsIgnoreCase("success")) {
                 rvFeed.setVisibility(View.VISIBLE);
                 JSONArray array = js.getJSONArray("AllFeeds");
-                if(isPulltoRefrash){
+                if (isPulltoRefrash) {
                     isPulltoRefrash = false;
                     mRefreshLayout.stopRefresh(true, 500);
                     int prevSize = feeds.size();
@@ -682,7 +668,12 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 }
 
                 Gson gson = new Gson();
-                if (array.length()!=0) {
+                if (array.length() != 0) {
+
+                    if (isGrideView) {
+                        feeds.clear();
+                    }
+
                     for (int i = 0; i < array.length(); i++) {
                         try {
                             JSONObject jsonObject = array.getJSONObject(i);
@@ -714,7 +705,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                             }
 
                             JSONArray jsonArray = jsonObject.getJSONArray("peopleTag");
-                            if (jsonArray.length() != 0){
+                            if (jsonArray.length() != 0) {
 
                                 for (int j = 0; j < jsonArray.length(); j++) {
 
@@ -724,17 +715,17 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                                     for (int k = 0; k < arrayJSONArray.length(); k++) {
                                         JSONObject object = arrayJSONArray.getJSONObject(k);
 
-                                        HashMap<String,TagDetail> tagDetails = new HashMap<>();
+                                        HashMap<String, TagDetail> tagDetails = new HashMap<>();
 
                                         String unique_tag_id = object.getString("unique_tag_id");
                                         double x_axis = Double.parseDouble(object.getString("x_axis"));
                                         double y_axis = Double.parseDouble(object.getString("y_axis"));
 
                                         JSONObject tagOjb = object.getJSONObject("tagDetails");
-                                        TagDetail tag ;
-                                        if (tagOjb.has("tabType")){
+                                        TagDetail tag;
+                                        if (tagOjb.has("tabType")) {
                                             tag = gson.fromJson(String.valueOf(tagOjb), TagDetail.class);
-                                        }else {
+                                        } else {
                                             JSONObject details = tagOjb.getJSONObject(unique_tag_id);
                                             tag = gson.fromJson(String.valueOf(details), TagDetail.class);
                                         }
@@ -747,11 +738,18 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
                                         feed.peopleTagList.add(tagged);
                                     }
-                                    feed.taggedImgMap.put(j,feed.peopleTagList);
+                                    feed.taggedImgMap.put(j, feed.peopleTagList);
                                 }
                             }
 
-                            feeds.add(feed);
+                            if (isGrideView) {
+                                if (!feed.feedType.equals("text")) {
+                                    feeds.add(feed);
+                                }
+                            } else {
+                                feeds.add(feed);
+                            }
+
 
                         } catch (JsonParseException e) {
                             ll_progress.setVisibility(View.GONE);
@@ -761,17 +759,29 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                         }
 
                     }// loop end.
-                } else if (feeds.size()==0){
+                } else if (feeds.size() == 0) {
                     rvFeed.setVisibility(View.GONE);
                     tv_no_data_msg.setVisibility(View.VISIBLE);
                 }
+
+                if (isGrideView) {
+                    rvFeed.setLayoutManager(new GridLayoutManager(UserProfileActivity.this, 3));
+                    feedAdapter.isGrideView(true);
+                    endlesScrollListener.resetState();
+                } else {
+                    rvFeed.setLayoutManager(new LinearLayoutManager(UserProfileActivity.this));
+                    feedAdapter.isGrideView(false);
+                    endlesScrollListener.resetState();
+                }
+
+
                 feedAdapter.notifyDataSetChanged();
 
-            } else if (status.equals("fail") && feeds.size()==0) {
+            } else if (status.equals("fail") && feeds.size() == 0) {
                 rvFeed.setVisibility(View.GONE);
                 tv_msg.setVisibility(View.VISIBLE);
 
-                if(isPulltoRefrash){
+                if (isPulltoRefrash) {
                     isPulltoRefrash = false;
                     mRefreshLayout.stopRefresh(false, 500);
 
@@ -779,11 +789,15 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 feedAdapter.notifyDataSetChanged();
             }
 
-        } catch (JSONException e) {
+        } catch (
+                JSONException e)
+
+        {
             e.printStackTrace();
             feedAdapter.notifyDataSetChanged();
             //MyToast.getInstance(mContext).showSmallCustomToast(getString(R.string.alert_something_wenjt_wrong));
         }
+
     }
 
     @Override
@@ -817,9 +831,9 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     public void onLikeListClick(Feeds feed) {
         //addFragment(LikeFragment.newInstance(feed._id, user.id), true);
 
-        Intent intent=new Intent(UserProfileActivity.this, LikeFeedActivity.class);
-        intent.putExtra("feedId",feed._id);
-        intent.putExtra("userId",user.id);
+        Intent intent = new Intent(UserProfileActivity.this, LikeFeedActivity.class);
+        intent.putExtra("feedId", feed._id);
+        intent.putExtra("userId", user.id);
         startActivity(intent);
 
 
@@ -828,7 +842,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onFeedClick(Feeds feed, int index, View v) {
         //publicationQuickView(feed, index);
-        showLargeImage(feed,index);
+        showLargeImage(feed, index);
     }
 
     @Override
@@ -842,13 +856,13 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         if (requestCode == 10) {
             apiForGetProfile();
             //apiForGetAllFeeds(0, 10, true);
-        } else if (data != null){
+        } else if (data != null) {
             if (requestCode == Constant.ACTIVITY_COMMENT) {
                 if (CURRENT_FEED_STATE == Constant.FEED_STATE) {
-                    int pos = data.getIntExtra("feedPosition",0);
-                    Feeds feed =  data.getParcelableExtra("feed");
+                    int pos = data.getIntExtra("feedPosition", 0);
+                    Feeds feed = data.getParcelableExtra("feed");
                     // feeds.get(pos).commentCount = feed.commentCount;
-                    feeds.get(pos).commentCount =data.getIntExtra("commentCount",0);
+                    feeds.get(pos).commentCount = data.getIntExtra("commentCount", 0);
                     feedAdapter.notifyItemChanged(pos);
                 }
             }
@@ -862,7 +876,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         boolean fragmentPopped = fragmentManager.popBackStackImmediate(backStackName, 0);
         if (!fragmentPopped) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_in,0,0);
+            transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_in, 0, 0);
             transaction.add(R.id.container, fragment, backStackName);
             if (addToBackStack)
                 transaction.addToBackStack(backStackName);
@@ -872,13 +886,14 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     private Dialog builder;
-    public void publicationQuickView(Feeds feeds, int index){
+
+    public void publicationQuickView(Feeds feeds, int index) {
         @SuppressLint("InflateParams")
-        View view = getLayoutInflater().inflate( R.layout.dialog_image_detail_view, null);
+        View view = getLayoutInflater().inflate(R.layout.dialog_image_detail_view, null);
 
         ImageView postImage = view.findViewById(R.id.ivFeedCenter);
-        ImageView profileImage =  view.findViewById(R.id.ivUserProfile);
-        TextView tvUsername =  view.findViewById(R.id.txtUsername);
+        ImageView profileImage = view.findViewById(R.id.ivUserProfile);
+        TextView tvUsername = view.findViewById(R.id.txtUsername);
         tvUsername.setText(feeds.userName);
 
         view.findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
@@ -897,7 +912,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
         Picasso.with(this).load(feeds.feed.get(index)).priority(Picasso.Priority.HIGH).noPlaceholder().into(postImage);
 
-        if(TextUtils.isEmpty(feeds.profileImage))
+        if (TextUtils.isEmpty(feeds.profileImage))
             Picasso.with(this).load(R.drawable.default_placeholder).noPlaceholder().into(profileImage);
         else Picasso.with(this).load(feeds.profileImage).noPlaceholder().into(profileImage);
 
@@ -910,18 +925,18 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         builder.show();
     }
 
-    public void hideQuickView(){
-        if(builder != null) builder.dismiss();
+    public void hideQuickView() {
+        if (builder != null) builder.dismiss();
     }
 
     @Override
     public void onClick(View view) {
-        if (SystemClock.elapsedRealtime() - mLastClickTime < 800){
+        if (SystemClock.elapsedRealtime() - mLastClickTime < 800) {
             return;
         }
         mLastClickTime = SystemClock.elapsedRealtime();
 
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.ly_feeds:
             case R.id.ly_images:
             case R.id.ly_videos:
@@ -939,22 +954,20 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                     profileData.followerStatus = "0";
                     btnFollow.setText("Follow");
                     followersCount--;
-                }
-                else {
+                } else {
                     profileData.followerStatus = "1";
                     btnFollow.setText("Unfollow");
                     followersCount++;
                 }
                 profileData.followersCount = String.valueOf(followersCount);
-                tv_profile_followers.setText(""+followersCount);
+                tv_profile_followers.setText("" + followersCount);
                 apiForGetFollowUnFollow();
                 break;
 
-            case R.id.btnNevMenu :
+            case R.id.btnNevMenu:
                 if (drawer.isDrawerOpen(GravityCompat.END)) {
                     drawer.closeDrawer(GravityCompat.END);
-                }
-                else {
+                } else {
                     drawer.openDrawer(GravityCompat.END);
                 }
                 break;
@@ -975,20 +988,20 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 intent1.putExtra("artistId",user.id);
                 startActivityForResult(intent1,10);*/
                 Bundle bundle1 = new Bundle();
-                bundle1.putBoolean("isFollowers",false);
+                bundle1.putBoolean("isFollowers", false);
                 bundle1.putString("artistId", String.valueOf(user.id));
-                Intent intent1 = new Intent(UserProfileActivity.this,FollowersActivity.class);
+                Intent intent1 = new Intent(UserProfileActivity.this, FollowersActivity.class);
                 intent1.putExtras(bundle1);
-                startActivityForResult(intent1,10);
+                startActivityForResult(intent1, 10);
                 break;
 
             case R.id.llFollowers:
                 Bundle bundle2 = new Bundle();
-                bundle2.putBoolean("isFollowers",true);
+                bundle2.putBoolean("isFollowers", true);
                 bundle2.putString("artistId", String.valueOf(user.id));
-                Intent intent2 = new Intent(UserProfileActivity.this,FollowersActivity.class);
+                Intent intent2 = new Intent(UserProfileActivity.this, FollowersActivity.class);
                 intent2.putExtras(bundle2);
-                startActivityForResult(intent2,10);
+                startActivityForResult(intent2, 10);
                 //startActivity(new Intent(mContext,FollowersActivity.class));
                 break;
 
@@ -998,7 +1011,6 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
             case R.id.ll_filter:
                 int[] location = new int[2];
-
                 // Get the x, y location and store it in the location[] array
                 // location[0] = x, location[1] = y.
                 ivFilter.getLocationOnScreen(location);
@@ -1052,12 +1064,12 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                             tvFilter.setText(R.string.all);
 
 
-                                feeds.clear();
+                            feeds.clear();
                             endlesScrollListener.resetState();
-                                feedType = "";
-                                CURRENT_FEED_STATE = Constant.FEED_STATE;
-                                feedAdapter.notifyItemRangeRemoved(0, prevSize);
-                                apiForGetAllFeeds(0, 10, true,"");
+                            feedType = "";
+                            CURRENT_FEED_STATE = Constant.FEED_STATE;
+                            feedAdapter.notifyItemRangeRemoved(0, prevSize);
+                            apiForGetAllFeeds(0, 200, true, "");
 
                             popupWindow.dismiss();
                             break;
@@ -1069,7 +1081,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                             feedType = "image";
                             CURRENT_FEED_STATE = Constant.IMAGE_STATE;
                             feedAdapter.notifyItemRangeRemoved(0, prevSize);
-                            apiForGetAllFeeds( 0, 10, true,"");
+                            apiForGetAllFeeds(0, 200, true, "");
                             popupWindow.dismiss();
                             break;
 
@@ -1081,7 +1093,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                             feedType = "video";
                             CURRENT_FEED_STATE = Constant.VIDEO_STATE;
                             feedAdapter.notifyItemRangeRemoved(0, prevSize);
-                            apiForGetAllFeeds( 0, 10, true,"");
+                            apiForGetAllFeeds(0, 200, true, "");
                             break;
 
                     }
@@ -1098,8 +1110,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
 
-
-    private void apifortokenUpdate(){
+    private void apifortokenUpdate() {
         Session session = Mualab.getInstance().getSessionManager();
         final User user = session.getUser();
 
@@ -1107,7 +1118,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             new NoConnectionDialog(UserProfileActivity.this, new NoConnectionDialog.Listner() {
                 @Override
                 public void onNetworkChange(Dialog dialog, boolean isConnected) {
-                    if(isConnected){
+                    if (isConnected) {
                         dialog.dismiss();
                         apifortokenUpdate();
                     }
@@ -1116,8 +1127,8 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         }
 
         Map<String, String> params = new HashMap<>();
-        params.put("deviceToken","");
-        params.put("firebaseToken","");
+        params.put("deviceToken", "");
+        params.put("firebaseToken", "");
         //  params.put("followerId", String.valueOf(user.id));
 
         // params.put("loginUserId", String.valueOf(user.id));
@@ -1134,13 +1145,13 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
 
                         NotificationManager notificationManager = (NotificationManager) UserProfileActivity.this.getSystemService(Context.NOTIFICATION_SERVICE);
-                        assert notificationManager != null; notificationManager.cancelAll();
+                        assert notificationManager != null;
+                        notificationManager.cancelAll();
                         FirebaseAuth.getInstance().signOut();
                         Mualab.getInstance().getSessionManager().logout();
 
 
-
-                    }else {
+                    } else {
                         MyToast.getInstance(UserProfileActivity.this).showDasuAlert(message);
                     }
                     //  showToast(message);
@@ -1152,18 +1163,19 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
             @Override
             public void ErrorListener(VolleyError error) {
-                try{
+                try {
                     Helper helper = new Helper();
-                    if (helper.error_Messages(error).contains("Session")){
+                    if (helper.error_Messages(error).contains("Session")) {
                         Mualab.getInstance().getSessionManager().logout();
                         // MyToast.getInstance(BookingActivity.this).showDasuAlert(helper.error_Messages(error));
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
 
-            }})
+            }
+        })
                 .setAuthToken(user.authToken)
                 .setProgress(false)
                 .setBody(params, HttpTask.ContentType.APPLICATION_JSON));
@@ -1229,9 +1241,10 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     boolean isShow = false;
-    private void showLargeImage(Feeds feeds, int index){
+
+    private void showLargeImage(Feeds feeds, int index) {
         View dialogView = View.inflate(UserProfileActivity.this, R.layout.dialog_large_image_view, null);
-        final Dialog dialog = new Dialog(UserProfileActivity.this,android.R.style.Theme_Holo_Light_NoActionBar_Fullscreen);
+        final Dialog dialog = new Dialog(UserProfileActivity.this, android.R.style.Theme_Holo_Light_NoActionBar_Fullscreen);
         //dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().getAttributes().windowAnimations = R.style.InOutAnimation;
@@ -1245,16 +1258,16 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         postImage.setRootWidth(postImage.getMeasuredWidth());
         postImage.setRootHeight(postImage.getMeasuredHeight());
 
-        if (feeds.feed.get(index)!=null){
+        if (feeds.feed.get(index) != null) {
             Glide.with(UserProfileActivity.this).load(feeds.feed.get(index)).placeholder(R.drawable.gallery_placeholder)
                     .skipMemoryCache(false).into(postImage.getTagImageView());
         }
 
         postImage.setImageToBeTaggedEvent(taggedImageEvent);
 
-        ArrayList<TagToBeTagged>tags =  feeds.taggedImgMap.get(index);
-        if (tags!=null && tags.size()!=0){
-            postImage.addTagViewFromTagsToBeTagged(tags,false);
+        ArrayList<TagToBeTagged> tags = feeds.taggedImgMap.get(index);
+        if (tags != null && tags.size() != 0) {
+            postImage.addTagViewFromTagsToBeTagged(tags, false);
             postImage.hideTags();
         }
 
@@ -1273,8 +1286,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 if (!isShow) {
                     isShow = true;
                     postImage.showTags();
-                }
-                else {
+                } else {
                     isShow = false;
                     postImage.hideTags();
                 }
@@ -1303,7 +1315,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         apifortokenUpdate();
     }
 
-    private void apiForGetFollowUnFollow(){
+    private void apiForGetFollowUnFollow() {
         Session session = Mualab.getInstance().getSessionManager();
         final User user = session.getUser();
 
@@ -1311,7 +1323,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             new NoConnectionDialog(UserProfileActivity.this, new NoConnectionDialog.Listner() {
                 @Override
                 public void onNetworkChange(Dialog dialog, boolean isConnected) {
-                    if(isConnected){
+                    if (isConnected) {
                         dialog.dismiss();
                         apiForGetFollowUnFollow();
                     }
@@ -1335,7 +1347,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
                     if (status.equalsIgnoreCase("success")) {
 
-                    }else {
+                    } else {
                         MyToast.getInstance(UserProfileActivity.this).showDasuAlert(message);
                     }
                     //  showToast(message);
@@ -1347,18 +1359,19 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
             @Override
             public void ErrorListener(VolleyError error) {
-                try{
+                try {
                     Helper helper = new Helper();
-                    if (helper.error_Messages(error).contains("Session")){
+                    if (helper.error_Messages(error).contains("Session")) {
                         Mualab.getInstance().getSessionManager().logout();
                         // MyToast.getInstance(BookingActivity.this).showDasuAlert(helper.error_Messages(error));
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
 
-            }})
+            }
+        })
                 .setAuthToken(user.authToken)
                 .setProgress(false)
                 .setBody(params, HttpTask.ContentType.APPLICATION_JSON));
@@ -1392,11 +1405,6 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         public void onSinglePress(MotionEvent e) {
         }
     };
-
-
-
-
-
 
 
 }

@@ -13,7 +13,7 @@
         android:background="@drawable/bg_white_gray_border"
         android:layout_margin="2dp"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
     <include layout="@layout/feed_item_header"
         android:layout_width="match_parent"
@@ -71,7 +71,8 @@
         android:id="@+id/grid_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="1dp">
+        android:layout_margin="1dp"
+        android:visibility="gone">
 
         <FrameLayout
             android:layout_width="match_parent"

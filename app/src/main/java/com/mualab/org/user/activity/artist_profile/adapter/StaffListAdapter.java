@@ -23,6 +23,7 @@ import com.mualab.org.user.data.remote.HttpResponceListner;
 import com.mualab.org.user.data.remote.HttpTask;
 import com.mualab.org.user.dialogs.MyToast;
 import com.mualab.org.user.utils.Helper;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -71,8 +72,14 @@ public class StaffListAdapter extends RecyclerView.Adapter<StaffListAdapter.View
             holder.tvprice.setText("£" + bean.inCallPrice+"");
         }else holder.tvprice.setText("£" + bean.outCallPrice+"");
 
-        Glide.with(mContext).load(bean.staffImage).placeholder(R.drawable.default_placeholder).into(holder.ivProfile);
 
+
+        if (!bean.staffImage.isEmpty() && !bean.staffImage.equals("")) {
+            Picasso.with(mContext).load(bean.staffImage).placeholder(R.drawable.default_placeholder).
+                    fit().into(holder.ivProfile);
+        }else {
+            holder.ivProfile.setImageResource(R.drawable.default_placeholder);
+        }
 
         holder.ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
