@@ -116,6 +116,7 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/btn_book"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="55dp"
@@ -125,7 +126,6 @@
         android:textSize="18sp"
         android:layout_margin="16dp"
         android:layout_alignParentBottom="true"
-        android:id="@+id/btn_login"
         android:backgroundTint="@color/colorPrimary"
         android:background="@drawable/bg_button"
         android:textColor="@color/white" />

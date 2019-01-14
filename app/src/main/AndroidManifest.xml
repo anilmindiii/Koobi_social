@@ -98,15 +98,14 @@
         <activity
             android:name=".activity.artist_profile.activity.ArtistProfileActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
-            android:theme="@style/StatusBarBlack" />
-
+            android:theme="@style/StatusBarBlack"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity
             android:name=".activity.myprofile.activity.activity.UserProfileActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
-            android:theme="@style/StatusBarBlack" />
+            android:theme="@style/StatusBarBlack"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <provider
             android:name=".application.GenericFileProvider"
@@ -147,7 +146,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/StatusBarBlack"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".activity.searchBoard.activity.RefineArtistActivity"
             android:screenOrientation="portrait"
@@ -164,8 +162,8 @@
         <activity
             android:name=".activity.feeds.activity.LikeFeedActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
-            android:theme="@style/StatusBarBlack" />
+            android:theme="@style/StatusBarBlack"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity
             android:name=".activity.feeds.activity.CommentsActivity"
             android:screenOrientation="portrait"
@@ -173,8 +171,8 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activity.artist_profile.activity.FollowersActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
-            android:theme="@style/StatusBarBlack" />
+            android:theme="@style/StatusBarBlack"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity android:name=".activity.authentication.ForgotPasswordActivity" />
 
         <meta-data
@@ -274,12 +272,15 @@
             android:name=".activity.artist_profile.activity.ArtistServicesActivity"
             android:screenOrientation="portrait"
             android:theme="@style/StatusBarBlack" />
-
         <activity
             android:name=".activity.artist_profile.activity.ArtistServiceDetailsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/StatusBarBlack" />
+        <activity android:name=".activity.booking.BookingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack"/>
 
     </application>
+
 
 </manifest>

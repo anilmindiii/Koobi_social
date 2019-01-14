@@ -1,6 +1,7 @@
 package com.mualab.org.user.activity.artist_profile.activity;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import com.mualab.org.user.activity.artist_profile.adapter.IncallOutCallAdapter;
 import com.mualab.org.user.activity.artist_profile.adapter.StaffListAdapter;
 import com.mualab.org.user.activity.artist_profile.model.Services;
 import com.mualab.org.user.activity.artist_profile.model.StaffDetailsInfo;
+import com.mualab.org.user.activity.booking.BookingActivity;
 import com.mualab.org.user.application.Mualab;
 import com.mualab.org.user.data.local.prefs.Session;
 import com.mualab.org.user.data.model.User;
@@ -37,7 +39,7 @@ public class ArtistServiceDetailsActivity extends AppCompatActivity {
 
     private String artistId;
     private String _id;
-    private TextView tv_description,callType;
+    private TextView tv_description,callType,btn_book;
     private RecyclerView recycler_view;
     private StaffListAdapter adapter;
     private ArrayList<StaffDetailsInfo.StaffInfoBean> detailsInfoList;
@@ -56,6 +58,7 @@ public class ArtistServiceDetailsActivity extends AppCompatActivity {
         callType = findViewById(R.id.callType);
         recycler_view = findViewById(R.id.recycler_view);
         id_tv_staff_text = findViewById(R.id.id_tv_staff_text);
+        btn_book = findViewById(R.id.btn_book);
 
         _id  = String.valueOf(getIntent().getIntExtra("_id",0));
         artistId = getIntent().getStringExtra("artistId");
@@ -69,6 +72,16 @@ public class ArtistServiceDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 onBackPressed();
+            }
+        });
+
+        btn_book.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ArtistServiceDetailsActivity.this,BookingActivity.class);
+                intent.putExtra("artistId",artistId);
+                intent.putExtra("callType",getIntent().getStringExtra("callType"));
+                startActivity(intent);
             }
         });
 

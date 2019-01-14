@@ -25,6 +25,7 @@ public class CustomStringAdapter extends RecyclerView.Adapter<CustomStringAdapte
     Services services;
     List<Services.ArtistServicesBean.SubServiesBean> artistServicesBean;
     String type = "";
+    public int pos = 0;
 
     public CustomStringAdapter(String type, Services services,
                                List<Services.ArtistServicesBean.SubServiesBean> artistServicesBean,
@@ -37,6 +38,8 @@ public class CustomStringAdapter extends RecyclerView.Adapter<CustomStringAdapte
         this.artistServicesBean = artistServicesBean;
         this.type = type;
     }
+
+
 
     @NonNull
     @Override
@@ -64,7 +67,7 @@ public class CustomStringAdapter extends RecyclerView.Adapter<CustomStringAdapte
     }
 
     public void clickItem(){
-        onClickItemListner.onclick(services.artistServices.get(0));
+        onClickItemListner.onclick(services.artistServices.get(pos));
     }
 
     @Override
@@ -89,6 +92,7 @@ public class CustomStringAdapter extends RecyclerView.Adapter<CustomStringAdapte
 
         @Override
         public void onClick(View v) {
+            pos  = getAdapterPosition();
             if (type.equals("bizType")) {
                 onClickItemListner.onclick(services.artistServices.get(getAdapterPosition()));
             } else {
