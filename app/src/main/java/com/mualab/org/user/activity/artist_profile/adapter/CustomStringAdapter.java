@@ -49,11 +49,11 @@ public class CustomStringAdapter extends RecyclerView.Adapter<CustomStringAdapte
     }
 
     public interface onClickItem {
-        void onclick(Services.ArtistServicesBean artistServicesBean);
+        void onclick(Services.ArtistServicesBean artistServicesBean, int adapterPosition);
     }
 
     public interface onClickItemCategory {
-        void onclick(Services.ArtistServicesBean.SubServiesBean bean);
+        void onclick(Services.ArtistServicesBean.SubServiesBean bean,int pos);
     }
 
     @Override
@@ -67,7 +67,11 @@ public class CustomStringAdapter extends RecyclerView.Adapter<CustomStringAdapte
     }
 
     public void clickItem(){
-        onClickItemListner.onclick(services.artistServices.get(pos));
+        onClickItemListner.onclick(services.artistServices.get(pos), pos);
+    }
+
+    public void clickItem(int customPosition){
+        onClickItemListner.onclick(services.artistServices.get(customPosition), customPosition);
     }
 
     @Override
@@ -94,9 +98,9 @@ public class CustomStringAdapter extends RecyclerView.Adapter<CustomStringAdapte
         public void onClick(View v) {
             pos  = getAdapterPosition();
             if (type.equals("bizType")) {
-                onClickItemListner.onclick(services.artistServices.get(getAdapterPosition()));
+                onClickItemListner.onclick(services.artistServices.get(getAdapterPosition()),getAdapterPosition());
             } else {
-                onClickCategoryListner.onclick(artistServicesBean.get(getAdapterPosition()));
+                onClickCategoryListner.onclick(artistServicesBean.get(getAdapterPosition()),getAdapterPosition());
             }
         }
     }

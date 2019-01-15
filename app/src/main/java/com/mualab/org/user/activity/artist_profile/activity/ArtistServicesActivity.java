@@ -51,6 +51,7 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
     IncallOutCallAdapter inCallAdapter, outCallAdapter;
     IncallOutCallAdapter.childItemClick click;
     private boolean isOpenCategory;
+    String mainServiceName = "", subServiceName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,11 +94,14 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
 
         click = new IncallOutCallAdapter.childItemClick() {
             @Override
-            public void childClick(Services.ArtistServicesBean.SubServiesBean.ArtistservicesBean artistservicesBean, String callType) {
+            public void childClick(Services.ArtistServicesBean.SubServiesBean.ArtistservicesBean artistservicesBean, String callType, int adapterPosition) {
                 Intent intent = new Intent(ArtistServicesActivity.this, ArtistServiceDetailsActivity.class);
                 intent.putExtra("artistId", artistId);
                 intent.putExtra("_id", artistservicesBean._id);
                 intent.putExtra("callType", callType);
+                intent.putExtra("mainServiceName", mainServiceName);
+                intent.putExtra("subServiceName", subServiceName);
+                intent.putExtra("childPosition", adapterPosition);
                 startActivity(intent);
             }
         };
@@ -188,7 +192,8 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
 
                         adapterBizType = new CustomStringAdapter("bizType", services, null, ArtistServicesActivity.this, new CustomStringAdapter.onClickItem() {
                             @Override
-                            public void onclick(final Services.ArtistServicesBean artistServicesBean) {
+                            public void onclick(final Services.ArtistServicesBean artistServicesBean, int adapterPosition) {
+                                mainServiceName = artistServicesBean.serviceName;
 
                                 tv_bizType.setText(artistServicesBean.serviceName + "");
                                 cv_ly_biz_type.setVisibility(View.GONE);
@@ -232,11 +237,11 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
                                             main_scroll_view.setVisibility(View.VISIBLE);
                                         }
 
-                                        inCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, inCallList, "In Call",false);
+                                        inCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, inCallList, "In Call",false,false);
                                         inCallAdapter.setClickListner(click);
                                         rcv_incall.setAdapter(inCallAdapter);
 
-                                        outCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, outCallList, "Out Call",false);
+                                        outCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, outCallList, "Out Call",false,false);
                                         outCallAdapter.setClickListner(click);
                                         rcv_outcall.setAdapter(outCallAdapter);
                                     }
@@ -260,7 +265,8 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
 
                                 adapterCategory = new CustomStringAdapter("categoryType", null, artistServicesBean.subServies, ArtistServicesActivity.this, null, new CustomStringAdapter.onClickItemCategory() {
                                     @Override
-                                    public void onclick(Services.ArtistServicesBean.SubServiesBean bean) {
+                                    public void onclick(Services.ArtistServicesBean.SubServiesBean bean,int position) {
+                                        subServiceName = bean.subServiceName;
                                         tv_category.setText(bean.subServiceName + "");
                                         cv_ly_category.setVisibility(View.GONE);
 
@@ -283,11 +289,11 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
 
 
                                           /*......................................................................*/
-                                        inCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, inCallList, "In Call",false);
+                                        inCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, inCallList, "In Call",false,false);
                                         inCallAdapter.setClickListner(click);
                                         rcv_incall.setAdapter(inCallAdapter);
 
-                                        outCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, outCallList, "Out Call",false);
+                                        outCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, outCallList, "Out Call",false,false);
                                         outCallAdapter.setClickListner(click);
                                         rcv_outcall.setAdapter(outCallAdapter);
 
@@ -307,6 +313,8 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
                                             tv_msg.setVisibility(View.GONE);
                                             main_scroll_view.setVisibility(View.VISIBLE);
                                         }
+
+
 
 
                                     }

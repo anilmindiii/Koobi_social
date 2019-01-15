@@ -33,8 +33,8 @@ public class StaffDetailsInfo {
         public int staffId;
         public String staffName;
         public String job;
-        public int inCallPrice;
-        public int outCallPrice;
+        public double inCallPrice;
+        public double outCallPrice;
         public String completionTime;
         public String staffImage;
         public String bookingType;

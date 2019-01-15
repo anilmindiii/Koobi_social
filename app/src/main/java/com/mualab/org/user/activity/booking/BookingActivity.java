@@ -2,10 +2,13 @@ package com.mualab.org.user.activity.booking;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -17,13 +20,16 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mualab.org.user.R;
-import com.mualab.org.user.activity.artist_profile.activity.ArtistServicesActivity;
+import com.mualab.org.user.Views.calender.data.CalendarAdapter;
+import com.mualab.org.user.Views.calender.data.Day;
+import com.mualab.org.user.Views.calender.widget.MyFlexibleCalendar;
 import com.mualab.org.user.activity.artist_profile.adapter.CustomStringAdapter;
 import com.mualab.org.user.activity.artist_profile.adapter.IncallOutCallAdapter;
 import com.mualab.org.user.activity.artist_profile.model.Services;
 import com.mualab.org.user.application.Mualab;
 import com.mualab.org.user.data.local.prefs.Session;
 import com.mualab.org.user.data.model.User;
+import com.mualab.org.user.data.model.booking.BookingTimeSlot;
 import com.mualab.org.user.data.remote.HttpResponceListner;
 import com.mualab.org.user.data.remote.HttpTask;
 import com.mualab.org.user.dialogs.NoConnectionDialog;
@@ -32,9 +38,15 @@ import com.mualab.org.user.utils.ConnectionDetector;
 import com.mualab.org.user.utils.Helper;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,20 +63,37 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
     private ScrollView main_scroll_view;
     private TextView tv_msg;
     private LinearLayout ly_incall;
-    IncallOutCallAdapter inCallAdapter;
-    IncallOutCallAdapter.childItemClick click;
+    private IncallOutCallAdapter inCallAdapter;
+    private IncallOutCallAdapter.childItemClick click;
     private boolean isOpenCategory;
     private RelativeLayout ly_outcall;
     private CheckBox chbOutcall;
-    private Services.ArtistServicesBean artistServicesBeans;
-    private boolean isOutCallSelected;
+    private boolean isOutCallSelected, isStaffAvail;
+    private int childPos = 0;
+    private String checkPositon = "", callType = "";
+    private String mainServiceName = "", subServiceName = "";
+    private int childPosition;
+
+    private String selectedDate, sMonth = "", sDay, currentTime, lat = "", lng = "";
+    private MyFlexibleCalendar viewCalendar;
+    private boolean isTodayClicked = false;
+    private SimpleDateFormat input, dateFormat;
+    private int dayId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booking);
         Intent i = getIntent();
+
         artistId = i.getStringExtra("artistId");
+        callType = i.getStringExtra("callType");
+        mainServiceName = i.getStringExtra("mainServiceName");
+        subServiceName = i.getStringExtra("subServiceName");
+        isStaffAvail = i.getBooleanExtra("isStaffAvail", false);
+        childPosition = i.getIntExtra("childPosition", 0);
+
 
         TextView tvHeaderTitle = findViewById(R.id.tvHeaderTitle);
         tvHeaderTitle.setText(getString(R.string.booking));
@@ -92,6 +121,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         main_scroll_view = findViewById(R.id.main_scroll_view);
         ly_incall = findViewById(R.id.ly_incall);
         tv_msg = findViewById(R.id.tv_msg);
+        AppCompatButton btnToday = findViewById(R.id.btnToday);
 
         cv_ly_category = findViewById(R.id.cv_ly_category);
         cv_ly_biz_type = findViewById(R.id.cv_ly_biz_type);
@@ -100,12 +130,60 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         ly_category.setOnClickListener(this);
         main_scroll_view.setOnClickListener(this);
         ly_outcall.setOnClickListener(this);
+        btnToday.setOnClickListener(this);
 
 
         inCallList = new ArrayList<>();
         outCallList = new ArrayList<>();
+        if (callType.equals("Out Call")) {
+            isOutCallSelected = true;
+            chbOutcall.setChecked(true);
+        }
+
+        viewCalendar = findViewById(R.id.calendar);
+
+        // init calendar
+        Calendar cal = Calendar.getInstance();
+        CalendarAdapter adapter = new CalendarAdapter(this, cal);
+        viewCalendar.setAdapter(adapter);
+        dateFormat = new SimpleDateFormat("EEE, d MMMM yyyy");
+        dateFormat.setTimeZone(cal.getTimeZone());
+        input = new SimpleDateFormat("yyyy-MM-dd");
+
+        selectedDate = getCurrentDate();
+        currentTime = getCurrentTime();
+        dayId = cal.get(GregorianCalendar.DAY_OF_WEEK)-2;
+
 
         apiForGetAllServices();
+    }
+
+    private String getCurrentTime() {
+        Calendar cal = Calendar.getInstance();
+        Date currentLocalTime = cal.getTime();
+        DateFormat date = new SimpleDateFormat("hh:mm a");
+        System.out.println("currentTime" + date.format(currentLocalTime));
+        return date.format(currentLocalTime);
+    }
+
+    private String getCurrentDate() {
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH) + 1;
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        if (month < 10) {
+            sMonth = "0" + month;
+        } else {
+            sMonth = String.valueOf(month);
+        }
+
+        if (day < 10) {
+            sDay = "0" + day;
+        } else {
+            sDay = String.valueOf(day);
+        }
+        return year + "-" + sMonth + "-" + sDay;
     }
 
 
@@ -150,12 +228,34 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                             ivProfile.setImageResource(R.drawable.default_placeholder);
                         }
                         tvArtistName.setText(services.artistDetail.firstName + "");
+
 /*.......................................................................................................................*/
 
                         adapterBizType = new CustomStringAdapter("bizType", services, null, BookingActivity.this, new CustomStringAdapter.onClickItem() {
                             @Override
-                            public void onclick(final Services.ArtistServicesBean artistServicesBean) {
-                                artistServicesBeans = artistServicesBean;
+                            public void onclick(final Services.ArtistServicesBean artistServicesBean, int adapterPosition) {
+
+                                if (!checkPositon.equals(artistServicesBean.serviceName)) {
+                                    childPos = 0;
+                                }
+
+                                if (!mainServiceName.equals(artistServicesBean.serviceName)) {
+                                    mainServiceName = "";
+                                }
+
+                                checkPositon = artistServicesBean.serviceName;
+
+
+                                if (!subServiceName.equals("")) {
+                                    for (int i = 0; i < artistServicesBean.subServies.size(); i++) {
+                                        if (artistServicesBean.subServies.get(i).subServiceName.equals(subServiceName)) {
+                                            childPos = i;
+                                        }
+                                    }
+                                    subServiceName = "";
+                                }
+
+
                                 tv_bizType.setText(artistServicesBean.serviceName + "");
                                 cv_ly_biz_type.setVisibility(View.GONE);
 
@@ -164,21 +264,30 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                                 } else isOpenCategory = true;
 
                                 if (artistServicesBean.subServies.size() > 0) {
-                                    if (artistServicesBean.subServies.get(0) != null) {
-                                        tv_category.setText(artistServicesBean.subServies.get(0).subServiceName + "");
+                                    if (artistServicesBean.subServies.get(childPos) != null) {
+                                        tv_category.setText(artistServicesBean.subServies.get(childPos).subServiceName + "");
 
                                         inCallList.clear();
                                         outCallList.clear();
 
-                                        for (int i = 0; i < artistServicesBean.subServies.get(0).artistservices.size(); i++) {
+                                        for (int i = 0; i < artistServicesBean.subServies.get(childPos).artistservices.size(); i++) {
 
-                                            if (artistServicesBean.subServies.get(0).artistservices.get(i).bookingType.equals("Both")) {
-                                                inCallList.add(artistServicesBean.subServies.get(0).artistservices.get(i));
-                                                outCallList.add(artistServicesBean.subServies.get(0).artistservices.get(i));
-                                            } else if (artistServicesBean.subServies.get(0).artistservices.get(i).bookingType.equals("Incall")) {
-                                                inCallList.add(artistServicesBean.subServies.get(0).artistservices.get(i));
-                                            } else if (artistServicesBean.subServies.get(0).artistservices.get(i).bookingType.equals("Outcall")) {
-                                                outCallList.add(artistServicesBean.subServies.get(0).artistservices.get(i));
+                                            if (artistServicesBean.subServies.get(childPos).artistservices.get(i).bookingType.equals("Both")) {
+                                                //if (childPosition == i) {
+                                                    artistServicesBean.subServies.get(childPos).artistservices.get(i).isSelected = true;
+                                                //}
+                                                inCallList.add(artistServicesBean.subServies.get(childPos).artistservices.get(i));
+                                                outCallList.add(artistServicesBean.subServies.get(childPos).artistservices.get(i));
+                                            } else if (artistServicesBean.subServies.get(childPos).artistservices.get(i).bookingType.equals("Incall")) {
+                                               // if (childPosition == i) {
+                                                    artistServicesBean.subServies.get(childPos).artistservices.get(i).isSelected = true;
+                                               // }
+                                                inCallList.add(artistServicesBean.subServies.get(childPos).artistservices.get(i));
+                                            } else if (artistServicesBean.subServies.get(childPos).artistservices.get(i).bookingType.equals("Outcall")) {
+                                               // if (childPosition == i) {
+                                                    artistServicesBean.subServies.get(childPos).artistservices.get(i).isSelected = true;
+                                               // }
+                                                outCallList.add(artistServicesBean.subServies.get(childPos).artistservices.get(i));
                                             }
                                         }
 
@@ -194,8 +303,8 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                                             tv_msg.setVisibility(View.GONE);
                                             main_scroll_view.setVisibility(View.VISIBLE);
 
-                                            if (isOutCallSelected){
-                                                if(outCallList.size() == 0){
+                                            if (isOutCallSelected) {
+                                                if (outCallList.size() == 0) {
                                                     main_scroll_view.setVisibility(View.GONE);
                                                     tv_msg.setVisibility(View.VISIBLE);
                                                 }
@@ -203,13 +312,14 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                                         }
 
                                         if (isOutCallSelected) {
-                                            inCallAdapter = new IncallOutCallAdapter(BookingActivity.this, outCallList, "Out Call", true);
+                                            inCallAdapter = new IncallOutCallAdapter(BookingActivity.this, outCallList, "Out Call", true, isStaffAvail);
                                         } else {
-                                            inCallAdapter = new IncallOutCallAdapter(BookingActivity.this, inCallList, "In Call", true);
+                                            inCallAdapter = new IncallOutCallAdapter(BookingActivity.this, inCallList, "In Call", true, isStaffAvail);
                                         }
 
                                         inCallAdapter.setClickListner(click);
                                         rcv_incall.setAdapter(inCallAdapter);
+
 
                                     }
                                 } else {
@@ -232,7 +342,10 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
 
                                 adapterCategory = new CustomStringAdapter("categoryType", null, artistServicesBean.subServies, BookingActivity.this, null, new CustomStringAdapter.onClickItemCategory() {
                                     @Override
-                                    public void onclick(Services.ArtistServicesBean.SubServiesBean bean) {
+                                    public void onclick(Services.ArtistServicesBean.SubServiesBean bean, int position) {
+
+                                        childPos = position;
+
                                         tv_category.setText(bean.subServiceName + "");
                                         cv_ly_category.setVisibility(View.GONE);
 
@@ -256,9 +369,9 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
 
                           /*......................................................................*/
                                         if (isOutCallSelected) {
-                                            inCallAdapter = new IncallOutCallAdapter(BookingActivity.this, outCallList, "Out Call", true);
+                                            inCallAdapter = new IncallOutCallAdapter(BookingActivity.this, outCallList, "Out Call", true, isStaffAvail);
                                         } else {
-                                            inCallAdapter = new IncallOutCallAdapter(BookingActivity.this, inCallList, "In Call", true);
+                                            inCallAdapter = new IncallOutCallAdapter(BookingActivity.this, inCallList, "In Call", true, isStaffAvail);
                                         }
                                         inCallAdapter.setClickListner(click);
                                         rcv_incall.setAdapter(inCallAdapter);
@@ -275,8 +388,8 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                                             tv_msg.setVisibility(View.GONE);
                                             main_scroll_view.setVisibility(View.VISIBLE);
 
-                                            if (isOutCallSelected){
-                                                if(outCallList.size() == 0){
+                                            if (isOutCallSelected) {
+                                                if (outCallList.size() == 0) {
                                                     main_scroll_view.setVisibility(View.GONE);
                                                     tv_msg.setVisibility(View.VISIBLE);
                                                 }
@@ -292,7 +405,12 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                             }
                         }, null);
 
-                        adapterBizType.clickItem();
+
+                        for (int i = 0; i < services.artistServices.size(); i++) {
+                            if (services.artistServices.get(i).serviceName.equals(mainServiceName)) {
+                                adapterBizType.clickItem(i);
+                            }
+                        }
 
                         rcv_biz_type.setAdapter(adapterBizType);
 
@@ -326,6 +444,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         task.execute(this.getClass().getName());
     }
 
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -357,48 +476,158 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 break;
 
-            case R.id.ly_outcall: {
+            case R.id.ly_outcall:
                 if (chbOutcall.isChecked()) {
                     chbOutcall.setChecked(false);
                     isOutCallSelected = false;
 
-                    adapterBizType.clickItem();
+                    if (!mainServiceName.equals("")) {
+                        for (int i = 0; i < services.artistServices.size(); i++) {
+                            if (services.artistServices.get(i).serviceName.equals(mainServiceName)) {
+                                adapterBizType.clickItem(i);
+                            }
 
-                   /* inCallAdapter = new IncallOutCallAdapter(BookingActivity.this, inCallList, "In Call", true);
-                    inCallAdapter.setClickListner(click);
-                    rcv_incall.setAdapter(inCallAdapter);
+                        }
+                    } else adapterBizType.clickItem();
 
-                    if (inCallList.size() == 0) {
-                        iv_down_arrow_category.setVisibility(View.GONE);
-                        main_scroll_view.setVisibility(View.GONE);
-                        tv_msg.setVisibility(View.VISIBLE);
-                    } else {
-                        tv_msg.setVisibility(View.GONE);
-                        main_scroll_view.setVisibility(View.VISIBLE);
-                    }
-*/
                 } else {
                     chbOutcall.setChecked(true);
                     isOutCallSelected = true;
 
-                    adapterBizType.clickItem();
+                    if (!mainServiceName.equals("")) {
+                        for (int i = 0; i < services.artistServices.size(); i++) {
+                            if (services.artistServices.get(i).serviceName.equals(mainServiceName)) {
+                                adapterBizType.clickItem(i);
+                            }
+                        }
+                    } else adapterBizType.clickItem();
 
-                   /* inCallAdapter = new IncallOutCallAdapter(BookingActivity.this, outCallList, "Out Call", true);
-                    inCallAdapter.setClickListner(click);
-                    rcv_incall.setAdapter(inCallAdapter);
+                }
+                break;
 
-                    if (outCallList.size() == 0) {
-                        iv_down_arrow_category.setVisibility(View.GONE);
-                        main_scroll_view.setVisibility(View.GONE);
-                        tv_msg.setVisibility(View.VISIBLE);
-                    }else {
-                        tv_msg.setVisibility(View.GONE);
-                        main_scroll_view.setVisibility(View.VISIBLE);
-                    }*/
+            case R.id.btnToday:
+                selectedDate = getCurrentDate();
+                viewCalendar.isFirstimeLoad = true;
+                if (selectedDate.contains("-")) {
+                    isTodayClicked = true;
+                    int year, month, day;
+                    String[] separated = selectedDate.split("-");
+                    year = Integer.parseInt(separated[0]);
+                    month = Integer.parseInt(separated[1]);
+                    day = Integer.parseInt(separated[2]);
+
+                    viewCalendar.select(new Day(year, month, day));
+                    viewCalendar.expand(500);
+                    selectedDate = year + "-" + month + "-" + day;
+                }
+                //     apiForGetSlots();
+                break;
+
+        }
+    }
+
+    private   long mLastClickTime = 0;
+    private void setCalenderClickListner(){
+        viewCalendar.setCalendarListener(new MyFlexibleCalendar.CalendarListener() {
+            @Override
+            public void onDaySelect() {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
+
+                Day day = viewCalendar.getSelectedDay();
+                viewCalendar.isFirstimeLoad = false;
+                Log.i(getClass().getName(), "Selected Day: "
+                        + day.getYear() + "/" + (day.getMonth() + 1) + "/" + day.getDay());
+
+                Date date = new Date(day.getYear(), day.getMonth(), day.getDay()-1);
+                dayId = date.getDay()-1;
+
+                if (dayId==-1){
+                    dayId = 6;
                 }
 
-                break;
+                int month = day.getMonth()+1;
+
+                if (month < 10){
+                    sMonth = "0"+month;
+                }else {
+                    sMonth = String.valueOf(month);
+                }
+
+                if (day.getDay()<10){
+                    sDay = "0"+day.getDay();
+                }else {
+                    sDay = String.valueOf(day.getDay());
+                }
+                if (!isTodayClicked) {
+                    selectedDate = day.getYear() + "-" + sMonth + "-" + sDay;
+                    //bookingInfo.selectedDate = selectedDate;
+                }
+
+                if (viewCalendar.isSelectedDay(day)) {
+                    Calendar todayCal = Calendar.getInstance();
+                    int cYear  = todayCal.get(Calendar.YEAR);
+                    int cMonth  = todayCal.get(Calendar.MONTH)+1;
+                    int cDay  = todayCal.get(Calendar.DAY_OF_MONTH);
+
+                    int year = day.getYear();
+                    int dayOfMonth =  day.getDay();
+
+                    if (year>=cYear && month>=cMonth){
+                        if (year==cYear && month==cMonth && dayOfMonth<cDay){
+                            Log.i("","can't select previous date");
+                        }else {
+                            /*if (!alreadyAddedFound || isEdit){
+                                if (!isRemoved){
+                                    bookingInfo.date = "Select date";
+                                    bookingInfo.time = "and time";
+                                }
+                                bookingInfo.endTime = bookingInfo.editEndTime;
+                                bookingInfoAdapter.notifyDataSetChanged();
+                            }
+                            if (dayOfMonth==cDay){
+                                currentTime = getCurrentTime();
+                            }else
+                                currentTime = "12:00 AM";
+
+                            Mualab.getInstance().cancelPendingRequests("");
+                            Mualab.getInstance().getRequestQueue().cancelAll("");
+                            apiForGetSlots();*/
+                        }
+                    }
+                }
             }
-        }
+
+            @Override
+            public void onItemClick(View v) {
+                viewCalendar.isFirstimeLoad = false;
+                isTodayClicked = false;
+                Day day = viewCalendar.getSelectedDay();
+                Log.i(getClass().getName(), "The Day of Clicked View: "
+                        + day.getYear() + "/" + (day.getMonth() + 1) + "/" + day.getDay());
+            }
+
+            @Override
+            public void onDataUpdate() {
+                Log.i(getClass().getName(), "Data Updated");
+            }
+
+            @Override
+            public void onMonthChange() {
+                Log.i(getClass().getName(), "Month Changed"
+                        + ". Current Year: " + viewCalendar.getYear()
+                        + ", Current Month: " + (viewCalendar.getMonth() + 1));
+            }
+
+            @Override
+            public void onWeekChange(int position) {
+                Log.i(getClass().getName(), "Week Changed"
+                        + ". Current Year: " + viewCalendar.getYear()
+                        + ", Current Month: " + (viewCalendar.getMonth() + 1)
+                        + ", Current Week position of Month: " + position);
+            }
+        });
     }
 }

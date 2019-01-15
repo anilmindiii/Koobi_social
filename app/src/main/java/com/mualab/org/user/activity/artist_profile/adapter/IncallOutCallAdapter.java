@@ -2,6 +2,7 @@ package com.mualab.org.user.activity.artist_profile.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,18 +25,20 @@ public class IncallOutCallAdapter extends RecyclerView.Adapter<IncallOutCallAdap
     childItemClick clickListner;
     ArrayList<Services.ArtistServicesBean.SubServiesBean.ArtistservicesBean> inCallList;
     String callType;
-    boolean isBookingView;
+    boolean isBookingView,isStaffAvail;
     String service_price_Type;
 
     public IncallOutCallAdapter(Context mContext,
                                 ArrayList<Services.ArtistServicesBean.SubServiesBean.ArtistservicesBean> inCallList,
                                 String callType,
-                                boolean isBookingView) {
+                                boolean isBookingView,
+                                boolean isStaffAvail) {
         this.mContext = mContext;
         this.inCallList = inCallList;
         this.callType = callType;
         this.isBookingView = isBookingView;
         this.service_price_Type = service_price_Type;
+        this.isStaffAvail = isStaffAvail;
     }
 
     @NonNull
@@ -53,10 +56,19 @@ public class IncallOutCallAdapter extends RecyclerView.Adapter<IncallOutCallAdap
         if(isBookingView){
             holder.service_view.setVisibility(View.GONE);
             holder.ly_booking_view.setVisibility(View.VISIBLE);
+            if(isStaffAvail){
+                holder.service_name.setTextColor(ContextCompat.getColor(mContext,R.color.colorPrimary));
+                holder.duration.setVisibility(View.GONE);
+                holder.service_price.setVisibility(View.GONE);
+            }
         }else {
             holder.ly_booking_view.setVisibility(View.GONE);
             holder.service_view.setVisibility(View.VISIBLE);
         }
+
+        if(inCallList.get(position).isSelected){
+            holder.service_name.setTextColor(ContextCompat.getColor(mContext,R.color.colorPrimary));
+        }else  holder.service_name.setTextColor(ContextCompat.getColor(mContext,R.color.gray));
 
         holder.service_name.setText(inCallList.get(position).title+"");
 
@@ -74,7 +86,7 @@ public class IncallOutCallAdapter extends RecyclerView.Adapter<IncallOutCallAdap
     }
 
     public interface childItemClick{
-        void childClick(Services.ArtistServicesBean.SubServiesBean.ArtistservicesBean artistservicesBean, String callType);
+        void childClick(Services.ArtistServicesBean.SubServiesBean.ArtistservicesBean artistservicesBean, String callType, int adapterPosition);
     }
 
     public void setClickListner(childItemClick click){
@@ -106,7 +118,7 @@ public class IncallOutCallAdapter extends RecyclerView.Adapter<IncallOutCallAdap
 
         @Override
         public void onClick(View v) {
-            clickListner.childClick(inCallList.get(getAdapterPosition()),callType);
+            clickListner.childClick(inCallList.get(getAdapterPosition()),callType,getAdapterPosition());
         }
     }
 }

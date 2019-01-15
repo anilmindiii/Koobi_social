@@ -44,6 +44,10 @@ public class ArtistServiceDetailsActivity extends AppCompatActivity {
     private StaffListAdapter adapter;
     private ArrayList<StaffDetailsInfo.StaffInfoBean> detailsInfoList;
     private TextView id_tv_staff_text;
+    private String callTypeString =  "";
+    String  mainServiceName = "", subServiceName = "";
+    private int childPosition;
+
 
 
     @Override
@@ -62,10 +66,15 @@ public class ArtistServiceDetailsActivity extends AppCompatActivity {
 
         _id  = String.valueOf(getIntent().getIntExtra("_id",0));
         artistId = getIntent().getStringExtra("artistId");
-        callType.setText(getIntent().getStringExtra("callType"));
+        callTypeString =  getIntent().getStringExtra("callType");
+        mainServiceName =  getIntent().getStringExtra("mainServiceName");
+        subServiceName =  getIntent().getStringExtra("subServiceName");
+        childPosition =  getIntent().getIntExtra("childPosition",0);
+
+        callType.setText(callTypeString);
         detailsInfoList = new ArrayList<>();
 
-        adapter = new StaffListAdapter(this,detailsInfoList,getIntent().getStringExtra("callType"));
+        adapter = new StaffListAdapter(this,detailsInfoList,callTypeString);
         recycler_view.setAdapter(adapter);
 
         findViewById(R.id.btnBack).setOnClickListener(new View.OnClickListener() {
@@ -78,9 +87,18 @@ public class ArtistServiceDetailsActivity extends AppCompatActivity {
         btn_book.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean isStaffAvail = false;
+                if(id_tv_staff_text.getVisibility() == View.VISIBLE) isStaffAvail = true;
+
+
                 Intent intent = new Intent(ArtistServiceDetailsActivity.this,BookingActivity.class);
                 intent.putExtra("artistId",artistId);
-                intent.putExtra("callType",getIntent().getStringExtra("callType"));
+                intent.putExtra("callType",callTypeString);
+
+                intent.putExtra("mainServiceName",mainServiceName);
+                intent.putExtra("subServiceName",subServiceName);
+                intent.putExtra("isStaffAvail",isStaffAvail);
+                intent.putExtra("childPosition",childPosition);
                 startActivity(intent);
             }
         });

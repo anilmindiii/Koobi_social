@@ -31,7 +31,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:background="@drawable/bg_pink_circle_background"
                 >
 
                 <ImageView
@@ -52,9 +51,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:padding="5dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/bg_pink_circle_background"
-                >
+                android:layout_marginRight="10dp">
 
                 <ImageView
                     android:layout_width="25dp"
@@ -62,8 +59,7 @@
                     android:layout_gravity="center"
                     android:layout_centerInParent="true"
                     android:rotation="180"
-                    android:src="@drawable/white_back_ico"
-                    />
+                    android:src="@drawable/white_back_ico" />
 
             </RelativeLayout>
 
@@ -84,11 +80,10 @@
                 android:gravity="center"
                 android:layout_centerVertical="true"
                 android:padding="5dp"
+
                 android:layout_marginLeft="10dp"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:background="@drawable/bg_pink_circle_background"
-                >
+                android:layout_alignParentStart="true">
 
                 <ImageView
                     android:layout_width="25dp"
@@ -96,9 +91,11 @@
                     android:layout_gravity="center"
                     android:layout_centerInParent="true"
                     android:src="@drawable/white_back_ico"
+                    android:tint="@color/gray"
                     />
 
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/btn_next_week"
                 android:layout_width="30dp"
@@ -108,7 +105,6 @@
                 android:layout_centerVertical="true"
                 android:padding="5dp"
                 android:layout_marginRight="10dp"
-                android:background="@drawable/bg_pink_circle_background"
                 >
 
                 <ImageView
@@ -117,7 +113,8 @@
                     android:layout_gravity="center"
                     android:layout_centerInParent="true"
                     android:rotation="180"
-                    android:background="@drawable/white_back_ico"
+                    android:tint="@color/gray"
+                    android:src="@drawable/white_back_ico"
                     />
 
             </RelativeLayout>
@@ -137,12 +134,13 @@
 
         <ImageView
             android:id="@+id/ivDropDownCal"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_marginLeft="4dp"
             android:padding="2dp"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/txt_title"
+            android:backgroundTint="@color/gray"
             android:background="@drawable/down_arrow_ico"
             />
 
@@ -164,7 +162,7 @@
 
     </TableLayout>
 
-    <views.calender.view.LockScrollView
+    <com.mualab.org.user.Views.calender.view.LockScrollView
         android:id="@+id/scroll_view_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -179,6 +177,6 @@
 
         </TableLayout>
 
-    </views.calender.view.LockScrollView>
+    </com.mualab.org.user.Views.calender.view.LockScrollView>
 
 </LinearLayout>

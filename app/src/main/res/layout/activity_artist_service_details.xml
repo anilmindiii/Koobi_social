@@ -14,48 +14,47 @@
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentTop="true" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?actionBarSize"
-        android:orientation="vertical">
+        android:scrollbars="">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Service Description"
-            android:fontFamily="@font/nunito_regular"
-            android:textSize="16sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="16dp"
-            android:textColor="@color/text_color"/>
-
-
-        <TextView
-            android:id="@+id/tv_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/nunito_regular"
-            android:textSize="16sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:textColor="@color/gray"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height=".7dp"
-            android:layout_margin="16dp"
-            android:background="@color/gray3"/>
-
-        <ScrollView
-            android:id="@+id/main_scroll_view"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="none"
-            android:overScrollMode="never">
+            android:layout_marginTop="?actionBarSize"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Service Description"
+                android:fontFamily="@font/nunito_regular"
+                android:textSize="16sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="16dp"
+                android:textColor="@color/text_color"/>
+
+
+            <TextView
+                android:id="@+id/tv_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_regular"
+                android:textSize="16sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:textColor="@color/gray"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height=".7dp"
+                android:layout_margin="16dp"
+                android:background="@color/gray3"/>
 
             <LinearLayout
+                android:id="@+id/main_scroll_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -108,26 +107,27 @@
 
             </LinearLayout>
 
-        </ScrollView>
+
+            <TextView
+                android:id="@+id/btn_book"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="@string/btn_book_now"
+                android:gravity="center"
+                android:fontFamily="@font/nunito_regular"
+                android:textSize="18sp"
+                android:layout_margin="16dp"
+                android:layout_alignParentBottom="true"
+                android:backgroundTint="@color/colorPrimary"
+                android:background="@drawable/bg_button"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
 
 
 
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/btn_book"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="55dp"
-        android:text="@string/btn_book_now"
-        android:gravity="center"
-        android:fontFamily="@font/nunito_regular"
-        android:textSize="18sp"
-        android:layout_margin="16dp"
-        android:layout_alignParentBottom="true"
-        android:backgroundTint="@color/colorPrimary"
-        android:background="@drawable/bg_button"
-        android:textColor="@color/white" />
 
 </RelativeLayout>
