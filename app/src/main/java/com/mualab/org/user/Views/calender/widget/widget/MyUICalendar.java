@@ -1,4 +1,4 @@
-package com.mualab.org.user.Views.calender.widget;
+package com.mualab.org.user.Views.calender.widget.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;

@@ -363,18 +363,15 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
 
-                                <com.mualab.org.user.Views.calender.widget.MyFlexibleCalendar
+                                <com.mualab.org.user.Views.calender.widget.widget.MyFlexibleCalendar
                                     android:id="@+id/calendar"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:background="@drawable/rectangular_border"
                                     android:overScrollMode="never"
-                                    custom:firstDayOfWeek="sunday"
-                                    custom:selectedItem_background="@drawable/circle_green_solid_background"
-                                    custom:showWeek="true"
-                                    custom:state="collapsed"
-                                    custom:textColor="@color/black"
-                                    custom:todayItem_background="@drawable/circle_blue_solid_background" />
+                                    app:firstDayOfWeek="sunday"
+                                    app:showWeek="true"
+                                    app:state="collapsed"
+                                    app:textColor="@color/black" />
 
                             </LinearLayout>
 
@@ -384,21 +381,19 @@
                                 android:layout_height="wrap_content"
                                 android:layout_margin="10dp"
                                 android:fontFamily="@font/nunito_regular"
-                                android:text="@string/text_select_time"
+                                android:text="@string/text_select_staff"
                                 android:textColor="@color/text_color"
                                 android:textSize="14sp" />
 
                             <android.support.v7.widget.RecyclerView
-                                android:id="@+id/rycTimeSlot"
+                                android:id="@+id/rcv_staff"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="4dp"
-                                android:layout_marginLeft="6dp"
-                                android:layout_marginRight="6dp"
-                                android:layout_marginTop="4dp"
-                                android:nestedScrollingEnabled="true"
+                                android:divider="@null"
+                                android:orientation="horizontal"
                                 android:overScrollMode="never"
-                                android:scrollbars="none" />
+                                android:scrollbars="none"
+                                app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
 
                             <TextView
                                 android:id="@+id/tvNoSlot"
@@ -425,12 +420,12 @@
                                 android:layout_marginRight="10dp"
                                 android:layout_marginTop="5dp"
                                 android:fontFamily="@font/nunito_regular"
-                                android:text="@string/text_booking_info"
+                                android:text="@string/text_select_time"
                                 android:textColor="@color/text_color"
                                 android:textSize="14sp" />
 
                             <android.support.v7.widget.RecyclerView
-                                android:id="@+id/rycBookingInfo"
+                                android:id="@+id/rcv_timeSlot"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="6dp"

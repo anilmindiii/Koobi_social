@@ -238,13 +238,13 @@
     <string name="saturday">Sat</string>
     <string name="sunday">Sun</string>
 
-    <string name="mon">Monday</string>
-    <string name="tues">Tuesday</string>
-    <string name="wednes">Wednesday</string>
-    <string name="thurs">Thursday</string>
-    <string name="fri">Friday</string>
-    <string name="satur">Saturday</string>
-    <string name="sun">Sunday</string>
+    <string name="mon">Mon</string>
+    <string name="tues">Tue</string>
+    <string name="wednes">Wed</string>
+    <string name="thurs">Thu</string>
+    <string name="fri">Fri</string>
+    <string name="satur">Sat</string>
+    <string name="sun">Sun</string>
     <string name="code">code.</string>
     <string name="profile">Profile</string>
     <string name="otp">New OTP has been sent to you</string>

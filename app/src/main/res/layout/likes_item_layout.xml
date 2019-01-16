@@ -48,7 +48,6 @@
             android:layout_weight="1"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-
             style="@style/TextView"
             android:fontFamily="@font/nunito_regular"
             android:maxLines="1"

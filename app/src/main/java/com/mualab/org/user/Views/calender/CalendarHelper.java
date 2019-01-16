@@ -16,8 +16,6 @@ import java.util.List;
 @SuppressLint("WrongConstant")
 public class CalendarHelper {
 
-    public static final String SERVER_DATE_FORMAT = "yyyy-MM-dd";
-    public static final String APP_DATE_FORMAT = "dd/MM/yyyy";
 
     public static int getDayShift(Calendar calendar, boolean z) {
         int i = 0;
@@ -152,21 +150,8 @@ public class CalendarHelper {
 
 
     public static String getStringYMDformatter(String inputDate){
-        DateFormat inputFormat  = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat inputFormat  = new SimpleDateFormat("dd-MM-yyyy");
         DateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date date = inputFormat.parse(inputDate);
-            String outputDateStr = outputFormat.format(date);
-            return outputDateStr;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
-    public static String getStringYMDformatter(String inputDate, String iFormat, String oFormat){
-        DateFormat inputFormat  = new SimpleDateFormat(iFormat);
-        DateFormat outputFormat = new SimpleDateFormat(oFormat);
         try {
             Date date = inputFormat.parse(inputDate);
             String outputDateStr = outputFormat.format(date);

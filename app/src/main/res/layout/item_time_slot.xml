@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/white"
+    android:layout_width="110dp"
+    android:layout_height="40dp"
+    android:padding="3dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@drawable/rounded_border_dark">
+
+        <ImageView
+            android:id="@+id/clock"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_clock"/>
+
+        <TextView
+            style="@style/TextView.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_regular"
+            android:text="03:00 PM"
+            android:layout_gravity="center"
+            android:layout_toRightOf="@+id/clock"
+            android:layout_marginLeft="5dp"
+            android:layout_centerVertical="true"
+            android:textColor="@color/text_color"
+            android:textSize="14sp" />
+
+
+
+    </LinearLayout>
+
+</RelativeLayout>

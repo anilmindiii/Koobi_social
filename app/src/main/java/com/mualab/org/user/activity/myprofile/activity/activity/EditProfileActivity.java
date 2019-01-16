@@ -34,6 +34,7 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.mualab.org.user.R;
+
 import com.mualab.org.user.Views.calender.CalendarHelper;
 import com.mualab.org.user.activity.authentication.AddAddressActivity;
 import com.mualab.org.user.activity.authentication.ChooseCountryActivity;
@@ -273,7 +274,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         btnContinue1.setOnClickListener(this);
         rl_dob.setOnClickListener(this);
         if (user.dob.contains("-"))
-            formattedTime = CalendarHelper.getStringYMDformatter(user.dob, CalendarHelper.SERVER_DATE_FORMAT, CalendarHelper.APP_DATE_FORMAT);
+            formattedTime = CalendarHelper.getStringYMDformatter(user.dob /*CalendarHelper.SERVER_DATE_FORMAT, CalendarHelper.APP_DATE_FORMAT*/);
         else formattedTime = user.dob;
 
 
@@ -445,7 +446,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 yearShow = Integer.parseInt(s[2]);*/
 
                 if (user.dob.contains("-")) {
-                    formattedTime = CalendarHelper.getStringYMDformatter(user.dob, CalendarHelper.SERVER_DATE_FORMAT, CalendarHelper.APP_DATE_FORMAT);
+                    formattedTime = CalendarHelper.getStringYMDformatter(user.dob/*, CalendarHelper.SERVER_DATE_FORMAT, CalendarHelper.APP_DATE_FORMAT*/);
                     String[] s = formattedTime.split("/");
                     monthShow = Integer.parseInt(s[1]);
                     dayShow = Integer.parseInt(s[0]);
@@ -612,7 +613,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         params.put("countryCode", edituser.countryCode);
         params.put("contactNo", edituser.contactNo);
         params.put("gender", edituser.gender);
-        params.put("dob", CalendarHelper.getStringYMDformatter(user.dob));
+     //   params.put("dob", CalendarHelper.getStringYMDformatter(user.dob));
         params.put("address", edituser.address);
         params.put("city", edituser.city);
         params.put("state", edituser.state);
