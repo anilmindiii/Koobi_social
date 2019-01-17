@@ -38,7 +38,7 @@ import java.util.Map;
 public class ArtistServiceDetailsActivity extends AppCompatActivity {
 
     private String artistId;
-    private String _id;
+    private int _id;
     private TextView tv_description,callType,btn_book;
     private RecyclerView recycler_view;
     private StaffListAdapter adapter;
@@ -46,7 +46,6 @@ public class ArtistServiceDetailsActivity extends AppCompatActivity {
     private TextView id_tv_staff_text;
     private String callTypeString =  "";
     String  mainServiceName = "", subServiceName = "";
-    private int childPosition;
 
 
 
@@ -64,12 +63,11 @@ public class ArtistServiceDetailsActivity extends AppCompatActivity {
         id_tv_staff_text = findViewById(R.id.id_tv_staff_text);
         btn_book = findViewById(R.id.btn_book);
 
-        _id  = String.valueOf(getIntent().getIntExtra("_id",0));
+        _id  = getIntent().getIntExtra("_id",0);
         artistId = getIntent().getStringExtra("artistId");
         callTypeString =  getIntent().getStringExtra("callType");
         mainServiceName =  getIntent().getStringExtra("mainServiceName");
         subServiceName =  getIntent().getStringExtra("subServiceName");
-        childPosition =  getIntent().getIntExtra("childPosition",0);
 
         callType.setText(callTypeString);
         detailsInfoList = new ArrayList<>();
@@ -87,18 +85,14 @@ public class ArtistServiceDetailsActivity extends AppCompatActivity {
         btn_book.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean isStaffAvail = false;
-                if(id_tv_staff_text.getVisibility() == View.VISIBLE) isStaffAvail = true;
-
-
                 Intent intent = new Intent(ArtistServiceDetailsActivity.this,BookingActivity.class);
+
+                intent.putExtra("_id",_id);
                 intent.putExtra("artistId",artistId);
                 intent.putExtra("callType",callTypeString);
 
                 intent.putExtra("mainServiceName",mainServiceName);
                 intent.putExtra("subServiceName",subServiceName);
-                intent.putExtra("isStaffAvail",isStaffAvail);
-                intent.putExtra("childPosition",childPosition);
                 startActivity(intent);
             }
         });
@@ -125,7 +119,7 @@ public class ArtistServiceDetailsActivity extends AppCompatActivity {
 
         Map<String, String> params = new HashMap<>();
         params.put("businessId", artistId);
-        params.put("artistServiceId", _id);
+        params.put("artistServiceId", String.valueOf(_id));
         HttpTask task = new HttpTask(new HttpTask.Builder(ArtistServiceDetailsActivity.this, "serviceStaff", new HttpResponceListner.Listener() {
             @Override
             public void onResponse(String response, String apiName) {

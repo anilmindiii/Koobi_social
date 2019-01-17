@@ -8,17 +8,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mualab.org.user.R;
@@ -33,16 +33,12 @@ import com.mualab.org.user.activity.booking.adapter.TimeSlotAdapter;
 import com.mualab.org.user.activity.booking.listner.DeleteServiceListener;
 import com.mualab.org.user.activity.booking.listner.TimeSlotClickListener;
 import com.mualab.org.user.activity.booking.model.ServiceInfoBooking;
+import com.mualab.org.user.activity.booking.model.TimeSlotInfo;
 import com.mualab.org.user.application.Mualab;
 import com.mualab.org.user.data.local.prefs.Session;
 import com.mualab.org.user.data.model.User;
-import com.mualab.org.user.data.model.booking.BookingInfo;
-import com.mualab.org.user.data.model.booking.BookingServices3;
-import com.mualab.org.user.data.model.booking.BookingTimeSlot;
-import com.mualab.org.user.data.model.booking.StaffInfo;
 import com.mualab.org.user.data.remote.HttpResponceListner;
 import com.mualab.org.user.data.remote.HttpTask;
-import com.mualab.org.user.dialogs.MyToast;
 import com.mualab.org.user.dialogs.NoConnectionDialog;
 import com.mualab.org.user.dialogs.Progress;
 import com.mualab.org.user.utils.ConnectionDetector;
@@ -56,6 +52,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -65,14 +62,15 @@ import java.util.Locale;
 import java.util.Map;
 
 public class BookingActivity extends AppCompatActivity implements View.OnClickListener
-        ,TimeSlotClickListener,DeleteServiceListener ,StaffAdapter.click{
+        , TimeSlotClickListener, DeleteServiceListener, StaffAdapter.click {
     private String artistId;
+    private int childId;
     private LinearLayout ly_biz_type, ly_category;
     private CardView cv_ly_biz_type, cv_ly_category;
     private CustomStringAdapter adapterBizType, adapterCategory;
     private RecyclerView rcv_biz_type, rcv_category_type, rcv_incall;
     private Services services;
-    private TextView tv_bizType, tv_category, tvArtistName;
+    private TextView tv_bizType, tv_category, tvArtistName,tvbizDate;
     private ImageView iv_down_arrow_bizType, iv_down_arrow_category, ivProfile;
     private ArrayList<Services.ArtistServicesBean.SubServiesBean.ArtistservicesBean> inCallList, outCallList;
     private ScrollView main_scroll_view;
@@ -83,19 +81,19 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
     private boolean isOpenCategory;
     private RelativeLayout ly_outcall;
     private CheckBox chbOutcall;
-    private boolean isOutCallSelected, isStaffAvail;
+    private boolean isOutCallSelected;
     private int childPos = 0;
     private String checkPositon = "", callType = "";
-    private String mainServiceName = "", subServiceName = "";
-    private int childPosition;
+    private String mainServiceName = "", subServiceName = "", artistServiceId = "";
 
     private RecyclerView rcv_staff;
     private StaffAdapter staffAdapter;
-    private ArrayList<ServiceInfoBooking.StaffInfoBean> staffInfoBeanList ;
+    private ArrayList<ServiceInfoBooking.StaffInfoBean> staffInfoBeanList;
 
     private RecyclerView rcv_timeSlot;
     private TimeSlotAdapter timeSlotAdapter;
-    private ArrayList<ServiceInfoBooking.StaffInfoBean.StaffHoursBean> timeSlotList;
+    private ArrayList<TimeSlotInfo> timeSlotList;
+    private String businessType = "", preprationTime = "";
 
     private String selectedDate, sMonth = "", sDay, currentTime, lat = "", lng = "";
     private MyFlexibleCalendar viewCalendar;
@@ -103,6 +101,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
     private SimpleDateFormat input, dateFormat;
     private int dayId;
     private SimpleDateFormat dateSdf, timeSdf;
+    private RatingBar rating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,12 +109,11 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_booking);
         Intent i = getIntent();
 
+        childId = i.getIntExtra("_id",0);
         artistId = i.getStringExtra("artistId");
         callType = i.getStringExtra("callType");
         mainServiceName = i.getStringExtra("mainServiceName");
         subServiceName = i.getStringExtra("subServiceName");
-        isStaffAvail = i.getBooleanExtra("isStaffAvail", false);
-        childPosition = i.getIntExtra("childPosition", 0);
 
         TextView tvHeaderTitle = findViewById(R.id.tvHeaderTitle);
         tvHeaderTitle.setText(getString(R.string.booking));
@@ -127,6 +125,8 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+        tvbizDate = findViewById(R.id.tvbizDate);
+        rating = findViewById(R.id.rating);
         rcv_timeSlot = findViewById(R.id.rcv_timeSlot);
         rcv_staff = findViewById(R.id.rcv_staff);
         chbOutcall = findViewById(R.id.chbOutcall);
@@ -154,9 +154,13 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         click = new IncallOutCallAdapter.childItemClick() {
             @Override
             public void childClick(Services.ArtistServicesBean.SubServiesBean.ArtistservicesBean artistservicesBean, String callType, int adapterPosition) {
+                childId = artistservicesBean._id;
+                artistServiceId = String.valueOf(artistservicesBean._id);
+
                 apiForserviceStaff(String.valueOf(artistservicesBean._id));
             }
         };
+        apiForserviceStaff(String.valueOf(childId));
 
 
 
@@ -168,11 +172,12 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
 
 
         staffInfoBeanList = new ArrayList<>();
-        staffAdapter = new StaffAdapter(this,staffInfoBeanList,callType,this);
+        staffAdapter = new StaffAdapter(this, staffInfoBeanList, callType, this);
         rcv_staff.setAdapter(staffAdapter);
 
         timeSlotList = new ArrayList<>();
-        timeSlotAdapter = new TimeSlotAdapter(this,timeSlotList);
+        timeSlotAdapter = new TimeSlotAdapter(this, timeSlotList);
+        rcv_timeSlot.setLayoutManager(new GridLayoutManager(this, 3));
         rcv_timeSlot.setAdapter(timeSlotAdapter);
 
         inCallList = new ArrayList<>();
@@ -211,10 +216,10 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
-    public void OnClickAdapter(List<ServiceInfoBooking.StaffInfoBean.StaffHoursBean> bean) {
-        timeSlotList.clear();
-        timeSlotList.addAll(bean);
-        timeSlotAdapter.notifyDataSetChanged();
+    public void OnClickAdapter(ServiceInfoBooking.StaffInfoBean bean) {
+        apiForstaffSlot(String.valueOf(bean.staffId));
+
+
     }
 
 
@@ -279,6 +284,12 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                     if (status.equals("success")) {
                         Gson gson = new Gson();
                         services = gson.fromJson(response, Services.class);
+                        businessType = services.artistDetail.businessType;
+
+                        rating.setRating(Float.parseFloat(services.artistDetail.ratingCount));
+                        if (isOutCallSelected) {
+                            preprationTime = services.artistDetail.outCallpreprationTime;
+                        } else preprationTime = services.artistDetail.inCallpreprationTime;
 
                         if (!services.artistDetail.profileImage.isEmpty() && !services.artistDetail.profileImage.equals("")) {
                             Picasso.with(BookingActivity.this).load(services.artistDetail.profileImage).placeholder(R.drawable.default_placeholder).
@@ -287,6 +298,21 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                             ivProfile.setImageResource(R.drawable.default_placeholder);
                         }
                         tvArtistName.setText(services.artistDetail.firstName + "");
+
+                        String from = "";
+                        String end = "";
+                        for(int i=0;i<services.artistDetail.busineshours.size();i++){
+                            if(services.artistDetail.busineshours.get(i).day == dayId){
+                                from = services.artistDetail.busineshours.get(i).startTime+" to "+services.artistDetail.busineshours.get(i).endTime;
+
+                                if(!from.equals("")){
+                                    end = from;
+                                    from = "";
+                                }
+                            }
+                        }
+
+                        if(!from.equals("")) tvbizDate.setText(end+" & "+from);else tvbizDate.setText(end);
 
 /*.......................................................................................................................*/
 
@@ -332,22 +358,25 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                                         for (int i = 0; i < artistServicesBean.subServies.get(childPos).artistservices.size(); i++) {
 
                                             if (artistServicesBean.subServies.get(childPos).artistservices.get(i).bookingType.equals("Both")) {
-                                                //if (childPosition == i) {
-                                                    artistServicesBean.subServies.get(childPos).artistservices.get(i).isSelected = true;
-                                                //}
+                                                if (childId == (artistServicesBean.subServies.get(childPos).artistservices.get(i)._id)) {
+                                                artistServicesBean.subServies.get(childPos).artistservices.get(i).isSelected = true;
+                                                }
                                                 inCallList.add(artistServicesBean.subServies.get(childPos).artistservices.get(i));
                                                 outCallList.add(artistServicesBean.subServies.get(childPos).artistservices.get(i));
                                             } else if (artistServicesBean.subServies.get(childPos).artistservices.get(i).bookingType.equals("Incall")) {
-                                               // if (childPosition == i) {
-                                                    artistServicesBean.subServies.get(childPos).artistservices.get(i).isSelected = true;
-                                               // }
+                                                if (childId == (artistServicesBean.subServies.get(childPos).artistservices.get(i)._id)) {
+                                                artistServicesBean.subServies.get(childPos).artistservices.get(i).isSelected = true;
+                                                }
                                                 inCallList.add(artistServicesBean.subServies.get(childPos).artistservices.get(i));
                                             } else if (artistServicesBean.subServies.get(childPos).artistservices.get(i).bookingType.equals("Outcall")) {
-                                               // if (childPosition == i) {
-                                                    artistServicesBean.subServies.get(childPos).artistservices.get(i).isSelected = true;
-                                               // }
+                                                if (childId == (artistServicesBean.subServies.get(childPos).artistservices.get(i)._id)){
+                                                artistServicesBean.subServies.get(childPos).artistservices.get(i).isSelected = true;
+                                                 }
                                                 outCallList.add(artistServicesBean.subServies.get(childPos).artistservices.get(i));
                                             }
+
+
+
                                         }
 
                                         if (inCallList.size() == 0) {
@@ -371,14 +400,13 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                                         }
 
                                         if (isOutCallSelected) {
-                                            inCallAdapter = new IncallOutCallAdapter(BookingActivity.this, outCallList, "Out Call", true, isStaffAvail);
+                                            inCallAdapter = new IncallOutCallAdapter(BookingActivity.this, outCallList, "Out Call", true);
                                         } else {
-                                            inCallAdapter = new IncallOutCallAdapter(BookingActivity.this, inCallList, "In Call", true, isStaffAvail);
+                                            inCallAdapter = new IncallOutCallAdapter(BookingActivity.this, inCallList, "In Call", true);
                                         }
 
                                         inCallAdapter.setClickListner(click);
                                         rcv_incall.setAdapter(inCallAdapter);
-
 
                                     }
                                 } else {
@@ -399,12 +427,13 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                                 } else iv_down_arrow_bizType.setVisibility(View.VISIBLE);
 
 
+
+
                                 adapterCategory = new CustomStringAdapter("categoryType", null, artistServicesBean.subServies, BookingActivity.this, null, new CustomStringAdapter.onClickItemCategory() {
                                     @Override
                                     public void onclick(Services.ArtistServicesBean.SubServiesBean bean, int position) {
 
                                         childPos = position;
-
                                         tv_category.setText(bean.subServiceName + "");
                                         cv_ly_category.setVisibility(View.GONE);
 
@@ -428,9 +457,9 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
 
                           /*......................................................................*/
                                         if (isOutCallSelected) {
-                                            inCallAdapter = new IncallOutCallAdapter(BookingActivity.this, outCallList, "Out Call", true, isStaffAvail);
+                                            inCallAdapter = new IncallOutCallAdapter(BookingActivity.this, outCallList, "Out Call", true);
                                         } else {
-                                            inCallAdapter = new IncallOutCallAdapter(BookingActivity.this, inCallList, "In Call", true, isStaffAvail);
+                                            inCallAdapter = new IncallOutCallAdapter(BookingActivity.this, inCallList, "In Call", true);
                                         }
                                         inCallAdapter.setClickListner(click);
                                         rcv_incall.setAdapter(inCallAdapter);
@@ -469,7 +498,10 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                             if (services.artistServices.get(i).serviceName.equals(mainServiceName)) {
                                 adapterBizType.clickItem(i);
                             }
+
                         }
+
+
 
                         rcv_biz_type.setAdapter(adapterBizType);
 
@@ -736,10 +768,9 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                     if (status.equals("success")) {
                         staffInfoBeanList.clear();
                         Gson gson = new Gson();
-                        ServiceInfoBooking infoBooking = gson.fromJson(response,ServiceInfoBooking.class);
+                        ServiceInfoBooking infoBooking = gson.fromJson(response, ServiceInfoBooking.class);
                         staffInfoBeanList.addAll(infoBooking.staffInfo);
                         staffAdapter.notifyDataSetChanged();
-
                     }
 
                 } catch (Exception e) {
@@ -769,7 +800,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         task.execute(this.getClass().getName());
     }
 
-    private void apiForstaffSlot(String staffId,String artistServiceId) {
+    private void apiForstaffSlot(String staffId) {
         Progress.show(BookingActivity.this);
         Session session = Mualab.getInstance().getSessionManager();
         User user = session.getUser();
@@ -802,15 +833,15 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         params.put("artistId", artistId);
         params.put("artistServiceId", artistServiceId);
         params.put("staffId", staffId);
-        params.put("userId", Mualab.currentUser.userId);
+        params.put("userId", String.valueOf(Mualab.currentUser.id));
 
-       /* params.put("businessType", businessType);
+        params.put("businessType", businessType);
         params.put("currentTime", currentTime);
-        params.put("date", date);
+        params.put("date", getCurrentDate());
         params.put("day", String.valueOf(dayId));
         params.put("latitude", String.valueOf(Mualab.currentLocation.lat));
         params.put("longitude", String.valueOf(Mualab.currentLocation.lng));
-        params.put("serviceTime", serviceTime);*/
+        params.put("serviceTime", preprationTime);
 
         HttpTask task = new HttpTask(new HttpTask.Builder(BookingActivity.this, "artistTimeSlotNew", new HttpResponceListner.Listener() {
             @Override
@@ -821,10 +852,19 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                     String status = js.getString("status");
                     String message = js.getString("message");
 
+                    timeSlotList.clear();
                     if (status.equals("success")) {
+                        JSONArray array = js.getJSONArray("timeSlots");
 
-
+                        for(int i=0;i<array.length();i++){
+                            TimeSlotInfo timeSlotInfo = new TimeSlotInfo();
+                            timeSlotInfo.timeSlots = array.get(i).toString();
+                            timeSlotInfo.isSelectSlot = false;
+                            timeSlotList.add(timeSlotInfo);
+                        }
                     }
+
+                    timeSlotAdapter.notifyDataSetChanged();
 
                 } catch (Exception e) {
                     Progress.hide(BookingActivity.this);
@@ -852,7 +892,6 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                 .setBody(params, HttpTask.ContentType.APPLICATION_JSON));
         task.execute(this.getClass().getName());
     }
-
 
 
 }

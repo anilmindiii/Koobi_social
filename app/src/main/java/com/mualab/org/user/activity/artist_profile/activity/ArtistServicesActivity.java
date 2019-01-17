@@ -101,7 +101,7 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
                 intent.putExtra("callType", callType);
                 intent.putExtra("mainServiceName", mainServiceName);
                 intent.putExtra("subServiceName", subServiceName);
-                intent.putExtra("childPosition", adapterPosition);
+
                 startActivity(intent);
             }
         };
@@ -237,11 +237,11 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
                                             main_scroll_view.setVisibility(View.VISIBLE);
                                         }
 
-                                        inCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, inCallList, "In Call",false,false);
+                                        inCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, inCallList, "In Call",false);
                                         inCallAdapter.setClickListner(click);
                                         rcv_incall.setAdapter(inCallAdapter);
 
-                                        outCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, outCallList, "Out Call",false,false);
+                                        outCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, outCallList, "Out Call",false);
                                         outCallAdapter.setClickListner(click);
                                         rcv_outcall.setAdapter(outCallAdapter);
                                     }
@@ -289,11 +289,11 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
 
 
                                           /*......................................................................*/
-                                        inCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, inCallList, "In Call",false,false);
+                                        inCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, inCallList, "In Call",false);
                                         inCallAdapter.setClickListner(click);
                                         rcv_incall.setAdapter(inCallAdapter);
 
-                                        outCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, outCallList, "Out Call",false,false);
+                                        outCallAdapter = new IncallOutCallAdapter(ArtistServicesActivity.this, outCallList, "Out Call",false);
                                         outCallAdapter.setClickListner(click);
                                         rcv_outcall.setAdapter(outCallAdapter);
 

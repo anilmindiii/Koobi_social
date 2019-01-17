@@ -2,6 +2,7 @@ package com.mualab.org.user.activity.booking.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +44,7 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.ViewHolder>{
     }
 
     public interface click{
-        void OnClickAdapter(List<ServiceInfoBooking.StaffInfoBean.StaffHoursBean> bean);
+        void OnClickAdapter(ServiceInfoBooking.StaffInfoBean bean);
     }
 
     @Override
@@ -67,6 +68,14 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.ViewHolder>{
         if(typeCall.equals("In Call")){
             holder.tv_price.setText("£" + bean.inCallPrice+"");
         }else holder.tv_price.setText("£" + bean.outCallPrice+"");
+
+        holder.tv_user_name.setText(bean.staffName);
+
+        if(!bean.isSelected){
+            holder.tv_user_name.setTextColor(ContextCompat.getColor(mContext,R.color.black));
+        }else {
+            holder.tv_user_name.setTextColor(ContextCompat.getColor(mContext,R.color.colorPrimary));
+        }
     }
 
     @Override
@@ -91,7 +100,15 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.ViewHolder>{
 
         @Override
         public void onClick(View v) {
-            clickListner.OnClickAdapter(staffInfoBeanList.get(getAdapterPosition()).staffHours);
+
+            clickListner.OnClickAdapter(staffInfoBeanList.get(getAdapterPosition()));
+
+            for(int i=0;i<staffInfoBeanList.size();i++){
+                staffInfoBeanList.get(i).isSelected = false;
+            }
+            staffInfoBeanList.get(getAdapterPosition()).isSelected = true;
+            notifyDataSetChanged();
+
         }
     }
 

@@ -21,75 +21,78 @@ import java.util.ArrayList;
  */
 
 public class IncallOutCallAdapter extends RecyclerView.Adapter<IncallOutCallAdapter.ViewHolder> {
-    Context  mContext;
+    Context mContext;
     childItemClick clickListner;
     ArrayList<Services.ArtistServicesBean.SubServiesBean.ArtistservicesBean> inCallList;
     String callType;
-    boolean isBookingView,isStaffAvail;
-    String service_price_Type;
+    boolean isBookingView;
+
 
     public IncallOutCallAdapter(Context mContext,
                                 ArrayList<Services.ArtistServicesBean.SubServiesBean.ArtistservicesBean> inCallList,
                                 String callType,
-                                boolean isBookingView,
-                                boolean isStaffAvail) {
+                                boolean isBookingView) {
         this.mContext = mContext;
         this.inCallList = inCallList;
         this.callType = callType;
         this.isBookingView = isBookingView;
-        this.service_price_Type = service_price_Type;
-        this.isStaffAvail = isStaffAvail;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_incall_outcall,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_incall_outcall, parent, false);
         return new ViewHolder(view);
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        holder.tv_inoutcall_service.setText(inCallList.get(position).title+"");
+        holder.tv_inoutcall_service.setText(inCallList.get(position).title + "");
 
-        if(isBookingView){
+        if (isBookingView) {
             holder.service_view.setVisibility(View.GONE);
             holder.ly_booking_view.setVisibility(View.VISIBLE);
-            if(isStaffAvail){
-                holder.service_name.setTextColor(ContextCompat.getColor(mContext,R.color.colorPrimary));
+
+            if (inCallList.get(position).isStaff) {
+                holder.service_name.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
                 holder.duration.setVisibility(View.GONE);
                 holder.service_price.setVisibility(View.GONE);
+            } else {
+                holder.service_name.setTextColor(ContextCompat.getColor(mContext, R.color.text_color));
+                holder.duration.setVisibility(View.VISIBLE);
+                holder.service_price.setVisibility(View.VISIBLE);
             }
-        }else {
+        } else {
             holder.ly_booking_view.setVisibility(View.GONE);
             holder.service_view.setVisibility(View.VISIBLE);
         }
 
-        if(inCallList.get(position).isSelected){
-            holder.service_name.setTextColor(ContextCompat.getColor(mContext,R.color.colorPrimary));
-        }else  holder.service_name.setTextColor(ContextCompat.getColor(mContext,R.color.gray));
+        if (inCallList.get(position).isSelected) {
+            holder.service_name.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+        } else holder.service_name.setTextColor(ContextCompat.getColor(mContext, R.color.gray));
 
-        holder.service_name.setText(inCallList.get(position).title+"");
+        holder.service_name.setText(inCallList.get(position).title + "");
 
-        if(callType.equals("In Call")){
-            holder.service_price.setText("£" + inCallList.get(position).inCallPrice+"");
-        }else holder.service_price.setText("£" + inCallList.get(position).outCallPrice+"");
+        if (callType.equals("In Call")) {
+            holder.service_price.setText("£" + inCallList.get(position).inCallPrice + "");
+        } else holder.service_price.setText("£" + inCallList.get(position).outCallPrice + "");
 
 
         String hour = Helper.formateDateFromstring("HH:mm", "HH", inCallList.get(position).completionTime);
         String min = Helper.formateDateFromstring("HH:mm", "mm", inCallList.get(position).completionTime);
 
-        if(hour.equals("00")){
-            holder.duration.setText(min+" min");
-        }else holder.duration.setText(hour +" hr "+min+" min");
+        if (hour.equals("00")) {
+            holder.duration.setText(min + " min");
+        } else holder.duration.setText(hour + " hr " + min + " min");
     }
 
-    public interface childItemClick{
+    public interface childItemClick {
         void childClick(Services.ArtistServicesBean.SubServiesBean.ArtistservicesBean artistservicesBean, String callType, int adapterPosition);
     }
 
-    public void setClickListner(childItemClick click){
+    public void setClickListner(childItemClick click) {
         this.clickListner = click;
 
     }
@@ -99,10 +102,10 @@ public class IncallOutCallAdapter extends RecyclerView.Adapter<IncallOutCallAdap
         return inCallList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView tv_inoutcall_service;
-        RelativeLayout service_view,ly_booking_view;
-        TextView service_name,service_price,duration;
+        RelativeLayout service_view, ly_booking_view;
+        TextView service_name, service_price, duration;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -118,7 +121,13 @@ public class IncallOutCallAdapter extends RecyclerView.Adapter<IncallOutCallAdap
 
         @Override
         public void onClick(View v) {
-            clickListner.childClick(inCallList.get(getAdapterPosition()),callType,getAdapterPosition());
+            clickListner.childClick(inCallList.get(getAdapterPosition()), callType, getAdapterPosition());
+
+            for (int i = 0; i < inCallList.size(); i++) inCallList.get(i).isSelected = false;
+            inCallList.get(getAdapterPosition()).isSelected = true;
+
+            notifyDataSetChanged();
+
         }
     }
 }
