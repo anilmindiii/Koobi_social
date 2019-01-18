@@ -81,6 +81,8 @@ public class Services {
                 public String description;
                 public String bookingType;
                 public boolean isStaff;
+                public boolean incallStaff;
+                public boolean outcallStaff;
                 public boolean isSelected;
                 
             }

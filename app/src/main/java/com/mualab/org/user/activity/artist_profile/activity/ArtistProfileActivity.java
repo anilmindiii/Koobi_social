@@ -51,6 +51,7 @@ import com.mualab.org.user.Views.refreshviews.RjRefreshLayout;
 import com.mualab.org.user.activity.artist_profile.adapter.ArtistFeedAdapter;
 import com.mualab.org.user.activity.artist_profile.model.UserProfileData;
 import com.mualab.org.user.activity.authentication.LoginActivity;
+import com.mualab.org.user.activity.booking.BookingActivity;
 import com.mualab.org.user.activity.feeds.activity.CommentsActivity;
 import com.mualab.org.user.activity.feeds.activity.PreviewImageActivity;
 import com.mualab.org.user.activity.feeds.adapter.ViewPagerAdapter;
@@ -438,10 +439,14 @@ public class ArtistProfileActivity extends AppCompatActivity implements View.OnC
                 break;
 
             case R.id.btnBook:
-                /*Intent intent = new Intent(ArtistProfileActivity.this, BookingActivity.class);
+                Intent intent = new Intent(ArtistProfileActivity.this, BookingActivity.class);
+                intent.putExtra("_id",0);
                 intent.putExtra("artistId",artistId);
-                intent.putExtra("businessType",item.businessType);
-                startActivity(intent);*/
+                intent.putExtra("callType","In Call");
+
+                intent.putExtra("mainServiceName","");
+                intent.putExtra("subServiceName","");
+                startActivity(intent);
                 break;
 
             case R.id.btnFollow:
@@ -474,7 +479,7 @@ public class ArtistProfileActivity extends AppCompatActivity implements View.OnC
             case R.id.llAboutUs:
                 if (profileData != null)
                     if (!profileData.bio.equals("")) {
-                        Intent intent = new Intent(this, AboutUsActivity.class);
+                        intent = new Intent(this, AboutUsActivity.class);
                         intent.putExtra("bio", profileData.bio);
                         startActivity(intent);
                     } else MyToast.getInstance(this).showDasuAlert("No about us added");

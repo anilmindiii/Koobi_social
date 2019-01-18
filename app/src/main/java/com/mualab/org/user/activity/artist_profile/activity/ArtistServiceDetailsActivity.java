@@ -46,6 +46,7 @@ public class ArtistServiceDetailsActivity extends AppCompatActivity {
     private TextView id_tv_staff_text;
     private String callTypeString =  "";
     String  mainServiceName = "", subServiceName = "";
+    private boolean outcallStaff,incallStaff;
 
 
 
@@ -68,6 +69,8 @@ public class ArtistServiceDetailsActivity extends AppCompatActivity {
         callTypeString =  getIntent().getStringExtra("callType");
         mainServiceName =  getIntent().getStringExtra("mainServiceName");
         subServiceName =  getIntent().getStringExtra("subServiceName");
+        incallStaff =  getIntent().getBooleanExtra("incallStaff",false);
+        outcallStaff =  getIntent().getBooleanExtra("outcallStaff",false);
 
         callType.setText(callTypeString);
         detailsInfoList = new ArrayList<>();
@@ -93,6 +96,8 @@ public class ArtistServiceDetailsActivity extends AppCompatActivity {
 
                 intent.putExtra("mainServiceName",mainServiceName);
                 intent.putExtra("subServiceName",subServiceName);
+                intent.putExtra("incallStaff",incallStaff);
+                intent.putExtra("outcallStaff",outcallStaff);
                 startActivity(intent);
             }
         });

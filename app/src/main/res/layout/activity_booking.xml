@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_marginTop="-7dp"
+                android:layout_marginTop="-5dp"
                 android:layout_toStartOf="@+id/btnBook"
                 android:orientation="horizontal"
                 android:weightSum="1">
@@ -238,7 +238,6 @@
                     android:layout_gravity="center"
                     android:fontFamily="@font/nunito_regular"
                     android:gravity="center"
-                    android:text="Hair"
                     android:textColor="@color/gray"
                     android:textSize="16sp" />
 
@@ -268,7 +267,6 @@
                     android:layout_gravity="center"
                     android:fontFamily="@font/nunito_regular"
                     android:gravity="center"
-                    android:text="Hair Cut"
                     android:textColor="@color/gray"
                     android:textSize="16sp" />
 
@@ -337,8 +335,8 @@
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/btnToday"
                     style="@style/My_Button_Small.Invert"
-                    android:layout_width="80dp"
-                    android:layout_height="28dp"
+                    android:layout_width="70dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="11dp"
                     android:layout_marginTop="10dp"
@@ -380,79 +378,99 @@
 
                         </LinearLayout>
 
-                        <TextView
-                            style="@style/TextView.Medium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:fontFamily="@font/nunito_regular"
-                            android:text="@string/text_select_staff"
-                            android:textColor="@color/text_color"
-                            android:textSize="14sp" />
-
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/rcv_staff"
+                        <LinearLayout
+                            android:id="@+id/ly_staff_main"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:divider="@null"
-                            android:orientation="horizontal"
-                            android:overScrollMode="never"
-                            android:scrollbars="none"
-                            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/tvNoSlot"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="4dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="5dp"
-                            android:layout_marginTop="1dp"
-                            android:fontFamily="@font/nunito_regular"
-                            android:gravity="center"
-                            android:padding="2dp"
-                            android:text="@string/there_are_no_available_slots_please_select_another_day"
-                            android:textColor="@color/text_color"
-                            android:textSize="13sp"
-                            android:visibility="gone" />
-
-                        <TextView
-                            style="@style/TextView.Medium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginTop="5dp"
-                            android:fontFamily="@font/nunito_regular"
-                            android:text="@string/text_select_time"
-                            android:textColor="@color/text_color"
-                            android:textSize="14sp" />
-
-                        <android.support.v4.widget.NestedScrollView
-                            android:layout_width="match_parent"
-                            android:layout_height="90dp">
+                            <TextView
+                                style="@style/TextView.Medium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:fontFamily="@font/nunito_regular"
+                                android:text="@string/text_select_staff"
+                                android:textColor="@color/text_color"
+                                android:textSize="14sp" />
 
                             <android.support.v7.widget.RecyclerView
-                                android:id="@+id/rcv_timeSlot"
+                                android:id="@+id/rcv_staff"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="6dp"
-                                android:layout_marginRight="6dp"
-                                android:nestedScrollingEnabled="false"
+                                android:divider="@null"
+                                android:orientation="horizontal"
                                 android:overScrollMode="never"
                                 android:scrollbars="none"
-                                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                                app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
 
 
-                        </android.support.v4.widget.NestedScrollView>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ly_time_slot_main"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/TextView.Medium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_marginTop="5dp"
+                                android:fontFamily="@font/nunito_regular"
+                                android:text="@string/text_select_time"
+                                android:textColor="@color/text_color"
+                                android:textSize="14sp" />
+
+
+                            <TextView
+                                android:id="@+id/tvNoSlot"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="4dp"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="5dp"
+                                android:layout_marginTop="1dp"
+                                android:fontFamily="@font/nunito_regular"
+                                android:gravity="center"
+                                android:padding="2dp"
+                                android:text="@string/there_are_no_available_slots_please_select_another_day"
+                                android:textColor="@color/text_color"
+                                android:textSize="13sp"
+                                android:visibility="gone" />
+
+                            <android.support.v4.widget.NestedScrollView
+                                android:layout_width="match_parent"
+                                android:layout_height="90dp">
+
+                                <android.support.v7.widget.RecyclerView
+                                    android:id="@+id/rcv_timeSlot"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="6dp"
+                                    android:layout_marginRight="6dp"
+                                    android:nestedScrollingEnabled="false"
+                                    android:overScrollMode="never"
+                                    android:scrollbars="none"
+                                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
+                            </android.support.v4.widget.NestedScrollView>
+
+
+
+                        </LinearLayout>
 
 
                         <android.support.v7.widget.AppCompatButton
                             android:id="@+id/btnCOnfirmBooking"
                             style="@style/My_Button_Small.Invert"
                             android:layout_width="match_parent"
-                            android:layout_height="32dp"
+                            android:layout_height="30dp"
                             android:layout_marginBottom="10dp"
                             android:layout_marginTop="10dp"
                             android:text="@string/text_continue_booking"

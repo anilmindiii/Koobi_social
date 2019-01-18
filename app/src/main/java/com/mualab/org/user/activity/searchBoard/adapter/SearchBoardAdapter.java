@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.mualab.org.user.R;
 import com.mualab.org.user.activity.artist_profile.activity.ArtistProfileActivity;
+import com.mualab.org.user.activity.booking.BookingActivity;
 import com.mualab.org.user.activity.feeds.adapter.LoadingViewHolder;
 import com.mualab.org.user.data.model.SearchBoard.ArtistsSearchBoard;
 import com.mualab.org.user.utils.Util;
@@ -197,9 +198,15 @@ public class SearchBoardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             ArtistsSearchBoard item = artistsList.get(getAdapterPosition());
             switch (v.getId()){
                 case R.id.btnBook:
-                  /*  Intent intent = new Intent(context, BookingActivity.class);
-                    intent.putExtra("item",item);
-                    context.startActivity(intent);*/
+
+                    Intent intent = new Intent(context, BookingActivity.class);
+                    intent.putExtra("_id",0);
+                    intent.putExtra("artistId",item._id);
+                    intent.putExtra("callType","In Call");
+
+                    intent.putExtra("mainServiceName","");
+                    intent.putExtra("subServiceName","");
+                    context.startActivity(intent);
                     break;
 
                 case R.id.ivProfile:

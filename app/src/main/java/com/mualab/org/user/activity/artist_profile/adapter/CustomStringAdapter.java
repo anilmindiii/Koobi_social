@@ -40,7 +40,6 @@ public class CustomStringAdapter extends RecyclerView.Adapter<CustomStringAdapte
     }
 
 
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -53,7 +52,7 @@ public class CustomStringAdapter extends RecyclerView.Adapter<CustomStringAdapte
     }
 
     public interface onClickItemCategory {
-        void onclick(Services.ArtistServicesBean.SubServiesBean bean,int pos);
+        void onclick(Services.ArtistServicesBean.SubServiesBean bean, int pos);
     }
 
     @Override
@@ -66,11 +65,12 @@ public class CustomStringAdapter extends RecyclerView.Adapter<CustomStringAdapte
         }
     }
 
-    public void clickItem(){
-        onClickItemListner.onclick(services.artistServices.get(pos), pos);
+    public void clickItem() {
+        if (services.artistServices.size() != 0)
+            onClickItemListner.onclick(services.artistServices.get(pos), pos);
     }
 
-    public void clickItem(int customPosition){
+    public void clickItem(int customPosition) {
         onClickItemListner.onclick(services.artistServices.get(customPosition), customPosition);
     }
 
@@ -96,11 +96,11 @@ public class CustomStringAdapter extends RecyclerView.Adapter<CustomStringAdapte
 
         @Override
         public void onClick(View v) {
-            pos  = getAdapterPosition();
+            pos = getAdapterPosition();
             if (type.equals("bizType")) {
-                onClickItemListner.onclick(services.artistServices.get(getAdapterPosition()),getAdapterPosition());
+                onClickItemListner.onclick(services.artistServices.get(getAdapterPosition()), getAdapterPosition());
             } else {
-                onClickCategoryListner.onclick(artistServicesBean.get(getAdapterPosition()),getAdapterPosition());
+                onClickCategoryListner.onclick(artistServicesBean.get(getAdapterPosition()), getAdapterPosition());
             }
         }
     }

@@ -100,6 +100,9 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.ViewHolder>{
 
         @Override
         public void onClick(View v) {
+            if(getAdapterPosition() == 0){
+                staffInfoBeanList.get(getAdapterPosition()).staffId = 0;
+            }
 
             clickListner.OnClickAdapter(staffInfoBeanList.get(getAdapterPosition()));
 

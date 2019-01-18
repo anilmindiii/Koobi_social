@@ -102,6 +102,9 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
                 intent.putExtra("mainServiceName", mainServiceName);
                 intent.putExtra("subServiceName", subServiceName);
 
+                intent.putExtra("incallStaff", artistservicesBean.incallStaff);
+                intent.putExtra("outcallStaff", artistservicesBean.outcallStaff);
+
                 startActivity(intent);
             }
         };

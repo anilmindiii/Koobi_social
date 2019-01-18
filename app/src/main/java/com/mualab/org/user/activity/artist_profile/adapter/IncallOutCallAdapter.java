@@ -55,15 +55,31 @@ public class IncallOutCallAdapter extends RecyclerView.Adapter<IncallOutCallAdap
             holder.service_view.setVisibility(View.GONE);
             holder.ly_booking_view.setVisibility(View.VISIBLE);
 
-            if (inCallList.get(position).isStaff) {
-                holder.service_name.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
-                holder.duration.setVisibility(View.GONE);
-                holder.service_price.setVisibility(View.GONE);
-            } else {
-                holder.service_name.setTextColor(ContextCompat.getColor(mContext, R.color.text_color));
-                holder.duration.setVisibility(View.VISIBLE);
-                holder.service_price.setVisibility(View.VISIBLE);
+            if (callType.equals("In Call")) {
+
+                if (inCallList.get(position).incallStaff) {
+                    holder.service_name.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+                    holder.duration.setVisibility(View.GONE);
+                    holder.service_price.setVisibility(View.GONE);
+                } else {
+                    holder.service_name.setTextColor(ContextCompat.getColor(mContext, R.color.text_color));
+                    holder.duration.setVisibility(View.VISIBLE);
+                    holder.service_price.setVisibility(View.VISIBLE);
+
+                }
+            }else {
+                if (inCallList.get(position).outcallStaff) {
+                    holder.service_name.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+                    holder.duration.setVisibility(View.GONE);
+                    holder.service_price.setVisibility(View.GONE);
+                } else {
+                    holder.service_name.setTextColor(ContextCompat.getColor(mContext, R.color.text_color));
+                    holder.duration.setVisibility(View.VISIBLE);
+                    holder.service_price.setVisibility(View.VISIBLE);
+
+                }
             }
+
         } else {
             holder.ly_booking_view.setVisibility(View.GONE);
             holder.service_view.setVisibility(View.VISIBLE);
