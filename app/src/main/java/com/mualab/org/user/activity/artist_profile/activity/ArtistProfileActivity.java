@@ -430,10 +430,10 @@ public class ArtistProfileActivity extends AppCompatActivity implements View.OnC
             case R.id.ivFav:
                 if (profileData.favoriteStatus.equals("1")) {
                     profileData.favoriteStatus = "0";
-                    ivFav.setImageDrawable(getResources().getDrawable(R.drawable.inactive_like_ico));
+                    ivFav.setImageDrawable(getResources().getDrawable(R.drawable.inactive_star_co));
                 } else {
                     profileData.favoriteStatus = "1";
-                    ivFav.setImageDrawable(getResources().getDrawable(R.drawable.active_like_ico));
+                    ivFav.setImageDrawable(getResources().getDrawable(R.drawable.active_star_ico));
                 }
                 apiForFavourite();
                 break;
@@ -659,9 +659,9 @@ public class ArtistProfileActivity extends AppCompatActivity implements View.OnC
 
         if (profileData != null) {
             if (profileData.favoriteStatus.equals("1")) {
-                ivFav.setImageDrawable(getResources().getDrawable(R.drawable.active_like_ico));
+                ivFav.setImageDrawable(getResources().getDrawable(R.drawable.active_star_ico));
             } else {
-                ivFav.setImageDrawable(getResources().getDrawable(R.drawable.inactive_like_ico));
+                ivFav.setImageDrawable(getResources().getDrawable(R.drawable.inactive_star_co));
             }
 
             if (profileData.followerStatus.equals("1")) {

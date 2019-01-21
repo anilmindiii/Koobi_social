@@ -941,8 +941,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         String user_name="";
 
         final Map<String, String> params = new HashMap<>();
-        if(userName.toString().contains("@")){
-             user_name = userName.toString().replace("@","");
+        if(userName.toString().startsWith("@")){
+
+            user_name = userName.toString().replaceFirst("@","");
             params.put("userName", user_name+"");
         }else params.put("userName", userName+"");
         new HttpTask(new HttpTask.Builder(mContext, "profileByUserName", new HttpResponceListner.Listener() {

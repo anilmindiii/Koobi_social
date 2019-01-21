@@ -260,7 +260,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         String user_name="";
 
         final Map<String, String> params = new HashMap<>();
-        if(userName.toString().contains("@")){
+        if(userName.toString().startsWith("@")){
             user_name = userName.toString().replace("@","");
             params.put("userName", user_name+"");
         }else params.put("userName", userName+"");

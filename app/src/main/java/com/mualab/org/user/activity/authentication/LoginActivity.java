@@ -80,14 +80,14 @@ public class LoginActivity extends AppCompatActivity {
                 String username = userInfoHashmap.get("username");
                 String profileImage = userInfoHashmap.get("profile_picture");
 
-               if(full_name.contains(" ")){
-                   String[] splited = full_name.split("\\s+");
-                   String firstname = splited[0];
-                   String lastname = splited[1];
-                   checkSocialUser(socialId,"insta","",firstname,lastname,profileImage,username);
-               }else {
-                   checkSocialUser(socialId,"insta","",full_name,"",profileImage,username);
-               }
+                if (full_name.contains(" ")) {
+                    String[] splited = full_name.split("\\s+");
+                    String firstname = splited[0];
+                    String lastname = splited[1];
+                    checkSocialUser(socialId, "insta", "", firstname, lastname, profileImage, username);
+                } else {
+                    checkSocialUser(socialId, "insta", "", full_name, "", profileImage, username);
+                }
             } else if (msg.what == InstagramApp.WHAT_FINALIZE) {
                 Toast.makeText(LoginActivity.this, "Check your network.",
                         Toast.LENGTH_SHORT).show();
@@ -228,7 +228,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (mApp.hasAccessToken()) {
                     mApp.fetchUserName(handler);
-                }else mApp.authorize();
+                } else mApp.authorize();
             }
         });
 
@@ -296,12 +296,10 @@ public class LoginActivity extends AppCompatActivity {
                 public void onNetworkChange(Dialog dialog, boolean isConnected) {
                     if (isConnected) {
                         dialog.dismiss();
-                        checkSocialUser(socialId,socialType,email, firstname, lastname, profileImage,username);
+                        checkSocialUser(socialId, socialType, email, firstname, lastname, profileImage, username);
                     }
-
                 }
             }).show();
-
         }
 
         String deviceToken = FirebaseInstanceId.getInstance().getToken();//"androidTest";
@@ -334,7 +332,7 @@ public class LoginActivity extends AppCompatActivity {
                             // checkUserRember(user);
                             writeNewUser(user);
                         }
-                    } else{
+                    } else {
                         // goto 3rd screen for register
 
                         User user = new User();
@@ -346,7 +344,7 @@ public class LoginActivity extends AppCompatActivity {
                         user.profileImage = profileImage;
                         user.userName = username;
                         startActivityForResult(new Intent(LoginActivity.this, Registration2Activity.class)
-                                .putExtra(Constant.USER, user),2);
+                                .putExtra(Constant.USER, user), 2);
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         finish();
                     }
@@ -373,7 +371,7 @@ public class LoginActivity extends AppCompatActivity {
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         FirebaseUser firebaseUser = new FirebaseUser();
         firebaseUser.firebaseToken = FirebaseInstanceId.getInstance().getToken();
-        ;
+
         firebaseUser.isOnline = 1;
         firebaseUser.lastActivity = ServerValue.TIMESTAMP;
         if (user.profileImage.isEmpty())
@@ -438,7 +436,7 @@ public class LoginActivity extends AppCompatActivity {
                             MyToast.getInstance(LoginActivity.this).showDasuAlert(getResources().getString(R.string.msg_some_thing_went_wrong));
                         } else {
                             try {
-                                String  email = "";
+                                String email = "";
                                 final String socialId = object.getString("id");
                                 final String firstname = object.getString("first_name");
                                 final String lastname = object.getString("last_name");
@@ -446,12 +444,12 @@ public class LoginActivity extends AppCompatActivity {
                                 final String profileImage = "https://graph.facebook.com/" + sSocialId + "/picture?width=200&height=200";
                                 final String deviceToken = FirebaseInstanceId.getInstance().getToken();
 
-                                if(object.has("email")){
-                                       email =  object.getString("email");
+                                if (object.has("email")) {
+                                    email = object.getString("email");
                                 }
 
 
-                                checkSocialUser(socialId,"facebook",email,firstname,lastname,profileImage,"");
+                                checkSocialUser(socialId, "facebook", email, firstname, lastname, profileImage, "");
 
 
                             } catch (JSONException e) {

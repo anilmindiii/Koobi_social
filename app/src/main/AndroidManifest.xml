@@ -278,11 +278,13 @@
             android:name=".activity.artist_profile.activity.ArtistServiceDetailsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/StatusBarBlack" />
-        <activity android:name=".activity.booking.BookingActivity"
+        <activity
+            android:name=".activity.booking.BookingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
+        <activity android:name=".activity.booking.BookingConfirmActivity"
             android:screenOrientation="portrait"
             android:theme="@style/StatusBarBlack"/>
-
     </application>
-
 
 </manifest>

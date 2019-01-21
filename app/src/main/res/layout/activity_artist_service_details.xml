@@ -17,6 +17,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="@dimen/dp50"
         android:scrollbars="">
 
         <LinearLayout
@@ -108,19 +109,7 @@
             </LinearLayout>
 
 
-            <TextView
-                android:id="@+id/btn_book"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:text="@string/btn_book_now"
-                android:gravity="center"
-                android:fontFamily="@font/nunito_regular"
-                android:textSize="18sp"
-                android:layout_margin="16dp"
-                android:layout_alignParentBottom="true"
-                android:backgroundTint="@color/colorPrimary"
-                android:background="@drawable/bg_button"
-                android:textColor="@color/white" />
+
 
         </LinearLayout>
 
@@ -128,6 +117,18 @@
 
 
 
-
+    <TextView
+        android:id="@+id/btn_book"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:text="@string/btn_book_now"
+        android:gravity="center"
+        android:fontFamily="@font/nunito_regular"
+        android:layout_margin="16dp"
+        android:textSize="14sp"
+        android:layout_alignParentBottom="true"
+        android:backgroundTint="@color/colorPrimary"
+        android:background="@drawable/bg_button"
+        android:textColor="@color/white" />
 
 </RelativeLayout>

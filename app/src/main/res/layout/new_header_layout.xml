@@ -120,11 +120,11 @@
 
         <ImageView
             android:id="@+id/ivFav"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:padding="12dp"
             android:visibility="gone"
-            android:src="@drawable/inactive_like_ico"
+            android:src="@drawable/inactive_star_co"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true" />

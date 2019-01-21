@@ -9,11 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.mualab.org.user.R;
 import com.mualab.org.user.activity.artist_profile.model.Services;
 import com.mualab.org.user.utils.Helper;
-
 import java.util.ArrayList;
 
 /**
@@ -62,7 +60,7 @@ public class IncallOutCallAdapter extends RecyclerView.Adapter<IncallOutCallAdap
                     holder.duration.setVisibility(View.GONE);
                     holder.service_price.setVisibility(View.GONE);
                 } else {
-                    holder.service_name.setTextColor(ContextCompat.getColor(mContext, R.color.text_color));
+                    holder.service_name.setTextColor(ContextCompat.getColor(mContext, R.color.black));
                     holder.duration.setVisibility(View.VISIBLE);
                     holder.service_price.setVisibility(View.VISIBLE);
 
@@ -73,7 +71,7 @@ public class IncallOutCallAdapter extends RecyclerView.Adapter<IncallOutCallAdap
                     holder.duration.setVisibility(View.GONE);
                     holder.service_price.setVisibility(View.GONE);
                 } else {
-                    holder.service_name.setTextColor(ContextCompat.getColor(mContext, R.color.text_color));
+                    holder.service_name.setTextColor(ContextCompat.getColor(mContext, R.color.black));
                     holder.duration.setVisibility(View.VISIBLE);
                     holder.service_price.setVisibility(View.VISIBLE);
 
@@ -87,7 +85,7 @@ public class IncallOutCallAdapter extends RecyclerView.Adapter<IncallOutCallAdap
 
         if (inCallList.get(position).isSelected) {
             holder.service_name.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
-        } else holder.service_name.setTextColor(ContextCompat.getColor(mContext, R.color.gray));
+        } else holder.service_name.setTextColor(ContextCompat.getColor(mContext, R.color.black));
 
         holder.service_name.setText(inCallList.get(position).title + "");
 

@@ -65,6 +65,7 @@ public class TimeSlotAdapter extends RecyclerView.Adapter<TimeSlotAdapter.ViewHo
                 for(int i =0;i<timeSlotList.size();i++){
                     timeSlotList.get(i).isSelectSlot = false;
                 }
+
                 timeSlotList.get(position).isSelectSlot = true;
                 notifyDataSetChanged();
             }

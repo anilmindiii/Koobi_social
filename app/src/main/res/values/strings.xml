@@ -418,6 +418,7 @@
     <string name="invitation">Business Invitaion</string>
     <string name="message">Message</string>
     <string name="details">Details</string>
+    <string name="booking_confirm">Booking Confirmation</string>
 
 
 </resources>

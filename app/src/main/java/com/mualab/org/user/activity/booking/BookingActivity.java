@@ -72,7 +72,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
     private CustomStringAdapter adapterBizType, adapterCategory;
     private RecyclerView rcv_biz_type, rcv_category_type, rcv_incall;
     private Services services;
-    private TextView tv_bizType, tv_category, tvArtistName, tvbizDate;
+    private TextView tv_bizType, tv_category, tvArtistName, tvbizDate,btnCOnfirmBooking;
     private ImageView iv_down_arrow_bizType, iv_down_arrow_category, ivProfile;
     private ArrayList<Services.ArtistServicesBean.SubServiesBean.ArtistservicesBean> inCallList, outCallList;
     private ScrollView main_scroll_view;
@@ -133,6 +133,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+        btnCOnfirmBooking = findViewById(R.id.btnCOnfirmBooking);
         tvNoSlot = findViewById(R.id.tvNoSlot);
         ly_staff_main = findViewById(R.id.ly_staff_main);
         ly_time_slot_main = findViewById(R.id.ly_time_slot_main);
@@ -192,6 +193,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         ly_category.setOnClickListener(this);
         main_scroll_view.setOnClickListener(this);
         ly_outcall.setOnClickListener(this);
+        btnCOnfirmBooking.setOnClickListener(this);
         btnToday.setOnClickListener(this);
 
 
@@ -373,6 +375,11 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                     selectedDate = year + "-" + month + "-" + day;
                 }
                 //     apiForGetSlots();
+                break;
+
+            case R.id.btnCOnfirmBooking:
+                Intent intent = new Intent(BookingActivity.this,BookingConfirmActivity.class);
+                startActivityForResult(intent,111);
                 break;
 
         }
@@ -562,8 +569,11 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                             }
                         }
 
-                        if (!from.equals("")) tvbizDate.setText(end + " & " + from);
-                        else tvbizDate.setText(end);
+                        if (!from.equals(""))
+                            tvbizDate.setText(end + " & " + from);
+                        else if(end.equals("")){
+                            tvbizDate.setText("NA");
+                        }else   tvbizDate.setText(end);
 
 /*.......................................................................................................................*/
 
@@ -788,6 +798,8 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                             } else ly_staff_main.setVisibility(View.GONE);
                         }
 
+
+
                     }
 
                 } catch (Exception e) {
@@ -853,9 +865,17 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                         Gson gson = new Gson();
                         ServiceInfoBooking infoBooking = gson.fromJson(response, ServiceInfoBooking.class);
                         infoBooking.staffInfo.get(0).isSelected = true;
-                        staffInfoBeanList.addAll(infoBooking.staffInfo);
-                        staffAdapter.notifyDataSetChanged();
 
+
+                        if(infoBooking.staffInfo.size()==1){
+                            ly_staff_main.setVisibility(View.GONE);
+                        }else{
+                            ly_staff_main.setVisibility(View.VISIBLE);
+                            staffInfoBeanList.addAll(infoBooking.staffInfo);
+
+                        }
+
+                        staffAdapter.notifyDataSetChanged();
                         apiForstaffSlot(String.valueOf(0));
                         ly_time_slot_main.setVisibility(View.VISIBLE);
                     }
@@ -958,7 +978,11 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
 
                     if (timeSlotList.size() == 0) {
                         tvNoSlot.setVisibility(View.VISIBLE);
-                    } else tvNoSlot.setVisibility(View.GONE);
+                        ly_time_slot_main.setVisibility(View.GONE);
+                    } else {
+                        tvNoSlot.setVisibility(View.GONE);
+                        ly_time_slot_main.setVisibility(View.VISIBLE);
+                    }
 
                     rcv_timeSlot.scrollToPosition(0);
                     timeSlotAdapter.notifyDataSetChanged();

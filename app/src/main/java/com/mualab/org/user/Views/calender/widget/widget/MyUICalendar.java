@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,8 +68,8 @@ public abstract class MyUICalendar extends LinearLayout {
 
     private int mTextColor = Color.BLACK;
     private int mPrimaryColor = Color.BLACK;
-    private int mTodayItemTextColor = Color.WHITE;
-    private int mSelectedItemTextColor = Color.WHITE;
+    private int mTodayItemTextColor = Color.GRAY;
+    private int mSelectedItemTextColor = Color.GREEN;
 
     // private Drawable mTodayItemBackgroundDrawable = getResources().getDrawable(R.drawable.circle_black_stroke_background);
     private Drawable mTodayItemBackgroundDrawable =
@@ -183,8 +184,10 @@ public abstract class MyUICalendar extends LinearLayout {
 
         if (style == STYLE_LIGHT) {
             setTextColor(Color.BLACK);
-            setPrimaryColor(Color.WHITE);
-            setTodayItemTextColor(Color.WHITE);
+
+            setPrimaryColor(ContextCompat.getColor(getContext(),R.color.white));
+            setTodayItemTextColor(ContextCompat.getColor(getContext(),R.color.colorPrimary));
+
             setTodayItemBackgroundDrawable(
                     getResources().getDrawable(R.drawable.circle_blue_solid_background));
             setSelectedItemTextColor(Color.WHITE);
@@ -275,7 +278,7 @@ public abstract class MyUICalendar extends LinearLayout {
     public void setTextColor(int textColor) {
         this.mTextColor = textColor;
         redraw();
-        mTxtTitle.setTextColor(getResources().getColor(R.color.colorPrimary));
+        mTxtTitle.setTextColor(getResources().getColor(R.color.black));
     }
 
     public int getPrimaryColor() {

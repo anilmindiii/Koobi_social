@@ -3,6 +3,7 @@ package com.mualab.org.user.Views.calender.widget.widget;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -159,19 +160,19 @@ public class MyFlexibleCalendar extends MyUICalendar {
                 if (isToady(day)) {
 
                     mTxtTitle.setText(dateFormat.format(mAdapter.getCalendar().getTime()));
-                    txtDay.setBackground(getTodayItemBackgroundDrawable());
+                    //txtDay.setBackground(getTodayItemBackgroundDrawable());
                     txtDay.setTextColor(getTodayItemTextColor());
 
-                    if (isFirstimeLoad)
+                   /* if (isFirstimeLoad)
                         txtDay.setBackground(getSelectedItemBackgroundDrawable());
                     else
-                        txtDay.setBackground(getTodayItemBackgroundDrawable());
+                        txtDay.setBackground(getTodayItemBackgroundDrawable());*/
                 }
 
                 // set the selected item
                 if (isSelectedDay(day)) {
                     if (!isFirstimeLoad){
-                        /*Calendar todayCal = Calendar.getInstance();
+                        Calendar todayCal = Calendar.getInstance();
                         int cYear  = todayCal.get(Calendar.YEAR);
                         int cMonth  = todayCal.get(Calendar.MONTH)+1;
                         int cDay  = todayCal.get(Calendar.DAY_OF_MONTH);
@@ -182,15 +183,15 @@ public class MyFlexibleCalendar extends MyUICalendar {
 
                         if (year>=cYear && month>=cMonth){
                             if (year==cYear && month==cMonth && dayOfMonth<cDay){
-                                MyToast.getInstance(mContext).showDasuAlert("You can't select previous date");
+                              //  MyToast.getInstance(mContext).showDasuAlert("You can't select previous date");
                             }else {
                                 mTxtTitle.setText(dateFormat.format(mAdapter.getCalendar().getTime()));
-                                txtDay.setBackgroundDrawable(getSelectedItemBackgroundDrawable());
-                                txtDay.setTextColor(getSelectedItemTextColor());
+                               // txtDay.setBackgroundDrawable(getSelectedItemBackgroundDrawable());
+                               // txtDay.setTextColor(getSelectedItemTextColor());
                             }
                         }else {
-                            MyToast.getInstance(mContext).showDasuAlert("You can't select previous date");
-                        }*/
+                            //MyToast.getInstance(mContext).showDasuAlert("You can't select previous date");
+                        }
 
                         mTxtTitle.setText(dateFormat.format(mAdapter.getCalendar().getTime()));
                         txtDay.setBackground(getSelectedItemBackgroundDrawable());
@@ -235,7 +236,8 @@ public class MyFlexibleCalendar extends MyUICalendar {
                 View view = mInflater.inflate(R.layout.layout_day_of_week, null);
                 TextView txtDayOfWeek = view.findViewById(R.id.txt_day_of_week);
                 txtDayOfWeek.setText(dayOfWeekIds[(i + getFirstDayOfWeek()) % 7]);
-                txtDayOfWeek.setTextColor(getResources().getColor(R.color.colorPrimary));
+                txtDayOfWeek.setTextColor(ContextCompat.getColor(getContext(),R.color.black));
+
 
                 //ViewGroup.LayoutParams.WRAP_CONTENT
                 view.setLayoutParams(new TableRow.LayoutParams(

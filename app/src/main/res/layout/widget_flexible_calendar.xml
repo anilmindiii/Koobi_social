@@ -28,7 +28,6 @@
                 android:gravity="center"
                 android:layout_centerVertical="true"
                 android:padding="5dp"
-                android:layout_marginLeft="10dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 >
@@ -52,7 +51,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:padding="5dp"
-                android:layout_marginRight="10dp"
                 >
 
                 <ImageView
@@ -84,7 +82,6 @@
                 android:gravity="center"
                 android:layout_centerVertical="true"
                 android:padding="5dp"
-                android:layout_marginLeft="10dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true">
 
@@ -98,6 +95,7 @@
                     />
 
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/btn_next_week"
                 android:layout_width="30dp"
@@ -106,7 +104,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:padding="5dp"
-                android:layout_marginRight="10dp"
                 >
 
                 <ImageView
@@ -123,13 +120,15 @@
 
         </RelativeLayout>
 
+
+
         <TextView
             android:id="@+id/txt_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:padding="8dp"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/text_color"
             android:fontFamily="@font/nunito_regular"
             android:textSize="16sp"
             android:text="Nov 2018" />
