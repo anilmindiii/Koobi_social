@@ -208,6 +208,7 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
                                 if (artistServicesBean.subServies.size() > 0) {
                                     if (artistServicesBean.subServies.get(0) != null) {
                                         tv_category.setText(artistServicesBean.subServies.get(0).subServiceName + "");
+                                        subServiceName = artistServicesBean.subServies.get(0).subServiceName;
                                         inCallList.clear();
                                         outCallList.clear();
                                         for (int i = 0; i < artistServicesBean.subServies.get(0).artistservices.size(); i++) {
@@ -216,7 +217,6 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
 
                                                 inCallList.add(artistServicesBean.subServies.get(0).artistservices.get(i));
                                                 outCallList.add(artistServicesBean.subServies.get(0).artistservices.get(i));
-
                                             } else if (artistServicesBean.subServies.get(0).artistservices.get(i).bookingType.equals("Outcall")) {
                                                 outCallList.add(artistServicesBean.subServies.get(0).artistservices.get(i));
                                             } else if (artistServicesBean.subServies.get(0).artistservices.get(i).bookingType.equals("Incall")) {

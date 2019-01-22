@@ -21,7 +21,7 @@ import java.util.List;
 
 /**
  * Created by mindiii on 16/1/19.
- */
+ **/
 
 public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.ViewHolder>{
     List<ServiceInfoBooking.StaffInfoBean> staffInfoBeanList;

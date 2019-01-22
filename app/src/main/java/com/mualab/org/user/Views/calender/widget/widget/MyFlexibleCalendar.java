@@ -186,16 +186,16 @@ public class MyFlexibleCalendar extends MyUICalendar {
                               //  MyToast.getInstance(mContext).showDasuAlert("You can't select previous date");
                             }else {
                                 mTxtTitle.setText(dateFormat.format(mAdapter.getCalendar().getTime()));
-                               // txtDay.setBackgroundDrawable(getSelectedItemBackgroundDrawable());
-                               // txtDay.setTextColor(getSelectedItemTextColor());
+                                txtDay.setBackground(getSelectedItemBackgroundDrawable());
+                                txtDay.setTextColor(getSelectedItemTextColor());
                             }
                         }else {
                             //MyToast.getInstance(mContext).showDasuAlert("You can't select previous date");
                         }
 
                         mTxtTitle.setText(dateFormat.format(mAdapter.getCalendar().getTime()));
-                        txtDay.setBackground(getSelectedItemBackgroundDrawable());
-                        txtDay.setTextColor(getSelectedItemTextColor());
+                        //txtDay.setBackground(getSelectedItemBackgroundDrawable());
+                        //txtDay.setTextColor(getSelectedItemTextColor());
                     }
                 }
             }
