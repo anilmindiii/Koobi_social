@@ -282,9 +282,14 @@
             android:name=".activity.booking.BookingActivity"
             android:screenOrientation="portrait"
             android:theme="@style/StatusBarBlack" />
-        <activity android:name=".activity.booking.BookingConfirmActivity"
+        <activity
+            android:name=".activity.booking.BookingConfirmActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/StatusBarBlack"/>
+            android:theme="@style/StatusBarBlack" />
+        <activity
+            android:name=".activity.booking.VoucherCodesActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" ></activity>
     </application>
 
 </manifest>

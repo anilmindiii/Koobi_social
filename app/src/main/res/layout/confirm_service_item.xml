@@ -23,18 +23,31 @@
             android:src="@drawable/user_placeholder"/>
 
         <TextView
+            android:id="@+id/tv_edit"
+            android:layout_toLeftOf="@+id/tv_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/nunito_semibold"
             android:text="Edit"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:textColor="@color/gray"
             android:layout_marginLeft="45dp"
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/tv_title"
+            android:id="@+id/tv_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_semibold"
+            android:text="Delete"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/gray"
+            android:layout_marginLeft="10dp"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/nunito_semibold"
@@ -86,7 +99,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/nunito_regular"
-            android:text="Make up"
             android:textColor="@color/gray"
             android:layout_marginRight="30dp"
             android:maxLines="2"
@@ -94,7 +106,54 @@
             android:textSize="12sp" />
 
         <View
-            android:layout_below="@+id/tv_address"
+            android:layout_below="@+id/tv_service_name"
+            android:layout_width="match_parent"
+            android:layout_height=".7dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/gray2"
+            />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="40dp"
+            android:tint="@color/gray"
+            android:src="@drawable/ic_navigate_next_white"
+            android:layout_alignParentRight="true" />
+
+        <TextView
+            android:id="@+id/tv_price_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_semibold"
+            android:text="@string/text_price"
+            android:textColor="@color/text_color"
+            android:layout_marginRight="45dp"
+            android:textSize="14sp" />
+
+
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_below="@+id/tv_price_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_regular"
+            android:textColor="@color/gray"
+            android:layout_marginRight="30dp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textSize="12sp" />
+
+        <View
+            android:layout_below="@+id/tv_price"
             android:layout_width="match_parent"
             android:layout_height=".7dp"
             android:layout_marginTop="5dp"
@@ -134,7 +193,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/nunito_regular"
-            android:text="Mindiii System pvt limited"
             android:textColor="@color/gray"
             android:layout_marginRight="30dp"
             android:maxLines="2"

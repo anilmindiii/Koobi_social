@@ -187,6 +187,7 @@
                         android:padding="5dp"
                         android:layout_gravity="center"
                         android:layout_marginLeft="5dp"
+                        android:tint="@color/colorPrimary"
                         android:src="@drawable/ic_location_pin" />
 
                     <TextView

@@ -28,7 +28,6 @@ public class TimeSlotAdapter extends RecyclerView.Adapter<TimeSlotAdapter.ViewHo
 
     Context mContext;
     ArrayList<TimeSlotInfo> timeSlotList;
-    int holdPosition;
     getSelectTime selectTimeListner;
 
     public TimeSlotAdapter(Context mContext, ArrayList<TimeSlotInfo> timeSlotList,getSelectTime selectTimeListner) {
@@ -71,8 +70,10 @@ public class TimeSlotAdapter extends RecyclerView.Adapter<TimeSlotAdapter.ViewHo
         holder.ly_main.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timeSlotList.get(holdPosition).isSelectSlot = false;
-                holdPosition = position;
+                for(int i =0;i<timeSlotList.size();i++){
+                    timeSlotList.get(i).isSelectSlot = false;
+                }
+
                 timeSlotList.get(position).isSelectSlot = true;
                 notifyDataSetChanged();
 

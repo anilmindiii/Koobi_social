@@ -98,16 +98,16 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
     private ArrayList<TimeSlotInfo> timeSlotList;
     private String businessType = "", preprationTime = "";
 
-    private String selectedDate, sMonth = "", sDay, currentTime, lat = "", lng = "",startTime = "";
+    private String selectedDate, sMonth = "", sDay, currentTime, lat = "", lng = "", startTime = "";
     private MyFlexibleCalendar viewCalendar;
     private boolean isTodayClicked = false;
     private SimpleDateFormat input, dateFormat;
-    private int dayId,staff=0,serviceId,subServiceId;
+    private int dayId, staff = 0, serviceId, subServiceId;
     private SimpleDateFormat dateSdf, timeSdf;
     private RatingBar rating;
     private LinearLayout ly_staff_main, ly_time_slot_main;
-    private boolean outcallStaff, incallStaff;
-    private int totalTime,endTime;
+    private boolean outcallStaff, incallStaff,isBankAdded;
+    private int totalTime, endTime;
     private Double price;
 
     @Override
@@ -171,7 +171,6 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
             public void childClick(Services.ArtistServicesBean.SubServiesBean.ArtistservicesBean artistservicesBean, String callType, int adapterPosition) {
                 childId = artistservicesBean._id;
                 artistServiceId = String.valueOf(artistservicesBean._id);
-
 
 
                 String completeTime = Helper.formateDateFromstring("HH:mm", "mm", artistservicesBean.completionTime);
@@ -260,9 +259,9 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         endTime = (getMinutes(bean.completionTime) + getMinutes(preprationTime));
 
         endTime = Integer.parseInt(completeTime) + Integer.parseInt(preprationminutes);
-        if(isOutCallSelected){
+        if (isOutCallSelected) {
             price = bean.outCallPrice;
-        }else price = bean.inCallPrice;
+        } else price = bean.inCallPrice;
 
 
         apiForstaffSlot(String.valueOf(bean.staffId));
@@ -381,10 +380,11 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                 break;
 
             case R.id.btnCOnfirmBooking:
-                if(!TextUtils.isEmpty(startTime)){
-                    apiForContinueBooking("0");
-
-                }else MyToast.getInstance(BookingActivity.this).showDasuAlert("Please select time slot");
+                if (childId == 0) {
+                    MyToast.getInstance(BookingActivity.this).showDasuAlert("Please select service");
+                } else if (TextUtils.isEmpty(startTime)){
+                    MyToast.getInstance(BookingActivity.this).showDasuAlert("Please select time slot");
+                }else  apiForContinueBooking("0");
 
 
                 break;
@@ -574,6 +574,10 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                             preprationTime = services.artistDetail.outCallpreprationTime;
                         } else preprationTime = services.artistDetail.inCallpreprationTime;
 
+                        if(services.artistDetail.bankStatus == 0){
+                            isBankAdded = false;
+                        }else isBankAdded = true;
+
                         if (!services.artistDetail.profileImage.isEmpty() && !services.artistDetail.profileImage.equals("")) {
                             Picasso.with(BookingActivity.this).load(services.artistDetail.profileImage).placeholder(R.drawable.default_placeholder).
                                     fit().into(ivProfile);
@@ -616,7 +620,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                                 serviceId = artistServicesBean.serviceId;
 
                                 if (!mainServiceName.equals(artistServicesBean.serviceName)) {
-                                    if(!TextUtils.isEmpty(mainServiceName)){
+                                    if (!TextUtils.isEmpty(mainServiceName)) {
                                         resetAllServices();
                                     }
                                     mainServiceName = "";
@@ -634,8 +638,9 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                                         }
                                     }
                                     subServiceName = "";
-                                }else {
-                                    subServiceId = artistServicesBean.subServies.get(childPos).subServiceId;
+                                } else {
+                                    if (artistServicesBean.subServies.size() > 0)
+                                        subServiceId = artistServicesBean.subServies.get(childPos).subServiceId;
                                 }
 
 
@@ -896,15 +901,17 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                         ServiceInfoBooking infoBooking = gson.fromJson(response, ServiceInfoBooking.class);
                         infoBooking.staffInfo.get(0).isSelected = true;
 
-                        if(isOutCallSelected){
+                        if (isOutCallSelected) {
                             price = infoBooking.staffInfo.get(0).outCallPrice;
-                        }else price = infoBooking.staffInfo.get(0).inCallPrice;
+                        } else price = infoBooking.staffInfo.get(0).inCallPrice;
 
                         endTime = (getMinutes(infoBooking.staffInfo.get(0).completionTime) + getMinutes(preprationTime));
 
                         if (infoBooking.staffInfo.size() == 1) {
                             ly_staff_main.setVisibility(View.GONE);
                         }
+
+                        staffInfoBeanList.addAll(infoBooking.staffInfo);
 
                         staffAdapter.notifyDataSetChanged();
                         apiForstaffSlot(String.valueOf(0));
@@ -940,16 +947,16 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
 
     /*.................................Apis for getting staff info..............................*/
 
-    private int getMinutes(String input){
+    private int getMinutes(String input) {
         int totalMinues = 0;
         try {
             String hours = Helper.formateDateFromstring("HH:mm", "HH", input);
             String minutes = Helper.formateDateFromstring("HH:mm", "mm", input);
 
-            int hoursInMinutes = (Integer.parseInt(hours)*60);
+            int hoursInMinutes = (Integer.parseInt(hours) * 60);
             totalMinues = (Integer.parseInt(minutes) + hoursInMinutes);
 
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -1060,6 +1067,13 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         task.execute(this.getClass().getName());
     }
 
+    private static Date addMinutesToDate(int minutes, Date beforeTime){
+        final long ONE_MINUTE_IN_MILLIS = 60000;//millisecs
+
+        long curTimeInMs = beforeTime.getTime();
+        Date afterAddingMins = new Date(curTimeInMs + (minutes * ONE_MINUTE_IN_MILLIS));
+        return afterAddingMins;
+    }
 
     private void apiForContinueBooking(String bookingId) {
         Progress.show(BookingActivity.this);
@@ -1082,8 +1096,9 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         params.put("startTime", startTime);
 
         String myTime = startTime;
+
         SimpleDateFormat df = new SimpleDateFormat("HH:mm aa");
-        Date d = null;
+        Date d = new Date();
         try {
             d = df.parse(myTime);
         } catch (ParseException e) {
@@ -1105,9 +1120,9 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         params.put("artistServiceId", artistServiceId);
         params.put("bookingDate", selectedDate);
 
-        if(isOutCallSelected){
+        if (isOutCallSelected) {
             params.put("serviceType", "2");// incall = 1 or out call = 2
-        }else  params.put("serviceType", "1");// incall = 1 or out call = 2
+        } else params.put("serviceType", "1");// incall = 1 or out call = 2
 
 
         params.put("price", String.valueOf(price));
@@ -1126,8 +1141,11 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
 
                     if (status.equals("success")) {
                         Intent intent = new Intent(BookingActivity.this, BookingConfirmActivity.class);
-                        intent.putExtra("artistId",artistId);
+                        intent.putExtra("artistId", artistId);
+                        intent.putExtra("isBankAdded", isBankAdded);
+                        intent.putExtra("isOutCallSelected", isOutCallSelected);
                         startActivityForResult(intent, 111);
+                        startTime = "";
                     } else {
                         MyToast.getInstance(BookingActivity.this).showDasuAlert(message);
                     }
@@ -1158,7 +1176,6 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                 .setBody(params, HttpTask.ContentType.APPLICATION_JSON));
         task.execute(this.getClass().getName());
     }
-
 
 
 }
