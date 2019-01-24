@@ -17,6 +17,7 @@ public class Constant {
     public static final int PERMISSION_REQUEST_CONTACT = 104;
     public static final int PERMISSION_READ_PHONE_STATE = 105;
     public static final int REQUEST_CODE_CHOOSE = 106;
+    public static final int REQUEST_Select_Service = 696;
     public static final int GALLERY_KITKAT_INTENT_CALLED = 91;
     public static final int REQUEST_VIDEO_CAPTURE = 89;
     public static final int GALLERY_INTENT_CALLED = 90;

@@ -1,8 +1,11 @@
 package com.mualab.org.user.activity.booking;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -46,6 +49,7 @@ import com.mualab.org.user.dialogs.NoConnectionDialog;
 import com.mualab.org.user.dialogs.Progress;
 import com.mualab.org.user.utils.ConnectionDetector;
 import com.mualab.org.user.utils.Helper;
+import com.mualab.org.user.utils.constants.Constant;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -98,7 +102,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
     private ArrayList<TimeSlotInfo> timeSlotList;
     private String businessType = "", preprationTime = "";
 
-    private String selectedDate, sMonth = "", sDay, currentTime, lat = "", lng = "", startTime = "";
+    private String selectedDate, sMonth = "", sDay, currentTime, lat = "", lng = "", startTime = "", bookingId = "", tempMainService = "";
     private MyFlexibleCalendar viewCalendar;
     private boolean isTodayClicked = false;
     private SimpleDateFormat input, dateFormat;
@@ -106,7 +110,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
     private SimpleDateFormat dateSdf, timeSdf;
     private RatingBar rating;
     private LinearLayout ly_staff_main, ly_time_slot_main;
-    private boolean outcallStaff, incallStaff,isBankAdded;
+    private boolean outcallStaff, incallStaff, isBankAdded, isAlreadybooked;
     private int totalTime, endTime;
     private Double price;
 
@@ -120,8 +124,13 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         artistServiceId = String.valueOf(childId);
         artistId = i.getStringExtra("artistId");
         callType = i.getStringExtra("callType");
+
         mainServiceName = i.getStringExtra("mainServiceName");
         subServiceName = i.getStringExtra("subServiceName");
+
+        serviceId =  getIntent().getIntExtra("serviceId",0);
+        subServiceId =  getIntent().getIntExtra("subServiceId",0);
+
         outcallStaff = i.getBooleanExtra("outcallStaff", false);
         incallStaff = i.getBooleanExtra("incallStaff", false);
 
@@ -296,7 +305,6 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         return year + "-" + sMonth + "-" + sDay;
     }
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -335,6 +343,29 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
 
                     if (!mainServiceName.equals("")) {
                         for (int i = 0; i < services.artistServices.size(); i++) {
+                            if (services.artistServices.get(i).serviceId == (serviceId)) {
+                                adapterBizType.clickItem(i);
+                            }
+
+                        }
+                    } else adapterBizType.clickItem();
+
+                } else {
+                    chbOutcall.setChecked(true);
+                    isOutCallSelected = true;
+
+                    if (!mainServiceName.equals("")) {
+                        for (int i = 0; i < services.artistServices.size(); i++) {
+                            if (services.artistServices.get(i).serviceId==(serviceId)) {
+                                adapterBizType.clickItem(i);
+                            }
+                        }
+                    } else adapterBizType.clickItem();
+
+                }
+
+                 /*   if (!mainServiceName.equals("")) {
+                        for (int i = 0; i < services.artistServices.size(); i++) {
                             if (services.artistServices.get(i).serviceName.equals(mainServiceName)) {
                                 adapterBizType.clickItem(i);
                             }
@@ -354,7 +385,9 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                         }
                     } else adapterBizType.clickItem();
 
-                }
+                }*/
+
+
 
                 //reset All services
                 resetAllServices();
@@ -366,29 +399,47 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                 viewCalendar.isFirstimeLoad = true;
                 if (selectedDate.contains("-")) {
                     isTodayClicked = true;
-                    int year, month, day;
+                    int year; String month, day;
                     String[] separated = selectedDate.split("-");
                     year = Integer.parseInt(separated[0]);
-                    month = Integer.parseInt(separated[1]);
-                    day = Integer.parseInt(separated[2]);
+                    month = String.valueOf(Integer.parseInt(separated[1]));
+                    day = String.valueOf(Integer.parseInt(separated[2]));
 
-                    viewCalendar.select(new Day(year, month, day));
+                    viewCalendar.select(new Day(year, Integer.parseInt(month), Integer.parseInt(day)));
                     viewCalendar.expand(500);
+
+                    if (Integer.parseInt(month) < 10) {
+                        month = "0" + Integer.parseInt( (month));
+                    }
+
+                    if (Integer.parseInt(day) < 10) {
+                        day = "0" +Integer.parseInt((day));
+                    }
+
                     selectedDate = year + "-" + month + "-" + day;
                 }
                 //     apiForGetSlots();
                 break;
 
             case R.id.btnCOnfirmBooking:
-                if (childId == 0) {
-                    MyToast.getInstance(BookingActivity.this).showDasuAlert("Please select service");
-                } else if (TextUtils.isEmpty(startTime)){
-                    MyToast.getInstance(BookingActivity.this).showDasuAlert("Please select time slot");
-                }else  apiForContinueBooking("0");
 
+                if (childId != 0 && !TextUtils.isEmpty(startTime) && !TextUtils.isEmpty(bookingId)) {
+                    apiForContinueBooking(bookingId);
+                } else if (isAlreadybooked) {
+                    Intent intent = new Intent(BookingActivity.this, BookingConfirmActivity.class);
+                    intent.putExtra("artistId", artistId);
+                    intent.putExtra("isBankAdded", isBankAdded);
+                    intent.putExtra("isOutCallSelected", isOutCallSelected);
+                    startActivityForResult(intent, Constant.REQUEST_Select_Service);
+                } else {
+                    if (childId == 0) {
+                        MyToast.getInstance(BookingActivity.this).showDasuAlert("Please select service");
+                    } else if (TextUtils.isEmpty(startTime)) {
+                        MyToast.getInstance(BookingActivity.this).showDasuAlert("Please select time slot");
+                    } else apiForContinueBooking("0");
+                }
 
                 break;
-
         }
     }
 
@@ -534,6 +585,87 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if (isAlreadybooked) {
+            // give popup here...
+            confirmDialog();
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    private void confirmDialog() {
+        AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(BookingActivity.this);
+        builder.setTitle("Alert")
+                .setMessage("Are you sure you want to permanently remove all selected services?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with Apis
+                        apiForRemoveAllBooking();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        main_scroll_view.fullScroll(ScrollView.FOCUS_UP);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == Constant.REQUEST_Select_Service) {
+                resetAllServices();
+                apiForGetAllServices();
+                isOutCallSelected = data.getBooleanExtra("isOutCallSelected", false);
+
+                if (isOutCallSelected) {
+                    chbOutcall.setChecked(true);
+                    ly_outcall.setEnabled(false);
+                } else {
+                    ly_outcall.setVisibility(View.GONE);
+                }
+            }
+        }
+
+        // Case of edit service
+        if(resultCode == -2){
+            if (requestCode == Constant.REQUEST_Select_Service){
+                if(data != null){
+                    resetAllServices();
+
+                    childId = data.getIntExtra("_id", 0);
+                    artistServiceId = String.valueOf(childId);
+                    artistId = data.getStringExtra("artistId");
+                    callType = data.getStringExtra("callType");
+
+                    mainServiceName = data.getStringExtra("mainServiceName");
+                    subServiceName = data.getStringExtra("subServiceName");
+
+                    serviceId =  data.getIntExtra("serviceId",0);
+                    subServiceId =  data.getIntExtra("subServiceId",0);
+
+                    outcallStaff = data.getBooleanExtra("outcallStaff", false);
+                    incallStaff = data.getBooleanExtra("incallStaff", false);
+
+                    apiForGetAllServices();
+                }
+
+            }
+        }
+    }
+
     private void apiForGetAllServices() {
         Progress.show(BookingActivity.this);
         Session session = Mualab.getInstance().getSessionManager();
@@ -569,14 +701,14 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                         businessType = services.artistDetail.businessType;
 
                         rating.setRating(Float.parseFloat(services.artistDetail.ratingCount));
-
+                        isAlreadybooked = services.artistDetail.isAlreadybooked;
                         if (isOutCallSelected) {
                             preprationTime = services.artistDetail.outCallpreprationTime;
                         } else preprationTime = services.artistDetail.inCallpreprationTime;
 
-                        if(services.artistDetail.bankStatus == 0){
+                        if (services.artistDetail.bankStatus == 0) {
                             isBankAdded = false;
-                        }else isBankAdded = true;
+                        } else isBankAdded = true;
 
                         if (!services.artistDetail.profileImage.isEmpty() && !services.artistDetail.profileImage.equals("")) {
                             Picasso.with(BookingActivity.this).load(services.artistDetail.profileImage).placeholder(R.drawable.default_placeholder).
@@ -624,15 +756,35 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                                         resetAllServices();
                                     }
                                     mainServiceName = "";
-
                                 }
+                                // for other screen coming check
+                                if (tempMainService.equals("")) {
+                                    tempMainService = artistServicesBean.serviceName;
+                                } else if (!artistServicesBean.serviceName.equals(tempMainService)) {
+                                    tempMainService = artistServicesBean.serviceName;
+                                    resetAllServices();
+                                }
+
 
                                 checkPositon = artistServicesBean.serviceName;
 
 
-                                if (!subServiceName.equals("")) {
+                               /* if (!subServiceName.equals("")) {
                                     for (int i = 0; i < artistServicesBean.subServies.size(); i++) {
                                         if (artistServicesBean.subServies.get(i).subServiceName.equals(subServiceName)) {
+                                            childPos = i;
+                                            subServiceId = artistServicesBean.subServies.get(i).subServiceId;
+                                        }
+                                    }
+                                    subServiceName = "";
+                                } else {
+                                    if (artistServicesBean.subServies.size() > 0)
+                                        subServiceId = artistServicesBean.subServies.get(childPos).subServiceId;
+                                }*/
+
+                                if (!subServiceName.equals("")) {
+                                    for (int i = 0; i < artistServicesBean.subServies.size(); i++) {
+                                        if (artistServicesBean.subServies.get(i).subServiceId==(subServiceId)) {
                                             childPos = i;
                                             subServiceId = artistServicesBean.subServies.get(i).subServiceId;
                                         }
@@ -804,7 +956,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
 //this is the case when we are coming from service tab
                         if (services.artistServices.size() != 0) {
                             for (int i = 0; i < services.artistServices.size(); i++) {
-                                if (services.artistServices.get(i).serviceName.equals(mainServiceName)) {
+                                if (services.artistServices.get(i).serviceId==(serviceId)) {
                                     adapterBizType.clickItem(i);
                                 }
                             }
@@ -815,23 +967,39 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                             iv_down_arrow_category.setVisibility(View.GONE);
                         }
 
+                       /* if (services.artistServices.size() != 0) {
+                            for (int i = 0; i < services.artistServices.size(); i++) {
+                                if (services.artistServices.get(i).serviceName.equals(mainServiceName)) {
+                                    adapterBizType.clickItem(i);
+                                }
+                            }
+                        } else if (services.artistServices.size() == 0) {
+                            tv_bizType.setText("No business type available");
+                            tv_category.setText("No category available");
+                            iv_down_arrow_bizType.setVisibility(View.GONE);
+                            iv_down_arrow_category.setVisibility(View.GONE);
+                        }*/
+
 //this is the case when we are coming from other tab not from service tab
                         if (mainServiceName.equals("")) {
                             adapterBizType.clickItem();
                         } else {
-                            apiForserviceStaff(String.valueOf(childId));
+                            if (!isAlreadybooked)
+                                apiForserviceStaff(String.valueOf(childId));
                         }
                         rcv_biz_type.setAdapter(adapterBizType);
 
                         // Calling api fot staff
                         if (isOutCallSelected) {
-                            if (outcallStaff) {
-                                ly_staff_main.setVisibility(View.VISIBLE);
-                            } else ly_staff_main.setVisibility(View.GONE);
+                            if (!isAlreadybooked)
+                                if (outcallStaff) {
+                                    ly_staff_main.setVisibility(View.VISIBLE);
+                                } else ly_staff_main.setVisibility(View.GONE);
                         } else {
-                            if (incallStaff) {
-                                ly_staff_main.setVisibility(View.VISIBLE);
-                            } else ly_staff_main.setVisibility(View.GONE);
+                            if (!isAlreadybooked)
+                                if (incallStaff) {
+                                    ly_staff_main.setVisibility(View.VISIBLE);
+                                } else ly_staff_main.setVisibility(View.GONE);
                         }
 
 
@@ -864,7 +1032,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         task.execute(this.getClass().getName());
     }
 
-    private void apiForserviceStaff(String artistServiceId) {
+    private void apiForserviceStaff(final String artistServiceId) {
         Progress.show(BookingActivity.this);
         Session session = Mualab.getInstance().getSessionManager();
         User user = session.getUser();
@@ -875,7 +1043,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                 public void onNetworkChange(Dialog dialog, boolean isConnected) {
                     if (isConnected) {
                         dialog.dismiss();
-                        apiForGetAllServices();
+                        apiForserviceStaff(artistServiceId);
                     }
                 }
             }).show();
@@ -914,6 +1082,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                         staffInfoBeanList.addAll(infoBooking.staffInfo);
 
                         staffAdapter.notifyDataSetChanged();
+                        staff = 0;
                         apiForstaffSlot(String.valueOf(0));
                         ly_time_slot_main.setVisibility(View.VISIBLE);
                     }
@@ -963,7 +1132,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         return totalMinues;
     }
 
-    private void apiForstaffSlot(String staffId) {
+    private void apiForstaffSlot(final String staffId) {
         Progress.show(BookingActivity.this);
         Session session = Mualab.getInstance().getSessionManager();
         User user = session.getUser();
@@ -974,7 +1143,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                 public void onNetworkChange(Dialog dialog, boolean isConnected) {
                     if (isConnected) {
                         dialog.dismiss();
-                        apiForGetAllServices();
+                        apiForstaffSlot(staffId);
                     }
                 }
             }).show();
@@ -1040,6 +1209,11 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                     rcv_timeSlot.scrollToPosition(0);
                     timeSlotAdapter.notifyDataSetChanged();
 
+                    if (js.has("bookingId")) {
+                        bookingId = String.valueOf(js.getInt("bookingId"));
+                    }
+
+
                 } catch (Exception e) {
                     Progress.hide(BookingActivity.this);
                     e.printStackTrace();
@@ -1067,7 +1241,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         task.execute(this.getClass().getName());
     }
 
-    private static Date addMinutesToDate(int minutes, Date beforeTime){
+    private static Date addMinutesToDate(int minutes, Date beforeTime) {
         final long ONE_MINUTE_IN_MILLIS = 60000;//millisecs
 
         long curTimeInMs = beforeTime.getTime();
@@ -1075,7 +1249,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         return afterAddingMins;
     }
 
-    private void apiForContinueBooking(String bookingId) {
+    private void apiForContinueBooking(final String bookingId) {
         Progress.show(BookingActivity.this);
         Session session = Mualab.getInstance().getSessionManager();
         User user = session.getUser();
@@ -1086,7 +1260,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                 public void onNetworkChange(Dialog dialog, boolean isConnected) {
                     if (isConnected) {
                         dialog.dismiss();
-                        apiForGetAllServices();
+                        apiForContinueBooking(bookingId);
                     }
                 }
             }).show();
@@ -1096,8 +1270,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         params.put("startTime", startTime);
 
         String myTime = startTime;
-
-        SimpleDateFormat df = new SimpleDateFormat("HH:mm aa");
+        SimpleDateFormat df = new SimpleDateFormat("hh:mm a");
         Date d = new Date();
         try {
             d = df.parse(myTime);
@@ -1108,7 +1281,6 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         cal.setTime(d);
         cal.add(Calendar.MINUTE, endTime);
         String newTime = df.format(cal.getTime());
-
 
         params.put("endTime", newTime);
         params.put("artistId", artistId);
@@ -1144,8 +1316,72 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                         intent.putExtra("artistId", artistId);
                         intent.putExtra("isBankAdded", isBankAdded);
                         intent.putExtra("isOutCallSelected", isOutCallSelected);
-                        startActivityForResult(intent, 111);
+                        startActivityForResult(intent, Constant.REQUEST_Select_Service);
                         startTime = "";
+                    } else {
+                        MyToast.getInstance(BookingActivity.this).showDasuAlert(message);
+                    }
+
+                } catch (Exception e) {
+                    Progress.hide(BookingActivity.this);
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void ErrorListener(VolleyError error) {
+                Progress.hide(BookingActivity.this);
+                try {
+                    Helper helper = new Helper();
+                    if (helper.error_Messages(error).contains("Session")) {
+                        Mualab.getInstance().getSessionManager().logout();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        })
+                .setAuthToken(user.authToken)
+                .setProgress(true)
+                .setBody(params, HttpTask.ContentType.APPLICATION_JSON));
+        task.execute(this.getClass().getName());
+    }
+
+    private void apiForRemoveAllBooking() {
+        Progress.show(BookingActivity.this);
+        Session session = Mualab.getInstance().getSessionManager();
+        User user = session.getUser();
+
+        if (!ConnectionDetector.isConnected()) {
+            new NoConnectionDialog(BookingActivity.this, new NoConnectionDialog.Listner() {
+                @Override
+                public void onNetworkChange(Dialog dialog, boolean isConnected) {
+                    if (isConnected) {
+                        dialog.dismiss();
+                        apiForGetAllServices();
+                    }
+                }
+            }).show();
+        }
+
+        Map<String, String> params = new HashMap<>();
+        params.put("userId", String.valueOf(Mualab.currentUser.id));
+
+
+        HttpTask task = new HttpTask(new HttpTask.Builder(BookingActivity.this, "deleteUserBookService", new HttpResponceListner.Listener() {
+            @Override
+            public void onResponse(String response, String apiName) {
+                Progress.hide(BookingActivity.this);
+                try {
+                    JSONObject js = new JSONObject(response);
+                    String status = js.getString("status");
+                    String message = js.getString("message");
+
+
+                    if (status.equals("success")) {
+                        finish();
                     } else {
                         MyToast.getInstance(BookingActivity.this).showDasuAlert(message);
                     }

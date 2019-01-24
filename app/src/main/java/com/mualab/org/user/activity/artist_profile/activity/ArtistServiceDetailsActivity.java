@@ -47,6 +47,7 @@ public class ArtistServiceDetailsActivity extends AppCompatActivity {
     private String callTypeString =  "";
     String  mainServiceName = "", subServiceName = "";
     private boolean outcallStaff,incallStaff;
+    private int serviceId, subServiceId;
 
 
 
@@ -67,8 +68,13 @@ public class ArtistServiceDetailsActivity extends AppCompatActivity {
         _id  = getIntent().getIntExtra("_id",0);
         artistId = getIntent().getStringExtra("artistId");
         callTypeString =  getIntent().getStringExtra("callType");
+
         mainServiceName =  getIntent().getStringExtra("mainServiceName");
         subServiceName =  getIntent().getStringExtra("subServiceName");
+
+        serviceId =  getIntent().getIntExtra("serviceId",0);
+        subServiceId =  getIntent().getIntExtra("subServiceId",0);
+
         incallStaff =  getIntent().getBooleanExtra("incallStaff",false);
         outcallStaff =  getIntent().getBooleanExtra("outcallStaff",false);
 
@@ -96,6 +102,10 @@ public class ArtistServiceDetailsActivity extends AppCompatActivity {
 
                 intent.putExtra("mainServiceName",mainServiceName);
                 intent.putExtra("subServiceName",subServiceName);
+
+                intent.putExtra("serviceId", serviceId);
+                intent.putExtra("subServiceId", subServiceId);
+
                 intent.putExtra("incallStaff",incallStaff);
                 intent.putExtra("outcallStaff",outcallStaff);
                 startActivity(intent);

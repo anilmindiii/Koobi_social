@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mualab.org.user.R;
+import com.mualab.org.user.activity.artist_profile.activity.ArtistServiceDetailsActivity;
 import com.mualab.org.user.activity.authentication.AddAddressActivity;
 import com.mualab.org.user.activity.booking.adapter.ConfirmServiceAdapter;
 import com.mualab.org.user.activity.booking.model.BookingConfirmInfo;
@@ -36,6 +38,7 @@ import com.mualab.org.user.dialogs.NoConnectionDialog;
 import com.mualab.org.user.dialogs.Progress;
 import com.mualab.org.user.utils.ConnectionDetector;
 import com.mualab.org.user.utils.Helper;
+import com.mualab.org.user.utils.KeyboardUtil;
 import com.mualab.org.user.utils.constants.Constant;
 
 import org.json.JSONObject;
@@ -44,6 +47,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class BookingConfirmActivity extends AppCompatActivity {
     private RecyclerView rcv_service;
@@ -60,7 +65,9 @@ public class BookingConfirmActivity extends AppCompatActivity {
     double total_price = 0.0;
     private FrameLayout ly_amount;
     private String voucher = "",bookingType = "1",paymentType = "1",discountPrice = "",bookingDate = "",bookingTime = "";
-    private AppCompatButton btn_confirm_booking;
+    private AppCompatButton btn_confirm_booking,brn_add_more;
+    private ImageView iv_location_arrow,iv_voucher_cancel;
+    private TextView tv_call_type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +82,16 @@ public class BookingConfirmActivity extends AppCompatActivity {
         tv_address = findViewById(R.id.tv_address);
         tv_apply = findViewById(R.id.tv_apply);
         ed_vouchar_code = findViewById(R.id.ed_vouchar_code);
+        ed_vouchar_code.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
         iv_voucher_arrow = findViewById(R.id.iv_voucher_arrow);
         tv_new_amount = findViewById(R.id.tv_new_amount);
         tv_amount = findViewById(R.id.tv_amount);
         ly_amount = findViewById(R.id.ly_amount);
         btn_confirm_booking = findViewById(R.id.btn_confirm_booking);
+        iv_location_arrow = findViewById(R.id.iv_location_arrow);
+        iv_voucher_cancel = findViewById(R.id.iv_voucher_cancel);
+        brn_add_more = findViewById(R.id.brn_add_more);
+        tv_call_type = findViewById(R.id.tv_call_type);
 
         TextView tvHeaderTitle = findViewById(R.id.tvHeaderTitle);
         tvHeaderTitle.setText(getString(R.string.booking_confirm));
@@ -99,8 +111,34 @@ public class BookingConfirmActivity extends AppCompatActivity {
             }
 
             @Override
-            public void editService() {
+            public void editService(BookingConfirmInfo.DataBean dataBean) {
+                Intent intent = new Intent();
 
+                intent.putExtra("_id",dataBean.staffId);
+                intent.putExtra("artistId",artistId);
+
+                if(isOutCallSelected){
+                    intent.putExtra("callType","Out Call");
+                    intent.putExtra("outcallStaff",true);
+                    intent.putExtra("incallStaff",false);
+                }else{
+                    intent.putExtra("callType","In Call");
+                    intent.putExtra("outcallStaff",false);
+                    intent.putExtra("incallStaff",true);
+                }
+
+
+                intent.putExtra("serviceId",dataBean.serviceId);
+                intent.putExtra("subServiceId",dataBean.subServiceId);
+
+                intent.putExtra("mainServiceName","");// should be empty
+                intent.putExtra("subServiceName",dataBean.artistServiceName);
+
+                intent.putExtra("incallStaff",false);
+
+
+                setResult(-2,intent);
+                finish();
             }
         });
         rcv_service.setAdapter(adapter);
@@ -111,7 +149,13 @@ public class BookingConfirmActivity extends AppCompatActivity {
             isOutCallSelected = getIntent().getBooleanExtra("isOutCallSelected", false);
             if(isOutCallSelected){
                 bookingType = "2";
-            }else  bookingType = "1";
+                iv_location_arrow.setVisibility(View.VISIBLE);
+                tv_call_type.setText("Out Call");
+            }else  {
+                bookingType = "1";
+                iv_location_arrow.setVisibility(View.GONE);
+                tv_call_type.setText("In Call");
+            }
         }
 
         if (!isBankAdded) {
@@ -147,6 +191,7 @@ public class BookingConfirmActivity extends AppCompatActivity {
         tv_apply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                KeyboardUtil.hideKeyboard(v,BookingConfirmActivity.this);
                 String voucherCode = ed_vouchar_code.getText().toString().trim();
                 if (!TextUtils.isEmpty(voucherCode)) {
                     applyVoucherCode(artistId,voucherCode);
@@ -164,10 +209,33 @@ public class BookingConfirmActivity extends AppCompatActivity {
             }
         });
 
+        iv_voucher_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ed_vouchar_code.setText("");
+                iv_voucher_arrow.setVisibility(View.VISIBLE);
+                iv_voucher_cancel.setVisibility(View.INVISIBLE);
+
+                tv_new_amount.setText("£"+total_price);
+
+                tv_new_amount.setVisibility(View.VISIBLE);
+                tv_amount.setVisibility(View.GONE);
+
+                tv_apply.setText("Apply");
+            }
+        });
+
         btn_confirm_booking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 confirmBooking();
+            }
+        });
+
+        brn_add_more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
             }
         });
 
@@ -196,12 +264,17 @@ public class BookingConfirmActivity extends AppCompatActivity {
                     VoucherInfo.DataBean voucherItem = data.getParcelableExtra("voucherItem");
 
                     ed_vouchar_code.setText(voucherItem.voucherCode);
-
-
-
                 }
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("isOutCallSelected",isOutCallSelected);
+        setResult(RESULT_OK,intent);
+        super.onBackPressed();
     }
 
     private void GetServices(final String artistId) {
@@ -352,6 +425,9 @@ public class BookingConfirmActivity extends AppCompatActivity {
                             discountPrice = String.valueOf(newDiscountedPrice);
                         }
 
+                        iv_voucher_arrow.setVisibility(View.INVISIBLE);
+                        iv_voucher_cancel.setVisibility(View.VISIBLE);
+
 
 
 
@@ -421,7 +497,7 @@ public class BookingConfirmActivity extends AppCompatActivity {
                     if (status.equals("success")) {
                         bookingList.remove(position);
                         if(bookingList.size() == 0){
-                            finish();
+                            onBackPressed();
                             return;
                         }else {
                             GetServices(artistId);
@@ -499,14 +575,24 @@ public class BookingConfirmActivity extends AppCompatActivity {
                     String status = js.getString("status");
                     String message = js.getString("message");
 
-
                     if (status.equals("success")) {
+                        SweetAlertDialog dialog = new SweetAlertDialog(BookingConfirmActivity.this, SweetAlertDialog.SUCCESS_TYPE);
 
-                        Intent showLogin = new Intent(BookingConfirmActivity.this, MainActivity.class);
-                        showLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        showLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(showLogin);
-
+                        dialog.setTitleText("Congratulation!");
+                        dialog.setContentText("Your booking request has been successfully sent to artist.");
+                        dialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+                                        sDialog.dismissWithAnimation();
+                                        Intent showLogin = new Intent(BookingConfirmActivity.this, MainActivity.class);
+                                        showLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        showLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(showLogin);
+                                    }
+                                });
+                        dialog.setCancelable(false);
+                        dialog.setCanceledOnTouchOutside(false);
+                        dialog.show();
                     } else {
                         MyToast.getInstance(BookingConfirmActivity.this).showDasuAlert(message);
                     }

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.mualab.org.user.R;
 import com.mualab.org.user.activity.booking.model.BookingConfirmInfo;
+import com.mualab.org.user.utils.Helper;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class ConfirmServiceAdapter extends RecyclerView.Adapter<ConfirmServiceAd
 
     public interface getValue{
         void deleteService(int bookingId,int position);
-        void editService();
+        void editService(BookingConfirmInfo.DataBean dataBean);
     }
 
     @NonNull
@@ -55,15 +56,16 @@ public class ConfirmServiceAdapter extends RecyclerView.Adapter<ConfirmServiceAd
         }
 
 
+        bean.bookingDate = Helper.formateDateFromstring("yyyy-MM-dd","dd/MM/yyyy",bean.bookingDate);
         holder.tv_date_time.setText(bean.bookingDate + ", " + bean.startTime);
         holder.tv_service_name.setText(bean.artistServiceName);
         holder.tv_name.setText(bean.staffName);
-        holder.tv_price.setText(bean.bookingPrice);
+        holder.tv_price.setText("£"+bean.bookingPrice);
 
         holder.tv_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                valueListner.editService();
+                valueListner.editService(bookingList.get(position));
             }
         });
 

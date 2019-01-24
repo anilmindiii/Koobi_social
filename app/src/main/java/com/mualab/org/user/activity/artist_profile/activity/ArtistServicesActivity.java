@@ -52,6 +52,7 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
     IncallOutCallAdapter.childItemClick click;
     private boolean isOpenCategory;
     String mainServiceName = "", subServiceName = "";
+    private int serviceId, subServiceId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +102,9 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
                 intent.putExtra("callType", callType);
                 intent.putExtra("mainServiceName", mainServiceName);
                 intent.putExtra("subServiceName", subServiceName);
+
+                intent.putExtra("serviceId", serviceId);
+                intent.putExtra("subServiceId", subServiceId);
 
                 intent.putExtra("incallStaff", artistservicesBean.incallStaff);
                 intent.putExtra("outcallStaff", artistservicesBean.outcallStaff);
@@ -197,6 +201,7 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
                             @Override
                             public void onclick(final Services.ArtistServicesBean artistServicesBean, int adapterPosition) {
                                 mainServiceName = artistServicesBean.serviceName;
+                                serviceId = artistServicesBean.serviceId;
 
                                 tv_bizType.setText(artistServicesBean.serviceName + "");
                                 cv_ly_biz_type.setVisibility(View.GONE);
@@ -209,6 +214,8 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
                                     if (artistServicesBean.subServies.get(0) != null) {
                                         tv_category.setText(artistServicesBean.subServies.get(0).subServiceName + "");
                                         subServiceName = artistServicesBean.subServies.get(0).subServiceName;
+                                        subServiceId = artistServicesBean.subServies.get(0).subServiceId;
+
                                         inCallList.clear();
                                         outCallList.clear();
                                         for (int i = 0; i < artistServicesBean.subServies.get(0).artistservices.size(); i++) {
@@ -270,6 +277,8 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
                                     @Override
                                     public void onclick(Services.ArtistServicesBean.SubServiesBean bean,int position) {
                                         subServiceName = bean.subServiceName;
+                                        subServiceId = bean.subServiceId;
+
                                         tv_category.setText(bean.subServiceName + "");
                                         cv_ly_category.setVisibility(View.GONE);
 

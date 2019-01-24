@@ -85,6 +85,7 @@
                 </RelativeLayout>
 
                 <ImageView
+                    android:id="@+id/iv_location_arrow"
                     android:layout_width="20dp"
                     android:layout_height="40dp"
                     android:tint="@color/gray"
@@ -109,10 +110,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito_regular"
-                    android:text="Mindiii System pvt limited"
                     android:textColor="@color/text_color"
                     android:layout_marginLeft="45dp"
-                    android:layout_marginRight="30dp"
+                    android:layout_marginRight="20dp"
                     android:ellipsize="end"
                     android:textSize="12sp" />
 
@@ -173,7 +173,18 @@
                     android:layout_height="40dp"
                     android:tint="@color/gray"
                     android:src="@drawable/ic_navigate_next_white"
-                    android:layout_alignParentRight="true" />
+                    android:layout_alignParentRight="true"
+                    />
+
+                <ImageView
+                    android:id="@+id/iv_voucher_cancel"
+                    android:layout_width="20dp"
+                    android:layout_height="40dp"
+                    android:tint="@color/gray"
+                    android:padding="2dp"
+                    android:src="@drawable/cancel_ico"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/tv_vouchar_code"
@@ -267,7 +278,7 @@
                         android:backgroundTint="@color/black"
                         android:buttonTint="@color/black"
                         android:textColor="@color/black"
-                        android:text="Case"
+                        android:text="Cash"
                         android:scaleX="0.7"
                         android:scaleY="0.7"
                         android:checked="true"/>
@@ -419,6 +430,7 @@
         android:weightSum="2">
 
         <android.support.v7.widget.AppCompatButton
+            android:id="@+id/brn_add_more"
             style="@style/My_Button_Small.Invert"
             android:layout_width="match_parent"
             android:layout_height="35dp"
