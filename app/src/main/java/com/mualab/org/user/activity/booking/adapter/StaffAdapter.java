@@ -65,7 +65,7 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.ViewHolder>{
             holder.tv_time_duration.setText(min+" min");
         }else holder.tv_time_duration.setText(hour +" hr "+min+" min");
 
-        if(typeCall.equals("In Call")){
+        if(staffInfoBeanList.get(position).bookingType.equals("Incall")){
             holder.tv_price.setText("£" + bean.inCallPrice+"");
         }else holder.tv_price.setText("£" + bean.outCallPrice+"");
 

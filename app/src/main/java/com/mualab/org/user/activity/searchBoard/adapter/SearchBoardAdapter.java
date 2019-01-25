@@ -2,6 +2,7 @@ package com.mualab.org.user.activity.searchBoard.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.inputmethodservice.Keyboard;
 import android.os.SystemClock;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,7 @@ import com.mualab.org.user.activity.artist_profile.activity.ArtistProfileActivit
 import com.mualab.org.user.activity.booking.BookingActivity;
 import com.mualab.org.user.activity.feeds.adapter.LoadingViewHolder;
 import com.mualab.org.user.data.model.SearchBoard.ArtistsSearchBoard;
+import com.mualab.org.user.utils.KeyboardUtil;
 import com.mualab.org.user.utils.Util;
 import com.squareup.picasso.Picasso;
 
@@ -190,6 +192,8 @@ public class SearchBoardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         @Override
         public void onClick(View v) {
+            KeyboardUtil.hideKeyboard(v,context);
+
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
                 return;
             }

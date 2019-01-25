@@ -82,7 +82,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
     private ArrayList<Services.ArtistServicesBean.SubServiesBean.ArtistservicesBean> inCallList, outCallList;
     private ScrollView main_scroll_view;
     private TextView tv_msg, tvNoSlot;
-    private LinearLayout ly_incall;
+    private LinearLayout ly_incall,lyArtistTopView;
     private IncallOutCallAdapter inCallAdapter;
     private IncallOutCallAdapter.childItemClick click;
     private boolean isOpenCategory;
@@ -113,6 +113,8 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
     private boolean outcallStaff, incallStaff, isBankAdded, isAlreadybooked;
     private int totalTime, endTime;
     private Double price;
+    private String radius = "",artistLat,artistLng;
+    private ArrayList<Services.ArtistDetailBean.BusineshoursBean> busineshoursList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,10 +171,13 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         main_scroll_view = findViewById(R.id.main_scroll_view);
         ly_incall = findViewById(R.id.ly_incall);
         tv_msg = findViewById(R.id.tv_msg);
+        lyArtistTopView = findViewById(R.id.lyArtistTopView);
         AppCompatButton btnToday = findViewById(R.id.btnToday);
 
         cv_ly_category = findViewById(R.id.cv_ly_category);
         cv_ly_biz_type = findViewById(R.id.cv_ly_biz_type);
+
+        busineshoursList = new ArrayList<>();
 
 
         click = new IncallOutCallAdapter.childItemClick() {
@@ -206,6 +211,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         main_scroll_view.setOnClickListener(this);
         ly_outcall.setOnClickListener(this);
         btnCOnfirmBooking.setOnClickListener(this);
+        lyArtistTopView.setOnClickListener(this);
         btnToday.setOnClickListener(this);
 
 
@@ -430,6 +436,9 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                     intent.putExtra("artistId", artistId);
                     intent.putExtra("isBankAdded", isBankAdded);
                     intent.putExtra("isOutCallSelected", isOutCallSelected);
+                    intent.putExtra("artistLat",artistLat);
+                    intent.putExtra("artistLng",artistLng);
+                    intent.putExtra("radius",radius);
                     startActivityForResult(intent, Constant.REQUEST_Select_Service);
                 } else {
                     if (childId == 0) {
@@ -439,6 +448,12 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                     } else apiForContinueBooking("0");
                 }
 
+                break;
+
+            case R.id.lyArtistTopView:
+                Intent intent = new Intent(BookingActivity.this, WorkingHourActivity.class);
+                intent.putExtra("busineshoursList", busineshoursList);
+                startActivity(intent);
                 break;
         }
     }
@@ -695,9 +710,15 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                     String status = js.getString("status");
                     String message = js.getString("message");
 
+                    busineshoursList.clear();
                     if (status.equals("success")) {
                         Gson gson = new Gson();
                         services = gson.fromJson(response, Services.class);
+                        busineshoursList.addAll(services.artistDetail.busineshours);
+                        radius = services.artistDetail.radius;
+                        artistLat = services.artistDetail.latitude;
+                        artistLng = services.artistDetail.longitude;
+
                         businessType = services.artistDetail.businessType;
 
                         rating.setRating(Float.parseFloat(services.artistDetail.ratingCount));
@@ -1316,6 +1337,9 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                         intent.putExtra("artistId", artistId);
                         intent.putExtra("isBankAdded", isBankAdded);
                         intent.putExtra("isOutCallSelected", isOutCallSelected);
+                        intent.putExtra("artistLat",artistLat);
+                        intent.putExtra("artistLng",artistLng);
+                        intent.putExtra("radius",radius);
                         startActivityForResult(intent, Constant.REQUEST_Select_Service);
                         startTime = "";
                     } else {

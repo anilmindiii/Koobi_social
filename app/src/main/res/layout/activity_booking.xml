@@ -37,12 +37,13 @@
             app:civ_border_width="2dp" />
 
         <LinearLayout
-            android:id="@+id/lyArtistName"
+            android:id="@+id/lyArtistTopView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
             android:layout_toRightOf="@+id/ivProfile"
             android:gravity="center_vertical"
+            android:layout_marginRight="80dp"
             android:orientation="vertical">
 
             <TextView
@@ -159,6 +160,8 @@
                 android:fontFamily="@font/nunito_regular"
                 android:scaleX=".7"
                 android:scaleY=".7"
+                android:clickable="false"
+                android:enabled="false"
                 android:textSize="12sp" />
 
             <TextView

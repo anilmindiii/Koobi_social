@@ -290,7 +290,10 @@
             android:name=".activity.booking.VoucherCodesActivity"
             android:screenOrientation="portrait"
             android:theme="@style/StatusBarBlack" />
-        <activity android:name=".activity.booking.WorkingHourActivity"></activity>
+        <activity
+            android:name=".activity.booking.WorkingHourActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack"/>
     </application>
 
 </manifest>

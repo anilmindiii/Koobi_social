@@ -40,9 +40,6 @@ public class TimeSlotAdapter extends RecyclerView.Adapter<TimeSlotAdapter.ViewHo
         void getSelectedTimeSlot(TimeSlotInfo slotInfo);
     }
 
-
-
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -58,13 +55,12 @@ public class TimeSlotAdapter extends RecyclerView.Adapter<TimeSlotAdapter.ViewHo
         if(timeSlotList.get(position).isSelectSlot){
             holder.tv_time_slot.setTextColor(ContextCompat.getColor(mContext,R.color.white));
             holder.clock.setColorFilter(ContextCompat.getColor(mContext, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-            holder.ly_main.getBackground().setColorFilter(ContextCompat.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+            holder.ly_main.setBackgroundResource(R.drawable.rounded_border_dark_selected);
 
         }else {
             holder.tv_time_slot.setTextColor(ContextCompat.getColor(mContext,R.color.text_color));
             holder.clock.setColorFilter(ContextCompat.getColor(mContext, R.color.text_color), android.graphics.PorterDuff.Mode.SRC_IN);
             holder.ly_main.setBackgroundResource(R.drawable.rounded_border_dark);
-
         }
 
         holder.ly_main.setOnClickListener(new View.OnClickListener() {
@@ -73,10 +69,9 @@ public class TimeSlotAdapter extends RecyclerView.Adapter<TimeSlotAdapter.ViewHo
                 for(int i =0;i<timeSlotList.size();i++){
                     timeSlotList.get(i).isSelectSlot = false;
                 }
-
                 timeSlotList.get(position).isSelectSlot = true;
-                notifyDataSetChanged();
 
+                notifyDataSetChanged();
                 selectTimeListner.getSelectedTimeSlot(timeSlotList.get(position));
             }
         });

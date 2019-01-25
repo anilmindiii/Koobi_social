@@ -279,6 +279,7 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
             @Override
             public boolean onQueryTextSubmit(String query) {
                 KeyboardUtil.hideKeyboard(searchview, mContext);
+                searchview.clearFocus();
                 return false;
             }
 
@@ -1099,6 +1100,8 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onResume() {
+        searchview.clearFocus();
+        KeyboardUtil.hideKeyboard(getView(),mContext);
         super.onResume();
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;

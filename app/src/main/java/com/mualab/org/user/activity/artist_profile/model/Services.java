@@ -1,5 +1,6 @@
 package com.mualab.org.user.activity.artist_profile.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,9 +38,9 @@ public class Services {
         public int bankStatus;
         public List<BusineshoursBean> busineshours;
         public boolean isAlreadybooked;
-        
 
-        public static class BusineshoursBean {
+
+        public static class BusineshoursBean implements Serializable{
            
             public int _id;
             public String fullStartTime;
@@ -52,7 +53,7 @@ public class Services {
             public String startTime;
             public String endTime;
             public int __v;
-            
+
         }
     }
 

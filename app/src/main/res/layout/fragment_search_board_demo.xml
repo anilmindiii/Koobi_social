@@ -121,7 +121,7 @@
                           android:fontFamily="@font/nunito_regular"
                           android:lineSpacingExtra="0dp"
                           android:lineSpacingMultiplier="0"
-
+                          android:imeOptions="actionDone"
                           android:minHeight="50dp"
                           android:textColor="@color/text_color"
                           android:textSize="18sp"

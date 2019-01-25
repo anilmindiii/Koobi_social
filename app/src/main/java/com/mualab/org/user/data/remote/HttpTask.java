@@ -83,6 +83,7 @@ public class HttpTask {
         private Map<String, String> header;
         private Map<String, String> params;
         private Map<String, String> body;
+        private Map<String, JSONObject> bodyjson;
         private String jsonObjectString;
         private String authToken;
         private String TAG;
@@ -131,6 +132,11 @@ public class HttpTask {
 
         public Builder setBody(Map<String, String> body) {
             this.body = body;
+            return this;
+        }
+        public Builder setBodyJson(Map<String, JSONObject> body,String contentType) {
+            this.bodyjson = body;
+            this.bodyContentType = contentType;
             return this;
         }
 
