@@ -44,7 +44,11 @@ import com.mualab.org.user.utils.constants.Constant;
 
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,9 +119,9 @@ public class BookingConfirmActivity extends AppCompatActivity {
 
             @Override
             public void editService(BookingConfirmInfo.DataBean dataBean) {
-               /* Intent intent = new Intent();
+                Intent intent = new Intent();
 
-                intent.putExtra("_id",dataBean.staffId);
+                intent.putExtra("_id",dataBean.artistServiceId);
                 intent.putExtra("artistId",artistId);
 
                 if(isOutCallSelected){
@@ -134,14 +138,20 @@ public class BookingConfirmActivity extends AppCompatActivity {
                 intent.putExtra("serviceId",dataBean.serviceId);
                 intent.putExtra("subServiceId",dataBean.subServiceId);
 
+                intent.putExtra("staffId",dataBean.staffId);
+                intent.putExtra("startTime",dataBean.startTime);
+                intent.putExtra("bookingDate",dataBean.bookingDate);//28/01/2019
+
                 intent.putExtra("mainServiceName","");// should be empty
                 intent.putExtra("subServiceName",dataBean.artistServiceName);
 
-                intent.putExtra("incallStaff",false);
 
+
+                int day = getDayFromDate(dataBean.bookingDate);
+                intent.putExtra("dayId",day);
 
                 setResult(-2,intent);
-                finish();*/
+                finish();
             }
         });
         rcv_service.setAdapter(adapter);
@@ -682,5 +692,54 @@ public class BookingConfirmActivity extends AppCompatActivity {
                 .setBodyJson(paramsobj, HttpTask.ContentType.APPLICATION_JSON)
                 .setBody(params, HttpTask.ContentType.APPLICATION_JSON));
         task.execute(this.getClass().getName());
+    }
+
+    private int getDayFromDate(String date) {
+        String input_date= date;
+        SimpleDateFormat format1=new SimpleDateFormat("dd/MM/yyyy");
+        Date dt1= null;
+        try {
+            dt1 = format1.parse(input_date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        DateFormat format2=new SimpleDateFormat("EEEE");
+        String finalDay=format2.format(dt1);
+
+      return getDayByName(finalDay);
+    }
+
+    private int getDayByName(String dayName){
+        int dayId = 0;
+        switch (dayName){
+            case "Sunday":
+                dayId = 6;
+                break;
+
+            case "Monday":
+                dayId = 0;
+                break;
+
+            case "Tuesday":
+                dayId = 1;
+                break;
+
+            case "Wednesday":
+                dayId = 2;
+                break;
+
+            case "Thursday":
+                dayId = 3;
+                break;
+
+            case "Friday":
+                dayId = 4;
+                break;
+
+            case "Saturday":
+                dayId = 5;
+                break;
+        }
+        return dayId;
     }
 }

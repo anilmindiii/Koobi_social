@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.ablanco.zoomy.Zoomy;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.hendraanggrian.socialview.SocialView;
@@ -850,6 +851,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ll_Dot = itemView.findViewById(R.id.ll_Dot);
             rl_imageView = itemView.findViewById(R.id.rl_imageView);
             weakRefViewPager = new WeakReference<>((ViewPager) itemView.findViewById(R.id.viewpager));
+
+
 
         }
     }
