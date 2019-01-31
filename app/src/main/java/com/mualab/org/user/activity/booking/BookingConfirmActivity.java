@@ -1,6 +1,8 @@
 package com.mualab.org.user.activity.booking;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.support.v4.content.ContextCompat;
@@ -11,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -19,7 +22,9 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
 import com.mualab.org.user.R;
 import com.mualab.org.user.activity.artist_profile.activity.ArtistServiceDetailsActivity;
@@ -52,6 +57,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -64,17 +71,17 @@ public class BookingConfirmActivity extends AppCompatActivity {
     private RadioGroup radioGroup;
     private RadioButton rb_case, rb_online;
     private RelativeLayout ly_location;
-    private TextView tv_address, tv_apply,tv_new_amount,tv_amount;
+    private TextView tv_address, tv_apply, tv_new_amount, tv_amount;
     private EditText ed_vouchar_code;
     private ImageView iv_voucher_arrow;
     double total_price = 0.0;
     private FrameLayout ly_amount;
     JSONObject voucher;
-    private String bookingType = "1",paymentType = "2",discountPrice = "",bookingDate = "",bookingTime = "";
-    private AppCompatButton btn_confirm_booking,brn_add_more;
-    private ImageView iv_location_arrow,iv_voucher_cancel;
+    private String bookingType = "1", paymentType = "2", discountPrice = "", bookingDate = "", bookingTime = "";
+    private AppCompatButton btn_confirm_booking, brn_add_more;
+    private ImageView iv_location_arrow, iv_voucher_cancel;
     private TextView tv_call_type;
-    private String radius = "",artistLat = "0.0",artistLng = "0.0";
+    private String radius = "", artistLat = "0.0", artistLng = "0.0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,44 +120,44 @@ public class BookingConfirmActivity extends AppCompatActivity {
         bookingList = new ArrayList<>();
         adapter = new ConfirmServiceAdapter(this, bookingList, new ConfirmServiceAdapter.getValue() {
             @Override
-            public void deleteService(int bookingId,int position) {
-                deleteBookService(String.valueOf(bookingId),position);
+            public void deleteService(int bookingId, int position) {
+                deleteBookService(String.valueOf(bookingId), position);
             }
 
             @Override
             public void editService(BookingConfirmInfo.DataBean dataBean) {
+                updateTimer();
                 Intent intent = new Intent();
 
-                intent.putExtra("_id",dataBean.artistServiceId);
-                intent.putExtra("artistId",artistId);
+                intent.putExtra("_id", dataBean.artistServiceId);
+                intent.putExtra("artistId", artistId);
 
-                if(isOutCallSelected){
-                    intent.putExtra("callType","Out Call");
-                    intent.putExtra("outcallStaff",true);
-                    intent.putExtra("incallStaff",false);
-                }else{
-                    intent.putExtra("callType","In Call");
-                    intent.putExtra("outcallStaff",false);
-                    intent.putExtra("incallStaff",true);
+                if (isOutCallSelected) {
+                    intent.putExtra("callType", "Out Call");
+                    intent.putExtra("outcallStaff", true);
+                    intent.putExtra("incallStaff", false);
+                } else {
+                    intent.putExtra("callType", "In Call");
+                    intent.putExtra("outcallStaff", false);
+                    intent.putExtra("incallStaff", true);
                 }
 
 
-                intent.putExtra("serviceId",dataBean.serviceId);
-                intent.putExtra("subServiceId",dataBean.subServiceId);
+                intent.putExtra("serviceId", dataBean.serviceId);
+                intent.putExtra("subServiceId", dataBean.subServiceId);
 
-                intent.putExtra("staffId",dataBean.staffId);
-                intent.putExtra("startTime",dataBean.startTime);
-                intent.putExtra("bookingDate",dataBean.bookingDate);//28/01/2019
+                intent.putExtra("staffId", dataBean.staffId);
+                intent.putExtra("startTime", dataBean.startTime);
+                intent.putExtra("bookingDate", dataBean.bookingDate);//28/01/2019
 
-                intent.putExtra("mainServiceName","");// should be empty
-                intent.putExtra("subServiceName",dataBean.artistServiceName);
-
+                intent.putExtra("mainServiceName", "");// should be empty
+                intent.putExtra("subServiceName", dataBean.artistServiceName);
 
 
                 int day = getDayFromDate(dataBean.bookingDate);
-                intent.putExtra("dayId",day);
+                intent.putExtra("dayId", day);
 
-                setResult(-2,intent);
+                setResult(-2, intent);
                 finish();
             }
         });
@@ -166,11 +173,11 @@ public class BookingConfirmActivity extends AppCompatActivity {
 
             isOutCallSelected = getIntent().getBooleanExtra("isOutCallSelected", false);
 
-            if(isOutCallSelected){
+            if (isOutCallSelected) {
                 bookingType = "2";
                 iv_location_arrow.setVisibility(View.VISIBLE);
                 tv_call_type.setText("Out Call");
-            }else  {
+            } else {
                 bookingType = "1";
                 iv_location_arrow.setVisibility(View.GONE);
                 tv_call_type.setText("In Call");
@@ -210,14 +217,14 @@ public class BookingConfirmActivity extends AppCompatActivity {
         tv_apply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                KeyboardUtil.hideKeyboard(v,BookingConfirmActivity.this);
-               /* if(!tv_apply.getText().toString().equals("Applied")){
+                KeyboardUtil.hideKeyboard(v, BookingConfirmActivity.this);
+                if (!tv_apply.getText().toString().equals("Applied")) {
                     String voucherCode = ed_vouchar_code.getText().toString().trim();
                     if (!TextUtils.isEmpty(voucherCode)) {
-                        applyVoucherCode(artistId,voucherCode);
+                        applyVoucherCode(artistId, voucherCode);
                     } else
                         MyToast.getInstance(BookingConfirmActivity.this).showDasuAlert("Please enter voucher code");
-                }*/
+                }
 
             }
         });
@@ -238,7 +245,7 @@ public class BookingConfirmActivity extends AppCompatActivity {
                 iv_voucher_arrow.setVisibility(View.VISIBLE);
                 iv_voucher_cancel.setVisibility(View.INVISIBLE);
 
-                tv_new_amount.setText("£"+total_price);
+                tv_new_amount.setText("£" + total_price);
 
                 tv_new_amount.setVisibility(View.VISIBLE);
                 tv_amount.setVisibility(View.GONE);
@@ -262,7 +269,10 @@ public class BookingConfirmActivity extends AppCompatActivity {
         });
 
         GetServices(artistId);
+        startTimer();
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -282,8 +292,8 @@ public class BookingConfirmActivity extends AppCompatActivity {
 
         }
 
-        if(requestCode == Constant.REQUEST_CODE_CHOOSE){
-            if (data != null){
+        if (requestCode == Constant.REQUEST_CODE_CHOOSE) {
+            if (data != null) {
                 if (data.getParcelableExtra("voucherItem") != null) {
                     VoucherInfo.DataBean voucherItem = data.getParcelableExtra("voucherItem");
 
@@ -295,9 +305,10 @@ public class BookingConfirmActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        updateTimer();
         Intent intent = new Intent();
-        intent.putExtra("isOutCallSelected",isOutCallSelected);
-        setResult(RESULT_OK,intent);
+        intent.putExtra("isOutCallSelected", isOutCallSelected);
+        setResult(RESULT_OK, intent);
         super.onBackPressed();
     }
 
@@ -345,7 +356,7 @@ public class BookingConfirmActivity extends AppCompatActivity {
                                 tv_address.setText(bookingList.get(0).companyAddress);
                         }
 
-                        if (bookingList.size() > 0){
+                        if (bookingList.size() > 0) {
                             bookingDate = bookingList.get(0).bookingDate;
                             bookingTime = bookingList.get(0).startTime;
 
@@ -353,10 +364,10 @@ public class BookingConfirmActivity extends AppCompatActivity {
 
 
                         total_price = 0.0;
-                        for(BookingConfirmInfo.DataBean bean : bookingList){
-                            total_price = Double.parseDouble(bean.bookingPrice)+total_price;
+                        for (BookingConfirmInfo.DataBean bean : bookingList) {
+                            total_price = Double.parseDouble(bean.bookingPrice) + total_price;
                         }
-                        tv_new_amount.setText("£"+total_price+"");
+                        tv_new_amount.setText("£" + total_price + "");
 
                     } else {
 
@@ -391,7 +402,7 @@ public class BookingConfirmActivity extends AppCompatActivity {
         task.execute(this.getClass().getName());
     }
 
-    private void applyVoucherCode(final String artistId,final String voucherCode) {
+    private void applyVoucherCode(final String artistId, final String voucherCode) {
         Progress.show(BookingConfirmActivity.this);
         Session session = Mualab.getInstance().getSessionManager();
         User user = session.getUser();
@@ -402,7 +413,7 @@ public class BookingConfirmActivity extends AppCompatActivity {
                 public void onNetworkChange(Dialog dialog, boolean isConnected) {
                     if (isConnected) {
                         dialog.dismiss();
-                        applyVoucherCode(artistId,voucherCode);
+                        applyVoucherCode(artistId, voucherCode);
                     }
                 }
             }).show();
@@ -429,17 +440,17 @@ public class BookingConfirmActivity extends AppCompatActivity {
                         JSONObject data = object.getJSONObject("data");
                         voucher = data;
 
-                        VoucherInfo.DataBean voucherItem = gson.fromJson(data.toString(),VoucherInfo.DataBean.class);
+                        VoucherInfo.DataBean voucherItem = gson.fromJson(data.toString(), VoucherInfo.DataBean.class);
 
 
                         tv_apply.setText("Applied");
 
                         ly_amount.setVisibility(View.VISIBLE);
                         tv_amount.setVisibility(View.VISIBLE);
-                        tv_amount.setText("£"+total_price+"");
-                        tv_amount.setTextColor(ContextCompat.getColor(BookingConfirmActivity.this,R.color.red));
+                        tv_amount.setText("£" + total_price + "");
+                        tv_amount.setTextColor(ContextCompat.getColor(BookingConfirmActivity.this, R.color.red));
 
-                        if(voucherItem.discountType.equals("1")){// for fix amount
+                        if (voucherItem.discountType.equals("1")) {// for fix amount
                             Double newDiscountedPrice = (total_price - (Double.parseDouble(voucherItem.amount)));
 
                             if (newDiscountedPrice < 0.0) {
@@ -449,13 +460,12 @@ public class BookingConfirmActivity extends AppCompatActivity {
                                 // it's a positive
                                 discountPrice = String.valueOf(newDiscountedPrice);
                             }
-                            tv_new_amount.setText("£"+discountPrice+"");
+                            tv_new_amount.setText("£" + discountPrice + "");
 
-                        }
-                        else if(voucherItem.discountType.equals("2")){// for % percentage
-                            Double newDiscountedPrice =  ((total_price * (Double.parseDouble(voucherItem.amount))) / 100);
+                        } else if (voucherItem.discountType.equals("2")) {// for % percentage
+                            Double newDiscountedPrice = ((total_price * (Double.parseDouble(voucherItem.amount))) / 100);
 
-                            newDiscountedPrice = ( total_price - newDiscountedPrice);
+                            newDiscountedPrice = (total_price - newDiscountedPrice);
                             if (newDiscountedPrice < 0.0) {
                                 // negative
                                 discountPrice = String.valueOf(0.0);
@@ -463,19 +473,16 @@ public class BookingConfirmActivity extends AppCompatActivity {
                                 // it's a positive
                                 discountPrice = String.valueOf(newDiscountedPrice);
                             }
-                            tv_new_amount.setText("£"+discountPrice+"");
+                            tv_new_amount.setText("£" + discountPrice + "");
                         }
 
                         iv_voucher_arrow.setVisibility(View.INVISIBLE);
                         iv_voucher_cancel.setVisibility(View.VISIBLE);
 
 
-
-
                     } else {
                         MyToast.getInstance(BookingConfirmActivity.this).showDasuAlert(message);
                     }
-
 
 
                 } catch (Exception e) {
@@ -537,10 +544,10 @@ public class BookingConfirmActivity extends AppCompatActivity {
 
                     if (status.equals("success")) {
                         bookingList.remove(position);
-                        if(bookingList.size() == 0){
+                        if (bookingList.size() == 0) {
                             onBackPressed();
                             return;
-                        }else {
+                        } else {
                             GetServices(artistId);
                         }
 
@@ -548,7 +555,6 @@ public class BookingConfirmActivity extends AppCompatActivity {
                     } else {
                         MyToast.getInstance(BookingConfirmActivity.this).showDasuAlert(message);
                     }
-
 
 
                 } catch (Exception e) {
@@ -579,20 +585,21 @@ public class BookingConfirmActivity extends AppCompatActivity {
     }
 
     private void confirmBooking() {
+        stopTimer();
         // check service availble or not particular location
-        if (isOutCallSelected){
+        if (isOutCallSelected) {
 
-            Location startPoint=new Location("locationA");
+            Location startPoint = new Location("locationA");
             startPoint.setLatitude(Mualab.currentLocation.lat);
             startPoint.setLongitude(Mualab.currentLocation.lng);
 
-            Location endPoint=new Location("locationA");
+            Location endPoint = new Location("locationA");
             endPoint.setLatitude(Double.parseDouble(artistLat));
             endPoint.setLongitude(Double.parseDouble(artistLng));
             double distance = startPoint.distanceTo(endPoint);
             distance = (distance / 1609.344);
 
-            if(Double.parseDouble(radius) <= distance){
+            if (Double.parseDouble(radius) <= distance) {
                 MyToast.getInstance(BookingConfirmActivity.this).showDasuAlert("Selected artist services is not available at this location");
                 return;
             }
@@ -626,11 +633,13 @@ public class BookingConfirmActivity extends AppCompatActivity {
         params.put("paymentType", paymentType);
         params.put("bookingType", bookingType);
 
+        params.put("latitude", artistLat);
+        params.put("longitude", artistLng);
+        //params.put("voucher", voucher.toString());
 
-        Map<String, JSONObject> paramsobj = new HashMap<>();
-        paramsobj.put("voucher", voucher);
 
-
+     /*   Map<String, JSONObject> paramsobj = new HashMap<>();
+        paramsobj.put("voucher", voucher);*/
         HttpTask task = new HttpTask(new HttpTask.Builder(BookingConfirmActivity.this, "confirmBooking", new HttpResponceListner.Listener() {
             @Override
             public void onResponse(String response, String apiName) {
@@ -646,16 +655,16 @@ public class BookingConfirmActivity extends AppCompatActivity {
                         dialog.setTitleText("Congratulation!");
                         dialog.setContentText("Your booking request has been successfully sent to artist.");
                         dialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                    @Override
-                                    public void onClick(SweetAlertDialog sDialog) {
-                                        sDialog.dismissWithAnimation();
-                                        Intent showLogin = new Intent(BookingConfirmActivity.this, MainActivity.class);
-                                        showLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        showLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        startActivity(showLogin);
-                                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                                    }
-                                });
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                sDialog.dismissWithAnimation();
+                                Intent showLogin = new Intent(BookingConfirmActivity.this, MainActivity.class);
+                                showLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                showLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(showLogin);
+                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                            }
+                        });
 
                         dialog.setCancelable(false);
                         dialog.setCanceledOnTouchOutside(false);
@@ -663,7 +672,6 @@ public class BookingConfirmActivity extends AppCompatActivity {
                     } else {
                         MyToast.getInstance(BookingConfirmActivity.this).showDasuAlert(message);
                     }
-
 
 
                 } catch (Exception e) {
@@ -689,29 +697,29 @@ public class BookingConfirmActivity extends AppCompatActivity {
         })
                 .setAuthToken(user.authToken)
                 .setProgress(true)
-                .setBodyJson(paramsobj, HttpTask.ContentType.APPLICATION_JSON)
+                //.setBodyJson(paramsobj, HttpTask.ContentType.APPLICATION_JSON)
                 .setBody(params, HttpTask.ContentType.APPLICATION_JSON));
         task.execute(this.getClass().getName());
     }
 
     private int getDayFromDate(String date) {
-        String input_date= date;
-        SimpleDateFormat format1=new SimpleDateFormat("dd/MM/yyyy");
-        Date dt1= null;
+        String input_date = date;
+        SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
+        Date dt1 = null;
         try {
             dt1 = format1.parse(input_date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        DateFormat format2=new SimpleDateFormat("EEEE");
-        String finalDay=format2.format(dt1);
+        DateFormat format2 = new SimpleDateFormat("EEEE");
+        String finalDay = format2.format(dt1);
 
-      return getDayByName(finalDay);
+        return getDayByName(finalDay);
     }
 
-    private int getDayByName(String dayName){
+    private int getDayByName(String dayName) {
         int dayId = 0;
-        switch (dayName){
+        switch (dayName) {
             case "Sunday":
                 dayId = 6;
                 break;
@@ -742,4 +750,134 @@ public class BookingConfirmActivity extends AppCompatActivity {
         }
         return dayId;
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopTimer();
+    }
+
+    public static void stopTimer() {
+        if (Mualab.getInstance().getMyTimer() != null) {
+            Mualab.getInstance().getMyTimer().cancel();
+            Mualab.getInstance().getMyTimer().purge();
+        }
+    }
+
+    public void updateTimer() {
+        stopTimer();
+        startTimer();
+    }
+
+    public void startTimer() {
+        Mualab.getInstance().myTimer = new Timer();
+        if (Mualab.getInstance().getMyTimer() != null) {
+            Mualab.getInstance().getMyTimer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    runOnUiThread(Timer_Tick);
+                }
+
+            }, 300000);
+        }
+
+    }
+
+    private Runnable Timer_Tick = new Runnable() {
+        public void run() {
+            dialogNew();
+        }
+    };
+
+
+    private void dialogNew() {
+        final AlertDialog alertDialog = new AlertDialog.Builder(getApplicationContext())
+                .setTitle("Alert")
+                .setMessage("Your booking session has been expaire")
+                .setCancelable(false)
+                .create();
+        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent dialogIntent = new Intent(getApplicationContext(), MainActivity.class);
+                dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                dialogIntent.putExtra("type", "LaunchAppAlarm");
+                getApplicationContext().startActivity(dialogIntent);
+                alertDialog.dismiss();
+                apiForRemoveAllBooking();
+            }
+        });
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
+        } else {
+            alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        }
+
+        alertDialog.show();
+    }
+
+    private void apiForRemoveAllBooking() {
+        Progress.show(BookingConfirmActivity.this);
+        Session session = Mualab.getInstance().getSessionManager();
+        User user = session.getUser();
+
+        if (!ConnectionDetector.isConnected()) {
+            new NoConnectionDialog(BookingConfirmActivity.this, new NoConnectionDialog.Listner() {
+                @Override
+                public void onNetworkChange(Dialog dialog, boolean isConnected) {
+                    if (isConnected) {
+                        dialog.dismiss();
+                        apiForRemoveAllBooking();
+                    }
+                }
+            }).show();
+        }
+
+        Map<String, String> params = new HashMap<>();
+        params.put("userId", String.valueOf(Mualab.currentUser.id));
+
+
+        HttpTask task = new HttpTask(new HttpTask.Builder(BookingConfirmActivity.this, "deleteUserBookService", new HttpResponceListner.Listener() {
+            @Override
+            public void onResponse(String response, String apiName) {
+                Progress.hide(BookingConfirmActivity.this);
+                try {
+                    JSONObject js = new JSONObject(response);
+                    String status = js.getString("status");
+                    String message = js.getString("message");
+                    if (status.equals("success")) {
+
+                    } else {
+                        MyToast.getInstance(BookingConfirmActivity.this).showDasuAlert(message);
+                    }
+
+                } catch (Exception e) {
+                    Progress.hide(BookingConfirmActivity.this);
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void ErrorListener(VolleyError error) {
+                Progress.hide(BookingConfirmActivity.this);
+                try {
+                    Helper helper = new Helper();
+                    if (helper.error_Messages(error).contains("Session")) {
+                        Mualab.getInstance().getSessionManager().logout();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        })
+                .setAuthToken(user.authToken)
+                .setProgress(true)
+                .setBody(params, HttpTask.ContentType.APPLICATION_JSON));
+        task.execute(this.getClass().getName());
+    }
 }
+

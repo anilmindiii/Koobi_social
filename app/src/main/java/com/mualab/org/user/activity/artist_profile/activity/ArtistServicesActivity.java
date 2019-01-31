@@ -256,7 +256,7 @@ public class ArtistServicesActivity extends AppCompatActivity implements View.On
                                         rcv_outcall.setAdapter(outCallAdapter);
                                     }
                                 } else {
-                                    tv_category.setText("No category found");
+                                    tv_category.setText("No category available");
                                     iv_down_arrow_category.setVisibility(View.GONE);
                                     main_scroll_view.setVisibility(View.GONE);
                                     tv_msg.setVisibility(View.VISIBLE);

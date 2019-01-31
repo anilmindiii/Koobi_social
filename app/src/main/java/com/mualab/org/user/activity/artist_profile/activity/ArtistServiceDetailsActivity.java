@@ -151,6 +151,22 @@ public class ArtistServiceDetailsActivity extends AppCompatActivity {
 
                         tv_description.setText(services.serviceInfo.description+"");
                         detailsInfoList.addAll(services.staffInfo);
+
+                        for (int i = 0; i < detailsInfoList.size(); i++) {
+
+                            if(callTypeString.equals("In Call")){
+                                if(detailsInfoList.get(i).inCallPrice == 0.0){
+                                    detailsInfoList.remove(i);
+                                }
+                            }else {
+                                if(detailsInfoList.get(i).outCallPrice == 0.0){
+                                    detailsInfoList.remove(i);
+                                }
+                            }
+                        }
+
+
+
                         adapter.notifyDataSetChanged();
 
                         if(detailsInfoList.size() == 1){

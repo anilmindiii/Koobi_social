@@ -18,6 +18,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <!-- All nesassery hardware -->
     <uses-feature
@@ -293,7 +294,15 @@
         <activity
             android:name=".activity.booking.WorkingHourActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/StatusBarBlack"/>
+            android:theme="@style/StatusBarBlack" />
+        <activity
+            android:name=".activity.booking.BookingHisoryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
+        <activity
+            android:name=".activity.booking.BookingDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StatusBarBlack" />
     </application>
 
 </manifest>

@@ -25,11 +25,18 @@ public class ConfirmServiceAdapter extends RecyclerView.Adapter<ConfirmServiceAd
     Context mContext;
     List<BookingConfirmInfo.DataBean> bookingList;
     getValue valueListner;
+    boolean isShowEditView = true;
 
     public ConfirmServiceAdapter(Context mContext,List<BookingConfirmInfo.DataBean> bookingList, getValue valueListner) {
         this.mContext = mContext;
         this.bookingList = bookingList;
         this.valueListner = valueListner;
+    }
+
+    public ConfirmServiceAdapter(Context mContext,List<BookingConfirmInfo.DataBean> bookingList,boolean isShowEditView) {
+        this.mContext = mContext;
+        this.bookingList = bookingList;
+        this.isShowEditView = isShowEditView;
     }
 
     public interface getValue{
@@ -76,6 +83,21 @@ public class ConfirmServiceAdapter extends RecyclerView.Adapter<ConfirmServiceAd
             }
         });
 
+        // hiding view
+        if(isShowEditView){
+            holder.tv_edit.setVisibility(View.VISIBLE);
+            holder.tv_delete.setVisibility(View.VISIBLE);
+            holder.iv_service_arrow.setVisibility(View.VISIBLE);
+            holder.iv_price_arrow.setVisibility(View.VISIBLE);
+            holder.iv_time_date_arrow.setVisibility(View.VISIBLE);
+        }else {
+            holder.tv_edit.setVisibility(View.GONE);
+            holder.tv_delete.setVisibility(View.GONE);
+            holder.iv_service_arrow.setVisibility(View.GONE);
+            holder.iv_price_arrow.setVisibility(View.GONE);
+            holder.iv_time_date_arrow.setVisibility(View.GONE);
+        }
+
     }
 
 
@@ -87,7 +109,7 @@ public class ConfirmServiceAdapter extends RecyclerView.Adapter<ConfirmServiceAd
 
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView tv_name,tv_service_name,tv_date_time,tv_edit,tv_delete,tv_price;
-        ImageView iv_profile;
+        ImageView iv_profile,iv_service_arrow,iv_price_arrow,iv_time_date_arrow;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -99,6 +121,10 @@ public class ConfirmServiceAdapter extends RecyclerView.Adapter<ConfirmServiceAd
             tv_edit = itemView.findViewById(R.id.tv_edit);
             tv_delete = itemView.findViewById(R.id.tv_delete);
             tv_price = itemView.findViewById(R.id.tv_price);
+
+            iv_service_arrow = itemView.findViewById(R.id.iv_service_arrow);
+            iv_price_arrow = itemView.findViewById(R.id.iv_price_arrow);
+            iv_time_date_arrow = itemView.findViewById(R.id.iv_time_date_arrow);
         }
     }
 }

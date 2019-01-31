@@ -372,7 +372,6 @@
     <string name="no">No</string>
     <string name="are_you_sure_want_to_cancel_the_appointment">Are you sure want to cancel the appointment</string>
     <string name="confirmed">Confirmed</string>
-    <string name="pending">Pending</string>
     <string name="text_cancelled">Cancelled</string>
     <string name="text_confirmed">Confirmed</string>
     <string name="text_completed">Completed</string>
@@ -420,6 +419,12 @@
     <string name="details">Details</string>
     <string name="booking_confirm">Booking Confirmation</string>
     <string name="date_time"><![CDATA[Date & Time]]></string>
+    <string name="my_booking">My Booking</string>
+    <string name="booking_history">Booking History</string>
+    <string name="pending">Pending</string>
+    <string name="confirm">Confirmed</string>
+    <string name="online">Online</string>
+    <string name="pond_symbol">£</string>
 
 
 </resources>

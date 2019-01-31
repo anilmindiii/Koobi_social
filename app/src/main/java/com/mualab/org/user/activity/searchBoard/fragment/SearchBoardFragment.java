@@ -1127,7 +1127,6 @@ public class SearchBoardFragment extends BaseFragment implements View.OnClickLis
             if (locationList.size() > 0) {
                 //The last location in the list is the newest
                 Location location = locationList.get(locationList.size() - 1);
-
                 setLatLng(location);
             }
         }

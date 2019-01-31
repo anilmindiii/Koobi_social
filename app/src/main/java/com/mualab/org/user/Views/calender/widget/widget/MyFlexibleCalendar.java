@@ -18,6 +18,8 @@ import com.mualab.org.user.R;
 import com.mualab.org.user.Views.calender.data.CalendarAdapter;
 import com.mualab.org.user.Views.calender.data.Day;
 import com.mualab.org.user.Views.calender.data.Event;
+import com.mualab.org.user.activity.booking.BookingActivity;
+import com.mualab.org.user.dialogs.MyToast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -34,7 +36,7 @@ public class MyFlexibleCalendar extends MyUICalendar {
     private Handler mHandler = new Handler();
     private boolean mIsWaitingForUpdate = false;
 
-    private int mCurrentWeekIndex;
+    private int mCurrentWeekIndex,childId;
 
     public MyFlexibleCalendar(Context context) {
         super(context);
@@ -78,14 +80,14 @@ public class MyFlexibleCalendar extends MyUICalendar {
         mBtnPrevWeek.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                prevWeek();
+                prevMonth();
             }
         });
 
         mBtnNextWeek.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                nextWeek();
+                nextMonth();
             }
         });
 
@@ -295,8 +297,19 @@ public class MyFlexibleCalendar extends MyUICalendar {
         }
     }
 
-    private void onItemClicked(View view, Day day) {
-        select(day);
+    public int isServiceSelected(int childId){
+        this.childId = childId;
+        return childId;
+    }
+
+    public void onItemClicked(View view, Day day) {
+        if(isServiceSelected(childId)  == 0){
+            MyToast.getInstance(mContext).showDasuAlert("Please select service");
+
+            return;
+        }
+
+        select(day,true);
         isFirstimeLoad  = false;
         //  Day day1 = getSelectedDay();
 
@@ -560,12 +573,14 @@ public class MyFlexibleCalendar extends MyUICalendar {
         }
     }
 
-    public void select(Day day) {
+    public void select(Day day, boolean isRunApi) {
         setSelectedItem(new Day(day.getYear(), day.getMonth(), day.getDay()));
         redraw();
 
-        if (mListener != null) {
-            mListener.onDaySelect();
+        if(isRunApi){
+            if (mListener != null) {
+                mListener.onDaySelect();
+            }
         }
     }
 

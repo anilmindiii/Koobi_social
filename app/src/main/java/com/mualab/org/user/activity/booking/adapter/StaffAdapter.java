@@ -67,7 +67,9 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.ViewHolder>{
 
         if(staffInfoBeanList.get(position).bookingType.equals("Incall")){
             holder.tv_price.setText("£" + bean.inCallPrice+"");
-        }else holder.tv_price.setText("£" + bean.outCallPrice+"");
+        }else {
+            holder.tv_price.setText("£" + bean.outCallPrice+"");
+        }
 
         holder.tv_user_name.setText(bean.staffName);
 

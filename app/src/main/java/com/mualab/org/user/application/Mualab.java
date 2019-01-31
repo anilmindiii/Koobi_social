@@ -35,6 +35,7 @@ import com.mualab.org.user.utils.constants.Constant;
 import io.fabric.sdk.android.Fabric;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
 
 /**
  * Created by mindiii on 21/12/17.
@@ -55,6 +56,7 @@ public class Mualab extends Application {
 
     private Session session;
     private RequestQueue mRequestQueue;
+    public Timer myTimer;
 
     //service tag
     private SharedPreferences mSharedPreferences;
@@ -67,6 +69,7 @@ public class Mualab extends Application {
                         mInstance.getSharedPreferences(SHARED_PREF_NAME,
                                 Context.MODE_PRIVATE);
             }
+
         }
 
         return mInstance;
@@ -85,6 +88,9 @@ public class Mualab extends Application {
         currentLocationForBooking = new Location();
         FirebaseApp.initializeApp(this);
         session.setIsOutCallFilter(false);
+        myTimer = new Timer();
+        getMyTimer();
+
         // ref = FirebaseDatabase.getInstance().getReference();
 
         AndroidNetworking.initialize(getApplicationContext());
@@ -93,6 +99,12 @@ public class Mualab extends Application {
         }
     }
 
+
+
+
+    public Timer getMyTimer(){
+        return myTimer;
+    }
 
 
 

@@ -12,6 +12,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
+import com.google.gson.Gson;
 import com.mualab.org.user.application.Mualab;
 import com.mualab.org.user.application.VolleyRequest.AppHelper;
 import com.mualab.org.user.application.VolleyRequest.VolleyMultipartRequest;
@@ -22,10 +23,12 @@ import com.mualab.org.user.dialogs.ServerErrorDialog;
 import com.mualab.org.user.image.compressor.ImageCompressor;
 import com.mualab.org.user.utils.media.FileUtils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,17 +54,18 @@ public class HttpTask {
     private Map<String, String> header;
     private Map<String, String> params;
     private Map<String, String> body;
+    private Map<String, JSONObject> bodyjson;
     private String jsonObjectString;
     private String authToken;
     private String TAG;
     private boolean progress;
 
     public static class ContentType {
-        public static final String FORM_DATA = "multipart/form-data; charset=UTF-8";
-        public static final String APPLICATION_JSON = "application/json; charset=UTF-8";
-        public static final String APPLICATION_TEXT = "application/text; charset=UTF-8";
+        public static final String FORM_DATA = "multipart/form-data; charset=utf-8";
+        public static final String APPLICATION_JSON = "application/json; charset=utf-8";
+        public static final String APPLICATION_TEXT = "application/text; charset=utf-8";
         public static final String APPLICATION_TEXT_2 = "application/x-www-form-urlencoded";
-        public static final String X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded; charset=UTF-8";
+        public static final String X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded; charset=utf-8";
     }
 
     public static class Builder {
@@ -196,6 +200,7 @@ public class HttpTask {
         this.header = builder.header;
         this.params = builder.params;
         this.body = builder.body;
+        this.bodyjson = builder.bodyjson;
         this.jsonObjectString = builder.jsonObjectString;
         this.authToken = builder.authToken;
 
@@ -248,11 +253,15 @@ public class HttpTask {
                 }
                return super.getBody();*/
 
+
                 if (body != null) {
+
                     String string = new JSONObject(body).toString();
                     //new String(data, "UTF-8");
                     return string.getBytes();
+
                 }
+
 
                 if (jsonObjectString != null) {
                     return jsonObjectString.getBytes();

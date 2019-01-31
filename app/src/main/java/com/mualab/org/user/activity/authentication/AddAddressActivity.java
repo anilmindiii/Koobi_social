@@ -414,7 +414,8 @@ public class AddAddressActivity extends AppCompatActivity {
                     placeName = "";
                 }
 
-                ed_locality.setText(TextUtils.isEmpty( placeName+" "+stAddress1) ? "" :  placeName+" "+stAddress1);
+                //ed_locality.setText(TextUtils.isEmpty( placeName+" "+stAddress1) ? "" :  placeName+" "+stAddress1);
+                ed_locality.setText(TextUtils.isEmpty(stAddress1) ? "" :  stAddress1);
                 // ed_pinCode.setText(postalCode);
 
             }

@@ -113,12 +113,12 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
     private RatingBar rating;
     private LinearLayout ly_staff_main, ly_time_slot_main;
     private boolean outcallStaff, incallStaff, isBankAdded, isAlreadybooked;
-    private int totalTime, endTime, staffId = 0;
+    private int totalTime, endTime;
     private Double price;
     private String radius = "", artistLat, artistLng;
     private ArrayList<Services.ArtistDetailBean.BusineshoursBean> busineshoursList;
     private boolean isEditService;
-
+    private CalendarAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -187,8 +187,12 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void childClick(Services.ArtistServicesBean.SubServiesBean.ArtistservicesBean artistservicesBean, String callType, int adapterPosition) {
                 childId = artistservicesBean._id;
+                viewCalendar.isServiceSelected(childId);
                 artistServiceId = String.valueOf(artistservicesBean._id);
 
+                // clear staff and slot
+                staff = 0;
+                startTime = "";
 
                 String completeTime = Helper.formateDateFromstring("HH:mm", "mm", artistservicesBean.completionTime);
                 String preprationminutes = Helper.formateDateFromstring("HH:mm", "mm", preprationTime);
@@ -244,7 +248,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
 
         // init calendar
         Calendar cal = Calendar.getInstance();
-        CalendarAdapter adapter = new CalendarAdapter(this, cal);
+        adapter = new CalendarAdapter(this, cal);
         viewCalendar.setAdapter(adapter);
         dateFormat = new SimpleDateFormat("EEE, d MMMM yyyy");
         dateFormat.setTimeZone(cal.getTimeZone());
@@ -263,7 +267,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
         selectedDate = getCurrentDate();
         currentTime = getCurrentTime();
 
-
+        viewCalendar.isServiceSelected(childId);
         apiForGetAllServices();
     }
 
@@ -346,6 +350,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
 
             case R.id.ly_outcall:
                 if (chbOutcall.isChecked()) {
+                    callType = "In Call";
                     chbOutcall.setChecked(false);
                     isOutCallSelected = false;
 
@@ -359,6 +364,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                     } else adapterBizType.clickItem();
 
                 } else {
+                    callType = "Out Call";
                     chbOutcall.setChecked(true);
                     isOutCallSelected = true;
 
@@ -413,9 +419,12 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                     month = String.valueOf(Integer.parseInt(separated[1]));
                     day = String.valueOf(Integer.parseInt(separated[2]));
 
-                    viewCalendar.select(new Day(year, Integer.parseInt(month), Integer.parseInt(day)));
-                    viewCalendar.expand(500);
-
+                    Calendar cal = Calendar.getInstance();
+                    CalendarAdapter adapter = new CalendarAdapter(this, cal);
+                    viewCalendar.setAdapter(adapter);
+                    //viewCalendar.expand(500);
+                    setCalenderClickListner(viewCalendar);
+                    dayId = cal.get(GregorianCalendar.DAY_OF_WEEK) - 2;
                     if (Integer.parseInt(month) < 10) {
                         month = "0" + Integer.parseInt((month));
                     }
@@ -430,8 +439,9 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                 break;
 
             case R.id.btnCOnfirmBooking:
+               // viewCalendar.select(new Day(2019, 1, 8),true);
 
-                if (childId != 0 && !TextUtils.isEmpty(startTime) && !TextUtils.isEmpty(bookingId)) {
+                 if (childId != 0 && !TextUtils.isEmpty(startTime) && !TextUtils.isEmpty(bookingId)) {
                     apiForContinueBooking(bookingId);
                 } else if (isAlreadybooked) {
                     Intent intent = new Intent(BookingActivity.this, BookingConfirmActivity.class);
@@ -555,6 +565,8 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                             if (childId == 0) {
                                 MyToast.getInstance(BookingActivity.this).showDasuAlert("Please select service");
                             } else {
+                                staff = 0;
+                                startTime = "";
                                 apiForserviceStaff(String.valueOf(childId));
                             }
                         }
@@ -576,7 +588,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
 
             @Override
             public void onDataUpdate() {
-                Log.i(getClass().getName(), "Data Updated");
+
             }
 
             @Override
@@ -624,6 +636,8 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with Apis
+
+                        BookingConfirmActivity.stopTimer();
                         apiForRemoveAllBooking();
                     }
                 })
@@ -668,6 +682,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
 
                     childId = data.getIntExtra("_id", 0);
                     artistServiceId = String.valueOf(childId);
+                    viewCalendar.isServiceSelected(childId);
                     artistId = data.getStringExtra("artistId");
                     callType = data.getStringExtra("callType");
 
@@ -677,7 +692,8 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                     serviceId = data.getIntExtra("serviceId", 0);
                     subServiceId = data.getIntExtra("subServiceId", 0);
 
-                    staffId = data.getIntExtra("staffId", 0);
+                    staff = data.getIntExtra("staffId", 0);
+
 
                     outcallStaff = data.getBooleanExtra("outcallStaff", false);
                     incallStaff = data.getBooleanExtra("incallStaff", false);
@@ -685,6 +701,8 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
 
                     startTime = data.getStringExtra("startTime");
                     String bookingDate = data.getStringExtra("bookingDate"); //28/01/2019
+                    selectedDate =  Helper.formateDateFromstring("dd/MM/yyyy","yyyy-MM-dd",bookingDate);//2019-02-01
+
 
                     isEditService = true;
 
@@ -703,13 +721,31 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                     String mm = Helper.formateDateFromstring("dd/MM/yyyy","M",bookingDate);
                     String yyyy = Helper.formateDateFromstring("dd/MM/yyyy","yyyy",bookingDate);
 
-                    ///viewCalendar.select(new Day(Integer.parseInt(yyyy), Integer.parseInt(mm), Integer.parseInt(dd)));
+
+                    viewCalendar.isFirstimeLoad = false;
+                    Calendar calendar = Calendar.getInstance();
+                    System.out.println("Before - "+calendar.getTime());
+                    calendar.set(Calendar.MONTH, Integer.parseInt(mm)-1);
+                    calendar.set(Calendar.DATE, Integer.parseInt(dd));
+                    calendar.set(Calendar.YEAR, Integer.parseInt(yyyy));
+                    System.out.println("After - "+calendar.getTime());
+                    adapter = new CalendarAdapter(this, calendar);
+                    viewCalendar.setAdapter(adapter);
+                    setCalenderClickListner(viewCalendar);
+
+                    viewCalendar.select(new Day(Integer.parseInt(yyyy),Integer.parseInt(mm)-1,Integer.parseInt(dd)),false);
 
                     apiForGetAllServices();
                 }
 
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        BookingConfirmActivity.stopTimer();
     }
 
     private void apiForGetAllServices() {
@@ -830,11 +866,9 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
 
                                 }
 
-
                                 checkPositon = artistServicesBean.serviceName;
 
-
-                               /* if (!subServiceName.equals("")) {
+                                /* if (!subServiceName.equals("")) {
                                     for (int i = 0; i < artistServicesBean.subServies.size(); i++) {
                                         if (artistServicesBean.subServies.get(i).subServiceName.equals(subServiceName)) {
                                             childPos = i;
@@ -902,7 +936,6 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                                                 outCallList.add(artistServicesBean.subServies.get(childPos).artistservices.get(i));
                                             }
 
-
                                         }
 
                                         if (inCallList.size() == 0) {
@@ -936,7 +969,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
 
                                     }
                                 } else {
-                                    tv_category.setText("No category found");
+                                    tv_category.setText("No category available");
                                     iv_down_arrow_category.setVisibility(View.GONE);
                                     main_scroll_view.setVisibility(View.GONE);
                                     tv_msg.setVisibility(View.VISIBLE);
@@ -964,6 +997,10 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
 
                                         inCallList.clear();
                                         outCallList.clear();
+
+                                        // clear staff and slot
+                                        staff = 0;
+                                        startTime = "";
 
 
                                         for (int i = 0; i < bean.artistservices.size(); i++) {
@@ -1155,19 +1192,34 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
 
                         staffInfoBeanList.addAll(infoBooking.staffInfo);
 
-                        if (staffId != 0) {
+                        for (int i = 0; i < staffInfoBeanList.size(); i++) {
+
+                            if(callType.equals("In Call")){
+                                if(staffInfoBeanList.get(i).inCallPrice == 0.0){
+                                    staffInfoBeanList.remove(i);
+                                }
+                            }else {
+                                if(staffInfoBeanList.get(i).outCallPrice == 0.0){
+                                    staffInfoBeanList.remove(i);
+                                }
+                            }
+                        }
+
+
+                        if (staff != 0) {
                             for (int i = 0; i < staffInfoBeanList.size(); i++) {
-                                if (staffId == staffInfoBeanList.get(i).staffId) {
+
+                                if (staff == staffInfoBeanList.get(i).staffId) {
                                     staffInfoBeanList.get(i).isSelected = true;
                                 }
                             }
-                            staffId = 0;
+                            //staff = 0;
                         } else {
                             staffInfoBeanList.get(0).isSelected = true;
                         }
 
                         staffAdapter.notifyDataSetChanged();
-                        staff = 0;
+
                         apiForstaffSlot(String.valueOf(0));
                         ly_time_slot_main.setVisibility(View.VISIBLE);
                     }
@@ -1434,7 +1486,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                 public void onNetworkChange(Dialog dialog, boolean isConnected) {
                     if (isConnected) {
                         dialog.dismiss();
-                        apiForGetAllServices();
+                        apiForRemoveAllBooking();
                     }
                 }
             }).show();

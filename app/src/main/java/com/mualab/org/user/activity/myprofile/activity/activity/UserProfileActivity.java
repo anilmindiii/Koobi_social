@@ -197,7 +197,8 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         RecyclerView rycslidermenu = findViewById(R.id.rycslidermenu);
         LinearLayoutManager layoutManager = new LinearLayoutManager(UserProfileActivity.this);
         rycslidermenu.setLayoutManager(layoutManager);
-        NavigationMenuAdapter listAdapter = new NavigationMenuAdapter(UserProfileActivity.this, navigationItems, drawer, this);
+        NavigationMenuAdapter listAdapter = new NavigationMenuAdapter(UserProfileActivity.this,
+                navigationItems, drawer, this);
 
         rycslidermenu.setAdapter(listAdapter);
 

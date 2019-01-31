@@ -188,6 +188,7 @@ public class SearchBoardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             btnBook.setOnClickListener(this);
             //  ivProfile.setOnClickListener(this);
             lyContainer.setOnClickListener(this);
+            ivProfile.setOnClickListener(this);
         }
 
         @Override
@@ -220,10 +221,10 @@ public class SearchBoardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     context.startActivity(intent2);
 
                 case R.id.lyContainer:
-                    Intent intent3 = new Intent(context, ArtistProfileActivity.class);
+                   /* Intent intent3 = new Intent(context, ArtistProfileActivity.class);
                     intent3.putExtra("item",item);
                     intent3.putExtra("artistId",item._id);
-                    context.startActivity(intent3);
+                    context.startActivity(intent3);*/
                     break;
             }
         }

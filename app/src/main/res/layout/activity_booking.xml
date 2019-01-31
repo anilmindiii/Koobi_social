@@ -437,8 +437,6 @@
                                 android:scrollbars="none"
                                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-
-
                         </LinearLayout>
 
                         <TextView
@@ -457,8 +455,6 @@
                             android:textSize="13sp"
                             android:visibility="gone" />
 
-
-
                         <android.support.v7.widget.AppCompatButton
                             android:id="@+id/btnCOnfirmBooking"
                             style="@style/My_Button_Small.Invert"
@@ -468,7 +464,6 @@
                             android:layout_marginTop="20dp"
                             android:text="@string/text_continue_booking"
                             android:textSize="14sp" />
-
 
                     </LinearLayout>
 

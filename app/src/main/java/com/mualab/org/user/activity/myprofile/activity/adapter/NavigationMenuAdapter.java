@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mualab.org.user.R;
+import com.mualab.org.user.activity.booking.BookingHisoryActivity;
 import com.mualab.org.user.activity.businessInvitaion.activity.InvitationActivity;
 import com.mualab.org.user.activity.myprofile.activity.activity.EditProfileActivity;
 import com.mualab.org.user.activity.myprofile.activity.model.NavigationItem;
@@ -115,12 +116,12 @@ class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
                 context.startActivity(new Intent(context,ChatHistoryActivity.class));
                 break;*/
 
+                break;
+
             case 2:
-/*
                 sSelect = item.itemName;
                 context.startActivity(new Intent(context,BookingHisoryActivity.class));
                 break;
-*/
 
             case 3:
 /*
@@ -128,6 +129,7 @@ class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
                 context.startActivity(new Intent(context,PaymentHistoryActivity.class));
                 break;
 */
+                break;
 
             case 4:
                 sSelect = item.itemName;

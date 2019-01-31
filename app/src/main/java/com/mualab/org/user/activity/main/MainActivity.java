@@ -1,18 +1,22 @@
 package com.mualab.org.user.activity.main;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -23,9 +27,11 @@ import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 
@@ -82,7 +88,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.mualab.org.user.application.Mualab.mInstance;
 import static com.mualab.org.user.data.local.prefs.Session.isLogout;
 
 
@@ -127,7 +137,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         user = session.getUser();
         profileData = new UserProfileData();
         liveUserList = new ArrayList<>();
-        if(getIntent().getStringExtra("FeedPostActivity") != null){
+        if (getIntent().getStringExtra("FeedPostActivity") != null) {
             isFromFeedPost = getIntent().getStringExtra("FeedPostActivity");
         }
 
@@ -175,9 +185,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                if (!isFromFeedPost.equals("FeedPostActivity")){
+                if (!isFromFeedPost.equals("FeedPostActivity")) {
                     replaceFragment(SearchBoardFragment.newInstance(item, locationData), false);
-                }else {
+                } else {
                     ibtnFeed.callOnClick();
                 }
 
@@ -206,7 +216,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         /*Manage Notification*/
         Intent intent = getIntent();
         if (intent != null) {
-            if (intent.getStringExtra("notifyId") != null ) {
+            if (intent.getStringExtra("notifyId") != null) {
                 String type = intent.getStringExtra("type");
                 String notifyId = intent.getStringExtra("notifyId");
                 String userName = intent.getStringExtra("userName");
@@ -349,7 +359,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         break;
 */
                 }
-            }else if (intent.hasExtra("notifincationType")){
+            } else if (intent.hasExtra("notifincationType")) {
 
                 /*if (intent.getStringExtra("notifincationType").equals("15")){
                     Intent chatIntent = new Intent(this, ChatActivity.class);
@@ -373,10 +383,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 replaceFragment(FeedsFragment.newInstance(1), false);
             }
 
-        }else {
-            addFragment(SearchBoardFragment.newInstance(item,locationData), false);
+        } else {
+            addFragment(SearchBoardFragment.newInstance(item, locationData), false);
+        }
+
+        checkPermission();
+    }
+
+    public void checkPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(this)) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, 121);
+            }
         }
     }
+
+
+
 
     private void initView() {
 
@@ -587,7 +612,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     session.saveFilter(null);
                     locationData = null;
                     item = null;
-                     replaceFragment(ExploreFragment.newInstance(), false);
+                    replaceFragment(ExploreFragment.newInstance(), false);
 
                 }
                 break;
