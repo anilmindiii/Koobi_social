@@ -1,6 +1,8 @@
 package com.mualab.org.user.activity.booking;
 
 import android.app.Dialog;
+import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -14,9 +16,11 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.mualab.org.user.R;
 import com.mualab.org.user.activity.booking.adapter.ConfirmServiceAdapter;
+import com.mualab.org.user.activity.booking.adapter.NewBookingHistoryAdapter;
 import com.mualab.org.user.activity.booking.model.BookingConfirmInfo;
 import com.mualab.org.user.activity.booking.model.BookingHistoryInfo;
 import com.mualab.org.user.activity.booking.model.BookingListInfo;
+import com.mualab.org.user.activity.booking.model.TrackInfo;
 import com.mualab.org.user.application.Mualab;
 import com.mualab.org.user.data.local.prefs.Session;
 import com.mualab.org.user.data.model.User;
@@ -37,14 +41,16 @@ import java.util.List;
 import java.util.Map;
 
 public class BookingDetailsActivity extends AppCompatActivity {
-    List<BookingConfirmInfo.DataBean> bookingList;
-    private ConfirmServiceAdapter adapter;
+
+    private NewBookingHistoryAdapter adapter;
     private RecyclerView rcv_service;
     private ImageView iv_profile_artist;
     private TextView tv_artist_name,tv_address,booking_status,tv_payment_method,tv_new_amount,tv_amount,
-            tv_voucher_code,tv_discounted_price;
+            tv_voucher_code,tv_discounted_price,tv_call_type;
     private FrameLayout ly_amount;
     private RelativeLayout ly_voucher_code,ly_map_direction;
+    BookingListInfo historyInfo;
+    private int bookingId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +59,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
 
 
         TextView tvHeaderTitle = findViewById(R.id.tvHeaderTitle);
-        tvHeaderTitle.setText(getString(R.string.booking));
+        tvHeaderTitle.setText(getString(R.string.appoinment));
 
         findViewById(R.id.btnBack).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,15 +81,60 @@ public class BookingDetailsActivity extends AppCompatActivity {
         ly_map_direction = findViewById(R.id.ly_map_direction);
         tv_voucher_code = findViewById(R.id.tv_voucher_code);
         tv_discounted_price = findViewById(R.id.tv_discounted_price);
+        tv_call_type = findViewById(R.id.tv_call_type);
 
 
         if (getIntent().getIntExtra("bookingId", 0) != 0) {
+            bookingId = getIntent().getIntExtra("bookingId", 0);
             getDetailsBookService(getIntent().getIntExtra("bookingId", 0));
         }
-        bookingList = new ArrayList<>();
 
-        adapter = new ConfirmServiceAdapter(this, bookingList,false);
-        rcv_service.setAdapter(adapter);
+
+
+
+        historyInfo = new BookingListInfo();
+
+        ly_map_direction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<TrackInfo> mapBeanArrayList = new ArrayList<>();
+
+                if(historyInfo.data != null){
+
+                    TrackInfo trackUser = new TrackInfo();
+                    trackUser.address = historyInfo.data.location;
+                    trackUser.latitude = historyInfo.data.latitude;
+                    trackUser.longitude = historyInfo.data.longitude;
+                    if(historyInfo.data.userDetail.get(0).profileImage.equals("")){
+                        trackUser.profileImage = "https://image.shutterstock.com/image-vector/male-default-placeholder-avatar-profile-260nw-387516193.jpg";
+
+                    }else trackUser.profileImage = historyInfo.data.userDetail.get(0).profileImage;
+
+
+                    TrackInfo trackArtist = new TrackInfo();
+                    trackArtist.address =  "";
+                    trackArtist.latitude =  historyInfo.data.bookingInfo.get(0).trackingLatitude;
+                    trackArtist.longitude =  historyInfo.data.bookingInfo.get(0).trackingLongitude;
+                    trackArtist.staffName =  historyInfo.data.bookingInfo.get(0).staffName;
+                    trackArtist.bookingDate =  historyInfo.data.bookingInfo.get(0).bookingDate;
+                    trackArtist.startTime =  historyInfo.data.bookingInfo.get(0).startTime;
+                    trackArtist.artistServiceName =  historyInfo.data.bookingInfo.get(0).artistServiceName;
+
+                    if(historyInfo.data.bookingInfo.get(0).staffImage.equals("")){
+                        trackArtist.profileImage = "https://image.shutterstock.com/image-vector/male-default-placeholder-avatar-profile-260nw-387516193.jpg";
+                    }else trackArtist.profileImage = historyInfo.data.bookingInfo.get(0).staffImage;
+
+
+                    Intent intent = new Intent(BookingDetailsActivity.this,TrackingActivity.class);
+                    intent.putExtra("trackUser",trackUser);
+                    intent.putExtra("trackArtist",trackArtist);
+                    intent.putExtra("bookingId",bookingId);
+                    startActivity(intent);
+                }
+
+
+            }
+        });
     }
 
     private void getDetailsBookService(final int bookingId) {
@@ -118,33 +169,11 @@ public class BookingDetailsActivity extends AppCompatActivity {
 
                     if (status.equals("success")) {
                         Gson gson = new Gson();
-                        BookingListInfo historyInfo = gson.fromJson(response, BookingListInfo.class);
+                        historyInfo = gson.fromJson(response, BookingListInfo.class);
+                        adapter = new NewBookingHistoryAdapter(BookingDetailsActivity.this, historyInfo);
+                        rcv_service.setAdapter(adapter);
 
                         setData(historyInfo);
-
-                        bookingList.clear();
-                        for (int i = 0; i < historyInfo.data.bookingInfo.size(); i++) {
-                            BookingConfirmInfo.DataBean bean = new BookingConfirmInfo.DataBean();
-                            bean._id = historyInfo.data.bookingInfo.get(i)._id;
-                            bean.bookingPrice = historyInfo.data.bookingInfo.get(i).bookingPrice;
-                            bean.serviceId = historyInfo.data.bookingInfo.get(i).serviceId;
-                            bean.subServiceId = historyInfo.data.bookingInfo.get(i).subServiceId;
-                            bean.artistServiceId = historyInfo.data.bookingInfo.get(i).artistServiceId;
-                            bean.bookingDate = historyInfo.data.bookingInfo.get(i).bookingDate;
-                            bean.startTime = historyInfo.data.bookingInfo.get(i).startTime;
-                            bean.endTime = historyInfo.data.bookingInfo.get(i).endTime;
-                            bean.status  = historyInfo.data.bookingInfo.get(i).status;
-                            bean.artistServiceName = historyInfo.data.bookingInfo.get(i).artistServiceName;
-                            bean.staffId = historyInfo.data.bookingInfo.get(i).staffId;
-                            bean.staffName = historyInfo.data.bookingInfo.get(i).staffName;
-                            bean.staffImage = historyInfo.data.bookingInfo.get(i).staffImage;
-                            bean.companyId = historyInfo.data.bookingInfo.get(i).companyId;
-                            bean.companyName = historyInfo.data.bookingInfo.get(i).companyName;
-                            bean.companyImage = historyInfo.data.bookingInfo.get(i).companyImage;
-
-                            bookingList.add(bean);
-
-                        }
                         adapter.notifyDataSetChanged();
 
                     } else {
@@ -180,6 +209,16 @@ public class BookingDetailsActivity extends AppCompatActivity {
     }
 
     void setData(BookingListInfo historyInfo){
+
+        if (historyInfo.data.bookingType == 2) {
+            //bookingType = "2";
+            tv_call_type.setText("Out Call");
+        } else {
+            //bookingType = "1";
+            tv_call_type.setText("In Call");
+        }
+
+
         if (!historyInfo.data.artistDetail.get(0).profileImage.isEmpty() && !historyInfo.data.artistDetail.get(0).profileImage.equals("")) {
             Picasso.with(BookingDetailsActivity.this).load(historyInfo.data.artistDetail.get(0).profileImage).placeholder(R.drawable.default_placeholder).
                     fit().into(iv_profile_artist);
@@ -190,13 +229,29 @@ public class BookingDetailsActivity extends AppCompatActivity {
         tv_artist_name.setText(historyInfo.data.artistDetail.get(0).userName+"");
         tv_address.setText(historyInfo.data.location);
 
+
+
         if(historyInfo.data.bookStatus.equals("0")){
             booking_status.setText(R.string.pending);
             ly_map_direction.setVisibility(View.GONE);
-        }else {
+            booking_status.setTextColor(ContextCompat.getColor(BookingDetailsActivity.this,R.color.main_orange_color));
+        }else  if(historyInfo.data.bookStatus.equals("1")){
             booking_status.setText(R.string.confirm);
             ly_map_direction.setVisibility(View.VISIBLE);
+            booking_status.setTextColor(ContextCompat.getColor(BookingDetailsActivity.this,R.color.main_green_color));
+        }else if(historyInfo.data.bookStatus.equals("2")){
+            booking_status.setText("Cancelled");
+            booking_status.setTextColor(ContextCompat.getColor(BookingDetailsActivity.this,R.color.red));
         }
+        else if(historyInfo.data.bookStatus.equals("3")){
+            booking_status.setText("Completed");
+            booking_status.setTextColor(ContextCompat.getColor(BookingDetailsActivity.this,R.color.main_green_color));
+        }
+        else if(historyInfo.data.bookStatus.equals("5")){
+            booking_status.setText("In progress");
+            booking_status.setTextColor(ContextCompat.getColor(BookingDetailsActivity.this,R.color.main_green_color));
+        }
+
 
         if(historyInfo.data.paymentStatus == 2){
             tv_payment_method.setText(R.string.cash);

@@ -28,6 +28,8 @@ public class BookingListInfo {
         public String paymentTime;
         public int artistId;
         public String totalPrice;
+        public String latitude;
+        public String longitude;
         public List<UserDetailBean> userDetail;
         public List<ArtistDetailBean> artistDetail;
         public List<BookingInfoBean> bookingInfo;

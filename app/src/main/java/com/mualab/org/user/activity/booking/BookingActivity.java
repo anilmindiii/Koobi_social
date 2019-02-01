@@ -833,7 +833,7 @@ public class BookingActivity extends AppCompatActivity implements View.OnClickLi
                         if (!from.equals(""))
                             tvbizDate.setText(end + " & " + from);
                         else if (end.equals("")) {
-                            tvbizDate.setText("NA");
+                            tvbizDate.setText("Close");
                         } else tvbizDate.setText(end);
 
 /*.......................................................................................................................*/

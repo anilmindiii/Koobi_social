@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tracking_bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    app:behavior_hideable="false"
-    app:behavior_peekHeight="50dp"
-    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+    android:background="@color/white">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -32,10 +29,10 @@
         <ImageView
             android:id="@+id/imgSheetUpDown"
             android:layout_width="50dp"
-            android:layout_height="30dp"
+            android:layout_height="25dp"
             android:layout_centerHorizontal="true"
             android:rotation="90"
-            android:src="@drawable/ic_right_arrow_angle"
+            app:srcCompat="@drawable/ic_right_arrow_angle"
             android:tint="@color/gray"
             tools:ignore="ContentDescription" />
 
@@ -73,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:text="3 Miles"
+                android:text="0 Miles"
                 android:textColor="@color/black"
                 android:fontFamily="@font/nunito_regular"
                 android:textSize="12sp" />
@@ -84,14 +81,13 @@
             android:id="@+id/llStaffInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/btnService"
             android:gravity="center_vertical"
             android:layout_marginTop="60dp"
             android:layout_marginBottom="20dp"
             android:orientation="horizontal">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/ivProfilePic"
+                android:id="@+id/ivartistProfilePic"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:src="@drawable/default_placeholder"
@@ -103,11 +99,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/ivProfilePic"
+                android:layout_toEndOf="@+id/ivartistProfilePic"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvName"
+                    android:id="@+id/tvstaffName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -130,31 +126,54 @@
                     android:isIndicator="true"
                     android:numStars="5"
                     android:rating="0"
-                    android:scaleX="0.8"
-                    android:scaleY="0.8"
+                    android:scaleX="0.7"
+                    android:scaleY="0.7"
                     android:stepSize="0.1"
                     android:transformPivotX="0.1dp"
                     android:transformPivotY="0.1dp" />
 
                 <TextView
-                    android:id="@+id/tvDate"
+                    android:id="@+id/tv_date_n_time_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:ellipsize="end"
                     android:fontFamily="@font/nunito_regular"
                     android:maxLines="1"
+                    android:textColor="@color/gray"
                     android:text="25/05/2018, 03:10 pm"
                     android:textSize="14sp" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rvServices"
-                    android:layout_width="match_parent"
+                <RelativeLayout
+                    android:id="@+id/rlServices"
+                    android:layout_width="wrap_content"
+                    android:layout_below="@+id/lyDetail"
+                    android:layout_marginLeft="4dp"
+                    android:layout_toRightOf="@+id/ivProfile"
+                    android:gravity="center"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/rounded_border_dark"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:overScrollMode="never"
-                    android:scrollbars="none" />
+                    android:layout_marginStart="4dp"
+                    android:layout_toEndOf="@+id/ivProfile">
+
+                    <TextView
+                        android:id="@+id/tvServices"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_regular"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:padding="2dp"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/text_color"
+                        android:textSize="11sp"
+                        />
+
+
+                </RelativeLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -195,5 +214,5 @@
 
     </RelativeLayout>
 
-</android.support.v4.widget.NestedScrollView>
+</RelativeLayout>
 

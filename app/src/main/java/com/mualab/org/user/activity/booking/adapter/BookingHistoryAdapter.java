@@ -3,6 +3,7 @@ package com.mualab.org.user.activity.booking.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,14 +54,9 @@ public class BookingHistoryAdapter  extends RecyclerView.Adapter<BookingHistoryA
 
         holder.tvServices.setText(bean.bookingInfo.get(0).artistServiceName+"");
 
-        if(bean.bookStatus.equals("0")){
-            holder.tv_status.setText("Pending");
-        }else holder.tv_status.setText("Confirmed");
-
         holder.tvArtistName.setText(bean.artistDetail.get(0).userName+"");
         holder.tv_price.setText("£"+bean.totalPrice+"");
 
-        bean.bookingDate = Helper.formateDateFromstring("yyyy-MM-dd","dd/MM/yyyy",bean.bookingDate);
 
         holder.tvDateTime.setText(bean.bookingDate+", "+bean.bookingTime);
 
@@ -68,6 +64,30 @@ public class BookingHistoryAdapter  extends RecyclerView.Adapter<BookingHistoryA
             Picasso.with(mContext).load(bean.artistDetail.get(0).profileImage).placeholder(R.drawable.default_placeholder).fit().into(holder.ivProfile);
         }else {
             holder.ivProfile.setImageDrawable(mContext.getResources().getDrawable(R.drawable.default_placeholder));
+        }
+
+
+        if(bean.bookStatus.equals("0")){
+            holder.tv_status.setText("Pending");
+        }else holder.tv_status.setText("Confirmed");
+
+        if(bean.bookStatus.equals("0")){
+            holder.tv_status.setText(R.string.pending);
+            holder.tv_status.setTextColor(ContextCompat.getColor(mContext,R.color.main_orange_color));
+        }else  if(bean.bookStatus.equals("1")){
+            holder.tv_status.setText(R.string.confirm);
+            holder.tv_status.setTextColor(ContextCompat.getColor(mContext,R.color.main_green_color));
+        }else if(bean.bookStatus.equals("2")){
+            holder.tv_status.setText("Cancelled");
+            holder.tv_status.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+        }
+        else if(bean.bookStatus.equals("3")){
+            holder.tv_status.setText("Completed");
+            holder.tv_status.setTextColor(ContextCompat.getColor(mContext,R.color.main_green_color));
+        }
+        else if(bean.bookStatus.equals("5")){
+            holder.tv_status.setText("In progress");
+            holder.tv_status.setTextColor(ContextCompat.getColor(mContext,R.color.main_green_color));
         }
 
     }

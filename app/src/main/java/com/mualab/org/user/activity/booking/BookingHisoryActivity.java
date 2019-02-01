@@ -46,7 +46,7 @@ public class BookingHisoryActivity extends AppCompatActivity {
 
 
         TextView tvHeaderTitle = findViewById(R.id.tvHeaderTitle);
-        tvHeaderTitle.setText(getString(R.string.my_booking));
+        tvHeaderTitle.setText(getString(R.string.appoinment));
 
         findViewById(R.id.btnBack).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,6 +134,12 @@ public class BookingHisoryActivity extends AppCompatActivity {
                         Gson gson = new Gson();
                         BookingHistoryInfo historyInfo = gson.fromJson(response,BookingHistoryInfo.class);
                         dataBean.addAll(historyInfo.data);
+
+                        for(BookingHistoryInfo.DataBean bean:dataBean){
+
+
+                            bean.bookingDate = Helper.formateDateFromstring("yyyy-MM-dd","dd/MM/yyyy",bean.bookingDate);
+                        }
 
                     } else {
                         MyToast.getInstance(BookingHisoryActivity.this).showDasuAlert(message);

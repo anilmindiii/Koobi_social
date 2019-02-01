@@ -25,7 +25,6 @@ public class ConfirmServiceAdapter extends RecyclerView.Adapter<ConfirmServiceAd
     Context mContext;
     List<BookingConfirmInfo.DataBean> bookingList;
     getValue valueListner;
-    boolean isShowEditView = true;
 
     public ConfirmServiceAdapter(Context mContext,List<BookingConfirmInfo.DataBean> bookingList, getValue valueListner) {
         this.mContext = mContext;
@@ -33,11 +32,6 @@ public class ConfirmServiceAdapter extends RecyclerView.Adapter<ConfirmServiceAd
         this.valueListner = valueListner;
     }
 
-    public ConfirmServiceAdapter(Context mContext,List<BookingConfirmInfo.DataBean> bookingList,boolean isShowEditView) {
-        this.mContext = mContext;
-        this.bookingList = bookingList;
-        this.isShowEditView = isShowEditView;
-    }
 
     public interface getValue{
         void deleteService(int bookingId,int position);
@@ -83,20 +77,6 @@ public class ConfirmServiceAdapter extends RecyclerView.Adapter<ConfirmServiceAd
             }
         });
 
-        // hiding view
-        if(isShowEditView){
-            holder.tv_edit.setVisibility(View.VISIBLE);
-            holder.tv_delete.setVisibility(View.VISIBLE);
-            holder.iv_service_arrow.setVisibility(View.VISIBLE);
-            holder.iv_price_arrow.setVisibility(View.VISIBLE);
-            holder.iv_time_date_arrow.setVisibility(View.VISIBLE);
-        }else {
-            holder.tv_edit.setVisibility(View.GONE);
-            holder.tv_delete.setVisibility(View.GONE);
-            holder.iv_service_arrow.setVisibility(View.GONE);
-            holder.iv_price_arrow.setVisibility(View.GONE);
-            holder.iv_time_date_arrow.setVisibility(View.GONE);
-        }
 
     }
 

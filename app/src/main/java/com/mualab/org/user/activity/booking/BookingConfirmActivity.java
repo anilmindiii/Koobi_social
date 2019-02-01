@@ -460,7 +460,8 @@ public class BookingConfirmActivity extends AppCompatActivity {
                                 // it's a positive
                                 discountPrice = String.valueOf(newDiscountedPrice);
                             }
-                            tv_new_amount.setText("£" + discountPrice + "");
+                            String roundValue = String.format("%.2f", newDiscountedPrice);
+                            tv_new_amount.setText("£" + roundValue + "");
 
                         } else if (voucherItem.discountType.equals("2")) {// for % percentage
                             Double newDiscountedPrice = ((total_price * (Double.parseDouble(voucherItem.amount))) / 100);
@@ -473,7 +474,8 @@ public class BookingConfirmActivity extends AppCompatActivity {
                                 // it's a positive
                                 discountPrice = String.valueOf(newDiscountedPrice);
                             }
-                            tv_new_amount.setText("£" + discountPrice + "");
+                            String roundValue = String.format("%.2f", newDiscountedPrice);
+                            tv_new_amount.setText("£" + roundValue + "");
                         }
 
                         iv_voucher_arrow.setVisibility(View.INVISIBLE);
@@ -793,7 +795,7 @@ public class BookingConfirmActivity extends AppCompatActivity {
     private void dialogNew() {
         final AlertDialog alertDialog = new AlertDialog.Builder(getApplicationContext())
                 .setTitle("Alert")
-                .setMessage("Your booking session has been expaire")
+                .setMessage("Booking session has been expired. Please try again.")
                 .setCancelable(false)
                 .create();
         alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {

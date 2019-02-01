@@ -21,7 +21,7 @@ android {
         applicationId "com.mualab.org.user"
         minSdkVersion 19
         multiDexEnabled true
-
+        vectorDrawables.useSupportLibrary = true
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
